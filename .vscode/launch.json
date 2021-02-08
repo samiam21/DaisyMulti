@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/DaisyTemplate.elf",
+            "serverpath": "C:/Program Files (x86)/SEGGER/JLink/JLinkGDBServerCL.exe",
+            "servertype": "jlink",
+            "device": "STM32H750XB",
+            "interface": "jtag",
+            "preLaunchTask": "build",
+            "runToMain": true,
+            "svdFile": "./.vscode/STM32H750x.svd"
+        }
+    ]
+}
