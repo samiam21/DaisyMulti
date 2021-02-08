@@ -13,7 +13,7 @@ void ToggleTest::Setup(daisy::DaisySeed *hardware)
     led3.Init(hw->GetPin(effectLedPin3), false);
 }
 
-void ToggleTest::AudioCallback(float **in, float **out, size_t size)
+void ToggleTest::Process(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
@@ -32,7 +32,7 @@ void ToggleTest::Cleanup()
     led3.Update();
 }
 
-void ToggleTest::Loop()
+void ToggleTest::Loop(PEDAL_STATE state)
 {
     // Read the toggle
     if (toggle.ReadToggle() == 0)

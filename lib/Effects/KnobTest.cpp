@@ -15,7 +15,7 @@ void KnobTest::Setup(daisy::DaisySeed *hardware)
     led2.Init(hw->GetPin(effectLedPin2), false);
 }
 
-void KnobTest::AudioCallback(float **in, float **out, size_t size)
+void KnobTest::Process(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
@@ -32,7 +32,7 @@ void KnobTest::Cleanup()
     led2.Update();
 }
 
-void KnobTest::Loop()
+void KnobTest::Loop(PEDAL_STATE state)
 {
     // Knob 1 controls intensity of LED 1
     if (knob1.SetNewValue(led1Value))

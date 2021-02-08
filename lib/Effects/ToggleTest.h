@@ -35,8 +35,8 @@ class ToggleTest : public IEffect
 public:
     void Setup(daisy::DaisySeed *hardware);
     void Cleanup();
-    void AudioCallback(float **in, float **out, size_t size);
-    void Loop();
+    void Process(float **in, float **out, size_t size);
+    void Loop(PEDAL_STATE state);
     char *GetEffectName();
 
 private:

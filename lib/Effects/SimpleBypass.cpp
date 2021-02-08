@@ -7,7 +7,7 @@ void SimpleBypass::Setup(daisy::DaisySeed *hardware)
     knob1.Init(hw, KNOB_1_CHN, boostLevel, boostLevelMin, boostLevelMax);
 }
 
-void SimpleBypass::AudioCallback(float **in, float **out, size_t size)
+void SimpleBypass::Process(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
@@ -19,7 +19,7 @@ void SimpleBypass::Cleanup()
 {
 }
 
-void SimpleBypass::Loop()
+void SimpleBypass::Loop(PEDAL_STATE state)
 {
     // Knob 1 controls the boost level
     if (knob1.SetNewValue(boostLevel))

@@ -20,7 +20,7 @@ void ButtonTest::Setup(daisy::DaisySeed *hardware)
     led4.Update();
 }
 
-void ButtonTest::AudioCallback(float **in, float **out, size_t size)
+void ButtonTest::Process(float **in, float **out, size_t size)
 {
     if (!isMuted)
     {
@@ -44,7 +44,7 @@ void ButtonTest::Cleanup()
     led4.Update();
 }
 
-void ButtonTest::Loop()
+void ButtonTest::Loop(PEDAL_STATE state)
 {
     // Button 1 turns on LED 1
     if (button1.IsPressed(false))
