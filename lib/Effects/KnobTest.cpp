@@ -29,7 +29,7 @@ void KnobTest::Cleanup()
     led2.Update();
 }
 
-void KnobTest::Loop(PEDAL_STATE state)
+void KnobTest::Loop(PedalState state)
 {
     // Knob 1 controls intensity of LED 1
     if (knob1.SetNewValue(led1Value))

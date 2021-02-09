@@ -29,7 +29,7 @@ void ToggleTest::Cleanup()
     led3.Update();
 }
 
-void ToggleTest::Loop(PEDAL_STATE state)
+void ToggleTest::Loop(PedalState state)
 {
     // Read the toggle
     if (toggle.ReadToggle() == 0)

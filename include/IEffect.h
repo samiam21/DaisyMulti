@@ -10,7 +10,7 @@ public:
     virtual void Setup(daisy::DaisySeed* hardware) {}
     virtual void Cleanup() {}
     virtual float Process(float in) { return 0; }
-    virtual void Loop(PEDAL_STATE state) {}
+    virtual void Loop(PedalState state) {}
     virtual char *GetEffectName() { return (char*)"uh-oh"; }
 
 protected:

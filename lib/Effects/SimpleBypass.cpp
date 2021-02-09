@@ -16,7 +16,7 @@ void SimpleBypass::Cleanup()
 {
 }
 
-void SimpleBypass::Loop(PEDAL_STATE state)
+void SimpleBypass::Loop(PedalState state)
 {
     // Knob 1 controls the boost level
     if (knob1.SetNewValue(boostLevel))

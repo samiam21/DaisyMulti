@@ -47,7 +47,7 @@
 #define PI_VAL 3.14159265
 
 // State enum for the system
-enum PEDAL_STATE
+enum PedalState
 {
     PLAY_MODE = 0,
     EDIT_MODE = 1

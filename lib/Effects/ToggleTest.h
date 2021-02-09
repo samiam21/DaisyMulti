@@ -36,7 +36,7 @@ public:
     void Setup(daisy::DaisySeed *hardware);
     void Cleanup();
     float Process(float in);
-    void Loop(PEDAL_STATE state);
+    void Loop(PedalState state);
     char *GetEffectName();
 
 private:

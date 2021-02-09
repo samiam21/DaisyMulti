@@ -11,12 +11,16 @@ DaisySeed *hw;
 
 // Effect switching parameters
 volatile EffectType selectedEffectType = UNSET;
+volatile PedalState currentState = PedalState::PLAY_MODE;
 IEffect *currentEffect;
 
+// HIDs
 Switch selectorPin1;
 Switch selectorPin2;
 Switch selectorPin3;
 Switch selectorPin4;
+Button controlButton;
+Led controlLed;
 
 /**
  * Sets the selected effect type based on reading the selector
@@ -55,6 +59,35 @@ void AudioCallback(float **in, float **out, size_t size)
 }
 
 /**
+ * Handles the control button
+ */
+void HandleControlButton()
+{
+    // // Check if we are currently in play mode and the control button is held
+    // if (currentState == PedalState::PLAY_MODE && controlButton.IsHeld())
+    // {
+    //     // Switch to edit mode
+    //     debugPrintln(hw, "Switching to edit mode!");
+    //     currentState = PedalState::EDIT_MODE;
+
+    //     // Turn on the control LED
+    //     controlLed.Set(1.f);
+    //     controlLed.Update();
+    // }
+    // // Check if we are currently in edit mode and the control button is pressed
+    // else if (currentState == PedalState::EDIT_MODE && controlButton.IsPressed())
+    // {
+    //     // Switch back to play mode
+    //     debugPrintln(hw, "Switching to play mode!");
+    //     currentState = PedalState::PLAY_MODE;
+
+    //     // Turn off the control LED
+    //     controlLed.Set(0);
+    //     controlLed.Update();
+    // }
+}
+
+/**
  * Main Loop
  */
 int main(void)
@@ -79,6 +112,10 @@ int main(void)
     adcConfig[KNOB_4_CHN].InitSingle(hw->GetPin(effectPotPin4));
     hw->adc.Init(adcConfig, 4);
     hw->adc.Start();
+
+    // Initialize the control button and LED
+    // controlButton.Init(hw, hw->GetPin(effectSPSTPin4), 3000);
+    // controlLed.Init(hw->GetPin(effectLedPin4), false);
 
 #ifndef BYPASS_SELECTOR
     // Initialize the selector pins
@@ -120,7 +157,10 @@ int main(void)
         }
 #endif
 
+        // Handle the control button
+        HandleControlButton();
+
         // Execute the effect loop commands
-        currentEffect->Loop(PEDAL_STATE::PLAY_MODE);
+        currentEffect->Loop(currentState);
     }
 }
