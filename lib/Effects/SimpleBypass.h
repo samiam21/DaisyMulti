@@ -33,7 +33,7 @@ class SimpleBypass : public IEffect
 public:
     void Setup(daisy::DaisySeed *hardware);
     void Cleanup();
-    void Process(float **in, float **out, size_t size);
+    float Process(float in);
     void Loop(PEDAL_STATE state);
     char *GetEffectName();
 

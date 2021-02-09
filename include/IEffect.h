@@ -9,7 +9,7 @@ class IEffect
 public:
     virtual void Setup(daisy::DaisySeed* hardware) {}
     virtual void Cleanup() {}
-    virtual void Process(float **in, float **out, size_t size) {}
+    virtual float Process(float in) { return 0; }
     virtual void Loop(PEDAL_STATE state) {}
     virtual char *GetEffectName() { return (char*)"uh-oh"; }
 

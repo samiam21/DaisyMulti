@@ -7,12 +7,9 @@ void SimpleBypass::Setup(daisy::DaisySeed *hardware)
     knob1.Init(hw, KNOB_1_CHN, boostLevel, boostLevelMin, boostLevelMax);
 }
 
-void SimpleBypass::Process(float **in, float **out, size_t size)
+float SimpleBypass::Process(float in)
 {
-    for (size_t i = 0; i < size; i++)
-    {
-        out[AUDIO_OUT_CH][i] = in[AUDIO_IN_CH][i] * boostLevel;
-    }
+    return in * boostLevel;
 }
 
 void SimpleBypass::Cleanup()

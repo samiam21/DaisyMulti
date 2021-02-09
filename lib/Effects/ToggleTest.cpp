@@ -13,12 +13,9 @@ void ToggleTest::Setup(daisy::DaisySeed *hardware)
     led3.Init(hw->GetPin(effectLedPin3), false);
 }
 
-void ToggleTest::Process(float **in, float **out, size_t size)
+float ToggleTest::Process(float in)
 {
-    for (size_t i = 0; i < size; i++)
-    {
-        out[AUDIO_OUT_CH][i] = in[AUDIO_IN_CH][i];
-    }
+    return in;
 }
 
 void ToggleTest::Cleanup()

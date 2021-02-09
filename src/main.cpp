@@ -9,6 +9,40 @@ using namespace daisy;
 // Declare a DaisySeed object called hw
 DaisySeed *hw;
 
+// Effect switching parameters
+volatile EffectType selectedEffectType = UNSET;
+IEffect *currentEffect;
+
+Switch selectorPin1;
+Switch selectorPin2;
+Switch selectorPin3;
+Switch selectorPin4;
+
+/**
+ * Sets the selected effect type based on reading the selector
+ */
+bool ReadSelectedEffect()
+{
+    // Read the state of the encoder pins
+    uint32_t pin1 = (uint32_t)selectorPin1.RawState();
+    uint32_t pin2 = (uint32_t)selectorPin2.RawState();
+    uint32_t pin3 = (uint32_t)selectorPin3.RawState();
+    uint32_t pin4 = (uint32_t)selectorPin4.RawState();
+
+    // Get the combined value and set the effect type
+    uint32_t combined = pin4 | (pin3 << 1) | (pin2 << 2) | (pin1 << 3);
+
+    if ((EffectType)combined != selectedEffectType)
+    {
+        selectedEffectType = (EffectType)(combined);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 /**
  * Audio callback to process each enabled effect
  */
@@ -16,7 +50,7 @@ void AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-        out[AUDIO_OUT_CH][i] = in[AUDIO_IN_CH][i];
+        out[AUDIO_OUT_CH][i] = currentEffect->Process(in[AUDIO_IN_CH][i]);
     }
 }
 
@@ -46,6 +80,20 @@ int main(void)
     hw->adc.Init(adcConfig, 4);
     hw->adc.Start();
 
+#ifndef BYPASS_SELECTOR
+    // Initialize the selector pins
+    selectorPin1.Init(hw->GetPin(effectSelectorPin1), 1, Switch::Type::TYPE_MOMENTARY, Switch::Polarity::POLARITY_NORMAL, Switch::Pull::PULL_UP);
+    selectorPin2.Init(hw->GetPin(effectSelectorPin2), 1, Switch::Type::TYPE_MOMENTARY, Switch::Polarity::POLARITY_NORMAL, Switch::Pull::PULL_UP);
+    selectorPin3.Init(hw->GetPin(effectSelectorPin3), 1, Switch::Type::TYPE_MOMENTARY, Switch::Polarity::POLARITY_NORMAL, Switch::Pull::PULL_UP);
+    selectorPin4.Init(hw->GetPin(effectSelectorPin4), 1, Switch::Type::TYPE_MOMENTARY, Switch::Polarity::POLARITY_NORMAL, Switch::Pull::PULL_UP);
+
+    // Read the selected effect
+    ReadSelectedEffect();
+#endif
+
+    // Set the current effect
+    currentEffect = GetEffectObject(selectedEffectType);
+
     // Start the audio processing
     debugPrintln(hw, "Starting Audio");
     hw->StartAudio(AudioCallback);
@@ -56,6 +104,23 @@ int main(void)
     // Loop forever
     for (;;)
     {
-        
+#ifndef BYPASS_SELECTOR
+        // Check if we have a new effect type and switch to the new state
+        if (ReadSelectedEffect())
+        {
+            // Clean up and stop the old effect
+            currentEffect->Cleanup();
+
+            // Get the new effect object
+            currentEffect = GetEffectObject(selectedEffectType);
+
+            // Start the new effect
+            debugPrintlnF(hw, "Switching To: %s", currentEffect->GetEffectName());
+            currentEffect->Setup(hw);
+        }
+#endif
+
+        // Execute the effect loop commands
+        currentEffect->Loop(PEDAL_STATE::PLAY_MODE);
     }
 }
