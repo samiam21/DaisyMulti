@@ -79,9 +79,9 @@ void InitializeEffects()
 {
     // Get the effect objects
     effect1 = GetEffectObject(EffectType::CLEANBOOST);
-    effect2 = GetEffectObject(EffectType::CLEANBOOST);
-    effect3 = GetEffectObject(EffectType::CLEANBOOST);
-    effect4 = GetEffectObject(EffectType::CLEANBOOST);
+    effect2 = GetEffectObject(EffectType::CHORUS);
+    effect3 = GetEffectObject(EffectType::FLANGER);
+    effect4 = GetEffectObject(EffectType::TREMOLO);
 
     // Setup each effect object
     effect1->Setup(hw);
@@ -131,7 +131,7 @@ void HandleEffectButtons()
         effect1Led.Set(isEffect1On ? 1.f : 0);
         effect1Led.Update();
 
-        debugPrintlnF(hw, "Turned Effect 1 %s", isEffect1On ? "ON" : "OFF");
+        debugPrintlnF(hw, "Turned %s %s", effect1->GetEffectName(), isEffect1On ? "ON" : "OFF");
     }
 
     // Poll effect button 2 to toggle effect 2
@@ -141,7 +141,7 @@ void HandleEffectButtons()
         effect2Led.Set(isEffect2On ? 1.f : 0);
         effect2Led.Update();
 
-        debugPrintlnF(hw, "Turned Effect 2 %s", isEffect2On ? "ON" : "OFF");
+        debugPrintlnF(hw, "Turned %s %s", effect2->GetEffectName(), isEffect2On ? "ON" : "OFF");
     }
 
     // Poll effect button 3 to toggle effect 3
@@ -151,7 +151,7 @@ void HandleEffectButtons()
         effect3Led.Set(isEffect3On ? 1.f : 0);
         effect3Led.Update();
 
-        debugPrintlnF(hw, "Turned Effect 3 %s", isEffect3On ? "ON" : "OFF");
+        debugPrintlnF(hw, "Turned %s %s", effect3->GetEffectName(), isEffect3On ? "ON" : "OFF");
     }
 
     // Poll effect button 4 to toggle effect 4
@@ -161,7 +161,7 @@ void HandleEffectButtons()
         effect4Led.Set(isEffect4On ? 1.f : 0);
         effect4Led.Update();
 
-        debugPrintlnF(hw, "Turned Effect 4 %s", isEffect4On ? "ON" : "OFF");
+        debugPrintlnF(hw, "Turned %s %s", effect4->GetEffectName(), isEffect4On ? "ON" : "OFF");
     }
 }
 

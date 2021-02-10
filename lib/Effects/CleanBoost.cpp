@@ -27,5 +27,5 @@ void CleanBoost::Loop(PedalState state)
 
 char *CleanBoost::GetEffectName()
 {
-    return (char *)"Simple Bypass";
+    return (char *)"CLEAN BOOST";
 }
