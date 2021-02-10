@@ -7,7 +7,27 @@ void AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-        out[AUDIO_OUT_CH][i] = effect1->Process(in[AUDIO_IN_CH][i]);
+        float wet = in[AUDIO_IN_CH][i];
+
+        // Apply each effect that is turned on
+        if (isEffect1On)
+        {
+            wet = effect1->Process(wet);
+        }
+        if (isEffect2On)
+        {
+            wet = effect2->Process(wet);
+        }
+        if (isEffect3On)
+        {
+            wet = effect3->Process(wet);
+        }
+        if (isEffect4On)
+        {
+            wet = effect4->Process(wet);
+        }
+
+        out[AUDIO_OUT_CH][i] = wet;
     }
 }
 
@@ -58,10 +78,10 @@ void InitializeControls()
 void InitializeEffects()
 {
     // Get the effect objects
-    effect1 = GetEffectObject(EffectType::SIMPLEBYPASS);
-    effect2 = GetEffectObject(EffectType::SIMPLEBYPASS);
-    effect3 = GetEffectObject(EffectType::SIMPLEBYPASS);
-    effect4 = GetEffectObject(EffectType::SIMPLEBYPASS);
+    effect1 = GetEffectObject(EffectType::CLEANBOOST);
+    effect2 = GetEffectObject(EffectType::CLEANBOOST);
+    effect3 = GetEffectObject(EffectType::CLEANBOOST);
+    effect4 = GetEffectObject(EffectType::CLEANBOOST);
 
     // Setup each effect object
     effect1->Setup(hw);

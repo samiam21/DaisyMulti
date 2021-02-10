@@ -2,16 +2,10 @@
 #define EFFECT_TYPE_H
 
 #include "IEffect.h"
-#include "../lib/Effects/SimpleBypass.h"
-#include "../lib/Effects/ButtonTest.h"
-#include "../lib/Effects/KnobTest.h"
-#include "../lib/Effects/ToggleTest.h"
+#include "../lib/Effects/CleanBoost.h"
 
 // Effect Objects
-SimpleBypass simpleBypass;
-ButtonTest buttonTest;
-KnobTest knobTest;
-ToggleTest toggleTest;
+CleanBoost boost;
 
 /**
  * The rotary encoder is using Gray code, not standard hex.
@@ -20,10 +14,7 @@ ToggleTest toggleTest;
  */
 enum EffectType
 {
-    SIMPLEBYPASS = 0,
-    BUTTONTEST = 1,
-    KNOBTEST = 3,
-    TOGGLETEST = 2,
+    CLEANBOOST = 0,
 
     UNSET = 99
 };
@@ -35,16 +26,10 @@ extern IEffect *GetEffectObject(EffectType type)
 {
     switch (type)
     {
-    case BUTTONTEST:
-        return (IEffect *)&buttonTest;
-    case KNOBTEST:
-        return (IEffect *)&knobTest;
-    case TOGGLETEST:
-        return (IEffect *)&toggleTest;
-    case SIMPLEBYPASS:
+    case CLEANBOOST:
     case UNSET:
     default:
-        return (IEffect *)&simpleBypass;
+        return (IEffect *)&boost;
     }
 };
 

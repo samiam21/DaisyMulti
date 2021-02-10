@@ -1,5 +1,5 @@
-#ifndef BYPASS_H
-#define BYPASS_H
+#ifndef CLEAN_BOOST_H
+#define CLEAN_BOOST_H
 
 #include "daisy_seed.h"
 #include "../../../include/IEffect.h"
@@ -7,7 +7,7 @@
 #include "../Inputs/Knob.h"
 
 /**********************************************
- * SimpleBypass Effect
+ * Clean Boost Effect
  * 
  * SPST 1 - 
  * SPST 2 - 
@@ -28,7 +28,7 @@
  * LED 4 - 
  **********************************************/
 
-class SimpleBypass : public IEffect
+class CleanBoost : public IEffect
 {
 public:
     void Setup(daisy::DaisySeed *hardware);
@@ -42,7 +42,7 @@ private:
     const float boostLevelMax = 30.0f;
     float boostLevel = 10.0f;
 
-    Knob knob1;
+    Knob boostKnob;
 };
 
 #endif

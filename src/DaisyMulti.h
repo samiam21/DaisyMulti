@@ -4,6 +4,7 @@
 #include "../include/PedalConfig.h"
 #include "../include/IEffect.h"
 #include "../include/EffectType.h"
+#include "../lib/Inputs/Button.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
