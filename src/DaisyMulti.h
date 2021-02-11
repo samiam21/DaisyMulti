@@ -5,6 +5,7 @@
 #include "../include/IEffect.h"
 #include "../include/EffectType.h"
 #include "../lib/Inputs/Button.h"
+#include "../lib/Inputs/Knob.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -33,6 +34,12 @@ Led effect1Led;
 Led effect2Led;
 Led effect3Led;
 Led effect4Led;
+
+// Output volume control
+Knob outputVolume;
+const float outputLevelMin = 0.0f;
+const float outputLevelMax = 5.0f;
+float outputLevel = 1.0f;
 
 // Effect on/off booleans
 bool isEffect1On = false;

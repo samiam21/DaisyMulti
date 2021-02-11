@@ -27,7 +27,8 @@ void AudioCallback(float **in, float **out, size_t size)
             wet = effect4->Process(wet);
         }
 
-        out[AUDIO_OUT_CH][i] = wet;
+        // Output the processed signal with the volume level control
+        out[AUDIO_OUT_CH][i] = wet * outputLevel;
     }
 }
 
@@ -60,6 +61,9 @@ void InitializeControls()
     effect2Led.Init(hw->GetPin(effectLedPin2), false);
     effect3Led.Init(hw->GetPin(effectLedPin3), false);
     effect4Led.Init(hw->GetPin(effectLedPin4), false);
+
+    // Initialize the output volume knob
+    outputVolume.Init(hw, KNOB_4_CHN, outputLevel, outputLevelMin, outputLevelMax);
 
     // Set the LEDs based on whether the effect is on/off
     effect1Led.Set(isEffect1On ? 1.f : 0);
@@ -166,6 +170,18 @@ void HandleEffectButtons()
 }
 
 /**
+ * Handles reading the volume knob and setting the output level
+ */
+void HandleOutputVolumeControl()
+{
+    // Knob 1 controls the boost level
+    if (outputVolume.SetNewValue(outputLevel))
+    {
+        debugPrintlnF(hw, "Updated the output level to: %f", outputLevel);
+    }
+}
+
+/**
  * Main Loop
  */
 int main(void)
@@ -203,6 +219,9 @@ int main(void)
 
         // Handle the effect buttons
         HandleEffectButtons();
+
+        // Handle the output volume
+        HandleOutputVolumeControl();
 
         // Execute the effect loop commands
         if (isEffect1On)
