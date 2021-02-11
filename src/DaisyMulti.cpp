@@ -78,10 +78,10 @@ void InitializeControls()
 void InitializeEffects()
 {
     // Get the effect objects
-    effect1 = GetEffectObject(EffectType::CLEANBOOST);
-    effect2 = GetEffectObject(EffectType::CHORUS);
+    effect1 = GetEffectObject(EffectType::DISTORTION);
+    effect2 = GetEffectObject(EffectType::BITCRUSH);
     effect3 = GetEffectObject(EffectType::FLANGER);
-    effect4 = GetEffectObject(EffectType::TREMOLO);
+    effect4 = GetEffectObject(EffectType::CLEANBOOST);
 
     // Setup each effect object
     effect1->Setup(hw);
