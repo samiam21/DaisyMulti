@@ -21,7 +21,7 @@ using namespace daisysp;
  * SPDT 1 - 
  * SPDT 2 - 
  * 
- * Knob 1 - Effect Level
+ * Knob 1 - Mix
  * Knob 2 - Downsampling Factor
  * Knob 3 - Bits To Crush
  * Knob 4 - 
@@ -47,18 +47,16 @@ private:
     const int LED_MIN_VALUE = 0;
 
     // Effect constants
-    const float boostLevelMin = 1.0f;
-    const float boostLevelMax = 10.0f;
     const float bitcrushMaxValue = 0.75f;
     const float bitcrushMinValue = 0.25f;
 
     // Effect parameters
-    float boostLevel = 0.0f;
+    float mixLevel = 0.0f;
     float bitcrushLevel = 0.0f;
     float downsampleLevel = 0.0f;
 
     Decimator decimator;
-    Knob boostLevelKnob;
+    Knob mixLevelKnob;
     Knob bitcrushFactorKnob;
     Knob downsamplingFactorKnob;
 };

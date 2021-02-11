@@ -22,7 +22,7 @@ using namespace daisysp;
  * SPDT 1 - Waveform selector (SIN, SQUARE, RAMP)
  * SPDT 2 - 
  * 
- * Knob 1 - Volume Boost
+ * Knob 1 - Mix
  * Knob 2 - Rate
  * Knob 3 - Width
  * Knob 4 - 
@@ -43,17 +43,15 @@ public:
     char *GetEffectName();
 
 private:
-    const float boostLevelMin = 1.0f;
-    const float boostLevelMax = 20.0f;
     const float rateMin = 0.0f;
     const float rateMax = 20.0f;
 
-    float boostLevel = 10.0f;
+    float mixLevel = 10.0f;
     float rate = 0.0f;
     float width = 0.0f;
     int waveform = Oscillator::WAVE_SIN;
 
-    Knob boostKnob;
+    Knob mixKnob;
     Knob rateKnob;
     Knob widthKnob;
 

@@ -7,7 +7,7 @@ void Crush::Setup(daisy::DaisySeed *hardware)
     decimator.Init();
 
     // Initialize the knobs and effect values
-    boostLevelKnob.Init(hw, KNOB_1_CHN, boostLevel, boostLevelMin, boostLevelMax);
+    mixLevelKnob.Init(hw, KNOB_1_CHN, mixLevel);
     downsamplingFactorKnob.Init(hw, KNOB_2_CHN, downsampleLevel);
     bitcrushFactorKnob.Init(hw, KNOB_3_CHN, bitcrushLevel, bitcrushMinValue, bitcrushMaxValue);
 
@@ -21,13 +21,13 @@ float Crush::Process(float in)
     float wet;
 
     // Read signal from I/O and apply gain
-    wet = in * boostLevel;
+    wet = in * mixLevel;
 
     // Get wet signal by adding bitcrush
     wet = decimator.Process(wet);
 
     // Mix wet and dry and send to I/O
-    return wet;
+    return wet * mixLevel + in * (1 - mixLevel);
 }
 
 void Crush::Cleanup()
@@ -36,10 +36,10 @@ void Crush::Cleanup()
 
 void Crush::Loop(PedalState state)
 {
-    // Update the boost level
-    if (boostLevelKnob.SetNewValue(boostLevel))
+    // Update the mix level
+    if (mixLevelKnob.SetNewValue(mixLevel))
     {
-        debugPrintlnF(hw, "Updated the boost level to: %f", boostLevel);
+        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
     }
 
     // Update the bitcrush level

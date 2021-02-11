@@ -5,7 +5,7 @@ void DaisyTremolo::Setup(daisy::DaisySeed *hardware)
     hw = hardware;
 
     // Initialize the knobs
-    boostKnob.Init(hw, KNOB_1_CHN, boostLevel, boostLevelMin, boostLevelMax);
+    mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
     rateKnob.Init(hw, KNOB_2_CHN, rate, rateMin, rateMax);
     widthKnob.Init(hw, KNOB_3_CHN, width);
 
@@ -25,13 +25,13 @@ float DaisyTremolo::Process(float in)
     float wet, dry;
 
     // Adjust the input signal by the boost
-    dry = in * boostLevel;
+    dry = in * mixLevel;
 
     // Process the tremolo
     wet = tremolo.Process(dry);
 
-    // Output the processed signal
-    return wet;
+    // Mix wet and dry and send to I/O
+    return wet * mixLevel + in * (1 - mixLevel);
 }
 
 void DaisyTremolo::Cleanup()
@@ -40,10 +40,10 @@ void DaisyTremolo::Cleanup()
 
 void DaisyTremolo::Loop(PedalState state)
 {
-    // Knob 1 controls the boost level
-    if (boostKnob.SetNewValue(boostLevel))
+    // Knob 1 controls the mix level
+    if (mixKnob.SetNewValue(mixLevel))
     {
-        debugPrintlnF(hw, "Updated the boost level to: %f", boostLevel);
+        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
     }
 
     // Knob 2 controls the LFO rate

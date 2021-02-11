@@ -21,7 +21,7 @@ using namespace daisysp;
  * SPDT 1 - 
  * SPDT 2 - 
  * 
- * Knob 1 - Volume Boost
+ * Knob 1 - Mix
  * Knob 2 - LFO Rate
  * Knob 3 - Width
  * Knob 4 - Delay
@@ -42,17 +42,15 @@ public:
     char *GetEffectName();
 
 private:
-    const float boostLevelMin = 1.0f;
-    const float boostLevelMax = 20.0f;
     const float rateMin = 0.0f;
     const float rateMax = 1.0f;
 
-    float boostLevel = 10.0f;
+    float mixLevel = 0.0f;
     float rate = 0.0f;
     float width = 0.0f;
     float delay = 0.0f;
 
-    Knob boostKnob;
+    Knob mixKnob;
     Knob rateKnob;
     Knob widthKnob;
     Knob delayKnob;
