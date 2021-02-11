@@ -47,20 +47,20 @@ void InitializeControls()
     hw->adc.Start();
 
     // Initialize the control button and LED
-    //controlButton.Init(hw, hw->GetPin(effectSPSTPin4), 3000);
-    //controlLed.Init(hw->GetPin(effectLedPin4), false);
+    controlButton.Init(hw, hw->GetPin(effectSPSTPin4), 3000);
+    controlLed.Init(hw->GetPin(effectLedPin4), false);
 
     // Initialize the buttons
     effect1Button.Init(hw, hw->GetPin(effectSPSTPin1));
     effect2Button.Init(hw, hw->GetPin(effectSPSTPin2));
     effect3Button.Init(hw, hw->GetPin(effectSPSTPin3));
-    effect4Button.Init(hw, hw->GetPin(effectSPSTPin4));
+    //effect4Button.Init(hw, hw->GetPin(effectSPSTPin4));
 
     // Initialize the LEDs
     effect1Led.Init(hw->GetPin(effectLedPin1), false);
     effect2Led.Init(hw->GetPin(effectLedPin2), false);
     effect3Led.Init(hw->GetPin(effectLedPin3), false);
-    effect4Led.Init(hw->GetPin(effectLedPin4), false);
+    //effect4Led.Init(hw->GetPin(effectLedPin4), false);
 
     // Initialize the output volume knob
     outputVolume.Init(hw, KNOB_4_CHN, outputLevel, outputLevelMin, outputLevelMax);
@@ -99,17 +99,17 @@ void InitializeEffects()
  */
 void HandleControlButton()
 {
-    // // Check if we are currently in play mode and the control button is held
-    // if (currentState == PedalState::PLAY_MODE && controlButton.IsHeld())
-    // {
-    //     // Switch to edit mode
-    //     debugPrintln(hw, "Switching to edit mode!");
-    //     currentState = PedalState::EDIT_MODE;
+    // Check if we are currently in play mode and the control button is held
+    if (currentState == PedalState::PLAY_MODE && controlButton.IsHeld())
+    {
+        // Switch to edit mode
+        debugPrintln(hw, "Switching to edit mode!");
+        currentState = PedalState::EDIT_MODE;
 
-    //     // Turn on the control LED
-    //     controlLed.Set(1.f);
-    //     controlLed.Update();
-    // }
+        // Turn on the control LED
+        controlLed.Set(1.f);
+        controlLed.Update();
+    }
     // // Check if we are currently in edit mode and the control button is pressed
     // else if (currentState == PedalState::EDIT_MODE && controlButton.IsPressed())
     // {
