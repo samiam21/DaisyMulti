@@ -1,5 +1,5 @@
-#ifndef DISTORTION_H
-#define DISTORTION_H
+#ifndef DRIVE_H
+#define DRIVE_H
 
 #include "daisy_seed.h"
 #include "daisysp.h"
@@ -13,14 +13,14 @@ using namespace daisy;
 using namespace daisysp;
 
 /**********************************************
- * Distortion Effect
+ * Overdrive Effect
  * 
  * SPST 1 - 
  * SPST 2 - 
  * SPST 3 - 
  * SPST 4 - 
  * 
- * SPDT 1 - Clipping Level
+ * SPDT 1 - 
  * SPDT 2 - 
  * 
  * Knob 1 - Pregain
@@ -34,7 +34,7 @@ using namespace daisysp;
  * LED 4 - 
  **********************************************/
 
-class Distortion : public IEffect
+class Drive : public IEffect
 {
 public:
     void Setup(daisy::DaisySeed *hardware);
@@ -45,12 +45,9 @@ public:
 
 private:
     float WaveShape(float in, float k);
-    float HardClip(float in);
-    void SetClipThreshold();
 
     DaisySeed *hw;
     float sample_rate;
-    int currentClip = -1;
     const int LED_MAX_VALUE = 256;
     const int LED_MIN_VALUE = 0;
 
@@ -61,23 +58,17 @@ private:
     const float gainLevelMax = 101.2f;
     const float driveLevelMin = 1.0f;
     const float driveLevelMax = 25.0f;
-    const float clipThresholdHigh = 0.1f;
-    const float clipThresholdMid = 2.0f;
-    const float clipThresholdLow = 5.0f;
 
     // Effect parameters
     float pregainLevel = 0.0f;
     float gainLevel = 0.0f;
     float mixLevel = 0.0f;
     float driveLevel = 1.0f;
-    float hardClipThreshold = 1.0f;
 
     Knob pregainKnob;
     Knob gainKnob;
     Knob mixKnob;
     Knob driveKnob;
-
-    NFNToggle clippingToggle;
 
     Balance balance;
 };

@@ -1,12 +1,8 @@
-#include "Distortion.h"
+#include "Drive.h"
 
-void Distortion::Setup(daisy::DaisySeed *hardware)
+void Drive::Setup(daisy::DaisySeed *hardware)
 {
     hw = hardware;
-
-    // Initialize the clipping toggle
-    clippingToggle.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
-    SetClipThreshold();
 
     // Initialize the knobs and effect values
     pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
@@ -19,7 +15,7 @@ void Distortion::Setup(daisy::DaisySeed *hardware)
     balance.Init(sample_rate);
 }
 
-float Distortion::Process(float in)
+float Drive::Process(float in)
 {
     // Set overdrive signal parameters
     float a = sin(((driveLevel + 1) / 101) * (PI_VAL / 2));
@@ -38,9 +34,6 @@ float Distortion::Process(float in)
     // Wave shape the wet signal
     wet = WaveShape(wet, k);
 
-    // Apply the hard clipping
-    wet = HardClip(wet);
-
     // Balance the output to account for volume gain in processing
     wet = balance.Process(wet, dry);
 
@@ -48,12 +41,11 @@ float Distortion::Process(float in)
     return wet * mixLevel + dry * (1 - mixLevel);
 }
 
-void Distortion::Cleanup()
+void Drive::Cleanup()
 {
-    
 }
 
-void Distortion::Loop(PedalState state)
+void Drive::Loop(PedalState state)
 {
     // Update the pregain level
     if (pregainKnob.SetNewValue(pregainLevel))
@@ -78,49 +70,14 @@ void Distortion::Loop(PedalState state)
     {
         debugPrintlnF(hw, "Updated the drive level to: %f", driveLevel);
     }
-
-    // Update the clipping threshold
-    SetClipThreshold();
 }
 
-char *Distortion::GetEffectName()
+char *Drive::GetEffectName()
 {
-    return (char *)"Distortion";
+    return (char *)"Overdrive";
 }
 
-float Distortion::WaveShape(float in, float k)
+float Drive::WaveShape(float in, float k)
 {
     return (1 + k) * in / (1 + k * abs(in));
-}
-
-float Distortion::HardClip(float in)
-{
-    in = in > hardClipThreshold ? hardClipThreshold : in;
-    in = in < -hardClipThreshold ? -hardClipThreshold : in;
-    return in;
-}
-
-void Distortion::SetClipThreshold()
-{
-    int togg = clippingToggle.ReadToggle();
-    if (togg != currentClip)
-    {
-        if (togg == 0)
-        {
-            hardClipThreshold = clipThresholdHigh;
-            debugPrintln(hw, "Clipping set to high");
-        }
-        else if (togg == 1)
-        {
-            hardClipThreshold = clipThresholdMid;
-            debugPrintln(hw, "Clipping set to middle");
-        }
-        else
-        {
-            hardClipThreshold = clipThresholdLow;
-            debugPrintln(hw, "Clipping set to low");
-        }
-
-        currentClip = togg;
-    }
 }

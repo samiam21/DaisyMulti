@@ -83,7 +83,7 @@ void InitializeEffects()
 {
     // Get the effect objects
     effect1 = GetEffectObject(EffectType::DISTORTION);
-    effect2 = GetEffectObject(EffectType::BITCRUSH);
+    effect2 = GetEffectObject(EffectType::OVERDRIVE);
     effect3 = GetEffectObject(EffectType::FLANGER);
     effect4 = GetEffectObject(EffectType::CLEANBOOST);
 

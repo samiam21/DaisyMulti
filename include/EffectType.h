@@ -8,6 +8,7 @@
 #include "../lib/Effects/DaisyTremolo.h"
 #include "../lib/Effects/Crush.h"
 #include "../lib/Effects/Distortion.h"
+#include "../lib/Effects/Drive.h"
 
 // Effect Objects
 CleanBoost boost;
@@ -16,6 +17,7 @@ DaisyFlanger flanger;
 DaisyTremolo tremolo;
 Crush bitcrush;
 Distortion distortion;
+Drive overdrive;
 
 enum EffectType
 {
@@ -25,6 +27,7 @@ enum EffectType
     TREMOLO = 3,
     BITCRUSH = 4,
     DISTORTION = 5,
+    OVERDRIVE = 6,
 
     UNSET = 99
 };
@@ -46,6 +49,8 @@ extern IEffect *GetEffectObject(EffectType type)
         return (IEffect *)&bitcrush;
     case DISTORTION:
         return (IEffect *)&distortion;
+    case OVERDRIVE:
+        return (IEffect *)&overdrive;
     case CLEANBOOST:
     case UNSET:
     default:
