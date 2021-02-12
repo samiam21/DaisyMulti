@@ -1,15 +1,13 @@
-#ifndef TOGGLETEST_H
-#define TOGGLETEST_H
+#ifndef CLEAN_BOOST_H
+#define CLEAN_BOOST_H
 
 #include "daisy_seed.h"
 #include "../../../include/IEffect.h"
 #include "../../../include/PedalConfig.h"
-#include "../Inputs/NFNToggle.h"
-
-using namespace daisy;
+#include "../Inputs/Knob.h"
 
 /**********************************************
- * ToggleTest Effect
+ * Clean Boost Effect
  * 
  * SPST 1 - 
  * SPST 2 - 
@@ -30,21 +28,21 @@ using namespace daisy;
  * LED 4 - 
  **********************************************/
 
-class ToggleTest : public IEffect
+class CleanBoost : public IEffect
 {
 public:
     void Setup(daisy::DaisySeed *hardware);
     void Cleanup();
-    void AudioCallback(float **in, float **out, size_t size);
-    void Loop();
+    float Process(float in);
+    void Loop(PedalState state);
     char *GetEffectName();
 
 private:
-    NFNToggle toggle;
+    const float boostLevelMin = 10.0f;
+    const float boostLevelMax = 30.0f;
+    float boostLevel = 10.0f;
 
-    Led led1;
-    Led led2;
-    Led led3;
+    Knob boostKnob;
 };
 
 #endif

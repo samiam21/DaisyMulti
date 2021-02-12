@@ -2,28 +2,32 @@
 #define EFFECT_TYPE_H
 
 #include "IEffect.h"
-#include "../lib/Effects/SimpleBypass.h"
-#include "../lib/Effects/ButtonTest.h"
-#include "../lib/Effects/KnobTest.h"
-#include "../lib/Effects/ToggleTest.h"
+#include "../lib/Effects/CleanBoost.h"
+#include "../lib/Effects/DaisyChorus.h"
+#include "../lib/Effects/DaisyFlanger.h"
+#include "../lib/Effects/DaisyTremolo.h"
+#include "../lib/Effects/Crush.h"
+#include "../lib/Effects/Distortion.h"
+#include "../lib/Effects/Drive.h"
 
 // Effect Objects
-SimpleBypass simpleBypass;
-ButtonTest buttonTest;
-KnobTest knobTest;
-ToggleTest toggleTest;
+CleanBoost boost;
+DaisyChorus chorus;
+DaisyFlanger flanger;
+DaisyTremolo tremolo;
+Crush bitcrush;
+Distortion distortion;
+Drive overdrive;
 
-/**
- * The rotary encoder is using Gray code, not standard hex.
- * The sequence of decimal numbers that it produces is as follows:
- * 0, 1, 3, 2, 6, 7, 5, 4, 12, 13, 15, 14, 10, 11, 9, 8
- */
 enum EffectType
 {
-    SIMPLEBYPASS = 0,
-    BUTTONTEST = 1,
-    KNOBTEST = 3,
-    TOGGLETEST = 2,
+    CLEANBOOST = 0,
+    CHORUS = 1,
+    FLANGER = 2,
+    TREMOLO = 3,
+    BITCRUSH = 4,
+    DISTORTION = 5,
+    OVERDRIVE = 6,
 
     UNSET = 99
 };
@@ -35,16 +39,22 @@ extern IEffect *GetEffectObject(EffectType type)
 {
     switch (type)
     {
-    case BUTTONTEST:
-        return (IEffect *)&buttonTest;
-    case KNOBTEST:
-        return (IEffect *)&knobTest;
-    case TOGGLETEST:
-        return (IEffect *)&toggleTest;
-    case SIMPLEBYPASS:
+    case CHORUS:
+        return (IEffect *)&chorus;
+    case FLANGER:
+        return (IEffect *)&flanger;
+    case TREMOLO:
+        return (IEffect *)&tremolo;
+    case BITCRUSH:
+        return (IEffect *)&bitcrush;
+    case DISTORTION:
+        return (IEffect *)&distortion;
+    case OVERDRIVE:
+        return (IEffect *)&overdrive;
+    case CLEANBOOST:
     case UNSET:
     default:
-        return (IEffect *)&simpleBypass;
+        return (IEffect *)&boost;
     }
 };
 

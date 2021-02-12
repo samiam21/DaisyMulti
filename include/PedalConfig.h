@@ -18,9 +18,6 @@
 #define KNOB_3_CHN 2
 #define KNOB_4_CHN 3
 
-// NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
-// #define BYPASS_SELECTOR // Bypasses the effect selector
-
 #define initDebugPrint(hw, pcBlock)                                                                    \
     {                                                                                                  \
         if (DEBUG)                                                                                     \
@@ -48,6 +45,14 @@
     }
 
 #define PI_VAL 3.14159265
+
+// State enum for the system
+enum PedalState
+{
+    PLAY_MODE = 0,
+    TRANSITION_MODE = 10,
+    EDIT_MODE = 20
+};
 
 // Pin Definitions - Selector
 const int effectSelectorPin1 = 29;
