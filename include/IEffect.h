@@ -7,14 +7,14 @@
 class IEffect
 {
 public:
-    virtual void Setup(daisy::DaisySeed* hardware) {}
+    virtual void Setup(daisy::DaisySeed *hardware) {}
     virtual void Cleanup() {}
     virtual float Process(float in) { return 0; }
-    virtual void Loop(PedalState state) {}
-    virtual char *GetEffectName() { return (char*)"uh-oh"; }
+    virtual void Loop(bool allowEffectControl) {}
+    virtual char *GetEffectName() { return (char *)"uh-oh"; }
 
 protected:
-    daisy::DaisySeed* hw;
+    daisy::DaisySeed *hw;
 };
 
 #endif

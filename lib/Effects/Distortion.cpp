@@ -52,10 +52,10 @@ void Distortion::Cleanup()
 {
 }
 
-void Distortion::Loop(PedalState state)
+void Distortion::Loop(bool allowEffectControl)
 {
     // Only adjust if we are in edit mode
-    if (state == PedalState::EDIT_MODE)
+    if (allowEffectControl)
     {
         // Update the pregain level
         if (pregainKnob.SetNewValue(pregainLevel))

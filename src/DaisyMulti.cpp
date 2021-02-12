@@ -323,21 +323,9 @@ int main(void)
         HandleOutputVolumeControl();
 
         // Execute the effect loop commands
-        if (isEffect1On)
-        {
-            effect1->Loop(currentState);
-        }
-        if (isEffect2On)
-        {
-            effect2->Loop(currentState);
-        }
-        if (isEffect3On)
-        {
-            effect3->Loop(currentState);
-        }
-        if (isEffect4On)
-        {
-            effect4->Loop(currentState);
-        }
+        effect1->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 1);
+        effect2->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 2);
+        effect3->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 3);
+        effect4->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 4);
     }
 }
