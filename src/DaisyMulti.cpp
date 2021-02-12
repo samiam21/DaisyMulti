@@ -47,7 +47,7 @@ void InitializeControls()
     hw->adc.Start();
 
     // Initialize the control button and LED
-    controlButton.Init(hw, hw->GetPin(effectSPSTPin4), 3000);
+    controlButton.Init(hw, hw->GetPin(effectSPSTPin4), 3000, 300);
     controlLed.Init(hw->GetPin(effectLedPin4), false);
 
     // Initialize the buttons
@@ -99,28 +99,41 @@ void InitializeEffects()
  */
 void HandleControlButton()
 {
+    // Get the button states (held must be checked before pressed)
+    bool buttonHeld = controlButton.IsHeld();
+    bool buttonPressed = controlButton.IsPressed(false);
+
     // Check if we are currently in play mode and the control button is held
-    if (currentState == PedalState::PLAY_MODE && controlButton.IsHeld())
+    if (currentState == PedalState::PLAY_MODE && buttonHeld)
     {
         // Switch to edit mode
-        debugPrintln(hw, "Switching to edit mode!");
-        currentState = PedalState::EDIT_MODE;
+        debugPrintln(hw, "Switching to transition mode!");
+        currentState = PedalState::TRANSITION_MODE;
 
         // Turn on the control LED
         controlLed.Set(1.f);
         controlLed.Update();
     }
-    // // Check if we are currently in edit mode and the control button is pressed
-    // else if (currentState == PedalState::EDIT_MODE && controlButton.IsPressed())
-    // {
-    //     // Switch back to play mode
-    //     debugPrintln(hw, "Switching to play mode!");
-    //     currentState = PedalState::PLAY_MODE;
 
-    //     // Turn off the control LED
-    //     controlLed.Set(0);
-    //     controlLed.Update();
-    // }
+    // Check for the button being released to transition into edit mode
+    if (currentState == PedalState::TRANSITION_MODE && !buttonPressed)
+    {
+        // Switch to edit mode
+        debugPrintln(hw, "Switching to edit mode!");
+        currentState = PedalState::EDIT_MODE;
+    }
+
+    // Check if we are currently in edit mode and the control button is pressed
+    if (currentState == PedalState::EDIT_MODE && buttonPressed)
+    {
+        // Switch back to play mode
+        debugPrintln(hw, "Switching to play mode!");
+        currentState = PedalState::PLAY_MODE;
+
+        // Turn off the control LED
+        controlLed.Set(0);
+        controlLed.Update();
+    }
 }
 
 /**
@@ -158,15 +171,15 @@ void HandleEffectButtons()
         debugPrintlnF(hw, "Turned %s %s", effect3->GetEffectName(), isEffect3On ? "ON" : "OFF");
     }
 
-    // Poll effect button 4 to toggle effect 4
-    if (effect4Button.IsPressed())
-    {
-        isEffect4On = !isEffect4On;
-        effect4Led.Set(isEffect4On ? 1.f : 0);
-        effect4Led.Update();
+    // // Poll effect button 4 to toggle effect 4
+    // if (effect4Button.IsPressed())
+    // {
+    //     isEffect4On = !isEffect4On;
+    //     effect4Led.Set(isEffect4On ? 1.f : 0);
+    //     effect4Led.Update();
 
-        debugPrintlnF(hw, "Turned %s %s", effect4->GetEffectName(), isEffect4On ? "ON" : "OFF");
-    }
+    //     debugPrintlnF(hw, "Turned %s %s", effect4->GetEffectName(), isEffect4On ? "ON" : "OFF");
+    // }
 }
 
 /**

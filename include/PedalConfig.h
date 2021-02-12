@@ -50,7 +50,8 @@
 enum PedalState
 {
     PLAY_MODE = 0,
-    EDIT_MODE = 1
+    TRANSITION_MODE = 10,
+    EDIT_MODE = 20
 };
 
 // Pin Definitions - Selector
