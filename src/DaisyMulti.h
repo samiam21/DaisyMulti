@@ -16,6 +16,7 @@ DaisySeed *hw;
 
 // Pedal state and effect objects
 volatile PedalState currentState = PedalState::PLAY_MODE;
+volatile u_int8_t selectedEditEffect = -1;
 IEffect *effect1;
 IEffect *effect2;
 IEffect *effect3;

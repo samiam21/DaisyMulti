@@ -140,6 +140,9 @@ void HandleControlButton()
         controlLed.Set(0);
         controlLed.Update();
 
+        // Reset the selected edit effect
+        selectedEditEffect = -1;
+
         // Update the effect LEDs
         UpdateEffectLeds();
     }
@@ -157,8 +160,8 @@ void HandleEffectButtons()
         if (effect1Button.IsPressed())
         {
             // Set edit mode to edit effect 1
-            effect1Led.Set(isEffect1On ? 1.f : 0);
-            effect1Led.Update();
+            selectedEditEffect = 1;
+            UpdateEffectLeds();
 
             debugPrintlnF(hw, "Editing %s", effect1->GetEffectName());
         }
@@ -167,8 +170,8 @@ void HandleEffectButtons()
         if (effect2Button.IsPressed())
         {
             // Set edit mode to edit effect 2
-            effect2Led.Set(isEffect2On ? 1.f : 0);
-            effect2Led.Update();
+            selectedEditEffect = 2;
+            UpdateEffectLeds();
 
             debugPrintlnF(hw, "Editing %s", effect2->GetEffectName());
         }
@@ -177,8 +180,8 @@ void HandleEffectButtons()
         if (effect3Button.IsPressed())
         {
             // Set edit mode to edit effect 3
-            effect3Led.Set(isEffect3On ? 1.f : 0);
-            effect3Led.Update();
+            selectedEditEffect = 3;
+            UpdateEffectLeds();
 
             debugPrintlnF(hw, "Editing %s", effect3->GetEffectName());
         }
@@ -187,8 +190,8 @@ void HandleEffectButtons()
         // if (effect4Button.IsPressed())
         // {
         //     // Set edit mode to edit effect 4
-        //     effect4Led.Set(isEffect4On ? 1.f : 0);
-        //     effect4Led.Update();
+        //     selectedEditEffect = 4;
+        //     UpdateEffectLeds();
 
         //     debugPrintlnF(hw, "Editing %s", effect4->GetEffectName());
         // }
@@ -242,13 +245,13 @@ void UpdateEffectLeds()
     // If in edit mode, only the effect being edited is turned on
     if (currentState == PedalState::EDIT_MODE)
     {
-        effect1Led.Set(0);
+        effect1Led.Set(selectedEditEffect == 1 ? 1.f : 0);
         effect1Led.Update();
-        effect2Led.Set(0);
+        effect2Led.Set(selectedEditEffect == 2 ? 1.f : 0);
         effect2Led.Update();
-        effect3Led.Set(0);
+        effect3Led.Set(selectedEditEffect == 3 ? 1.f : 0);
         effect3Led.Update();
-        //effect4Led.Set(0);
+        //effect4Led.Set(selectedEditEffect == 4 ? 1.f : 0);
         //effect4Led.Update();
     }
     // If not in edit mode, turn on LEDs for effects that are enabled
