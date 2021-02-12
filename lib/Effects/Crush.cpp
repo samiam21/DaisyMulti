@@ -36,24 +36,28 @@ void Crush::Cleanup()
 
 void Crush::Loop(PedalState state)
 {
-    // Update the mix level
-    if (mixLevelKnob.SetNewValue(mixLevel))
+    // Only adjust if we are in edit mode
+    if (state == PedalState::EDIT_MODE)
     {
-        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-    }
+        // Update the mix level
+        if (mixLevelKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+        }
 
-    // Update the bitcrush level
-    if (bitcrushFactorKnob.SetNewValue(bitcrushLevel))
-    {
-        decimator.SetBitcrushFactor(bitcrushLevel);
-        debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
-    }
+        // Update the bitcrush level
+        if (bitcrushFactorKnob.SetNewValue(bitcrushLevel))
+        {
+            decimator.SetBitcrushFactor(bitcrushLevel);
+            debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
+        }
 
-    // Update the downsample level
-    if (downsamplingFactorKnob.SetNewValue(downsampleLevel))
-    {
-        decimator.SetDownsampleFactor(downsampleLevel);
-        debugPrintlnF(hw, "Updated the downsample factor to: %f", downsampleLevel);
+        // Update the downsample level
+        if (downsamplingFactorKnob.SetNewValue(downsampleLevel))
+        {
+            decimator.SetDownsampleFactor(downsampleLevel);
+            debugPrintlnF(hw, "Updated the downsample factor to: %f", downsampleLevel);
+        }
     }
 }
 

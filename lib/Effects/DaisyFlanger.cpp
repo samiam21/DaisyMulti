@@ -38,34 +38,38 @@ void DaisyFlanger::Cleanup()
 
 void DaisyFlanger::Loop(PedalState state)
 {
-    // Knob 1 controls the mix level
-    if (mixKnob.SetNewValue(mixLevel))
+    // Only adjust if we are in edit mode
+    if (state == PedalState::EDIT_MODE)
     {
-        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-    }
+        // Knob 1 controls the mix level
+        if (mixKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+        }
 
-    // Knob 2 controls the LFO rate
-    if (rateKnob.SetNewValue(rate))
-    {
-        flanger.SetLfoFreq(rate);
+        // Knob 2 controls the LFO rate
+        if (rateKnob.SetNewValue(rate))
+        {
+            flanger.SetLfoFreq(rate);
 
-        debugPrintlnF(hw, "Updated the rate to: %f", rate);
-    }
+            debugPrintlnF(hw, "Updated the rate to: %f", rate);
+        }
 
-    // Knob 3 controls the LFO width
-    if (widthKnob.SetNewValue(width))
-    {
-        flanger.SetLfoDepth(width);
+        // Knob 3 controls the LFO width
+        if (widthKnob.SetNewValue(width))
+        {
+            flanger.SetLfoDepth(width);
 
-        debugPrintlnF(hw, "Updated the width to: %f", width);
-    }
+            debugPrintlnF(hw, "Updated the width to: %f", width);
+        }
 
-    // Knob 4 controls the feedback
-    if (feedbackKnob.SetNewValue(feedback))
-    {
-        flanger.SetFeedback(feedback);
+        // Knob 4 controls the feedback
+        if (feedbackKnob.SetNewValue(feedback))
+        {
+            flanger.SetFeedback(feedback);
 
-        debugPrintlnF(hw, "Updated the feedback to to: %f", feedback);
+            debugPrintlnF(hw, "Updated the feedback to to: %f", feedback);
+        }
     }
 }
 

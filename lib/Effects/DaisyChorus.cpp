@@ -38,34 +38,38 @@ void DaisyChorus::Cleanup()
 
 void DaisyChorus::Loop(PedalState state)
 {
-    // Knob 1 controls the mix level
-    if (mixKnob.SetNewValue(mixLevel))
+    // Only adjust if we are in edit mode
+    if (state == PedalState::EDIT_MODE)
     {
-        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-    }
+        // Knob 1 controls the mix level
+        if (mixKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+        }
 
-    // Knob 2 controls the LFO rate
-    if (rateKnob.SetNewValue(rate))
-    {
-        chorus.SetLfoFreq(rate);
+        // Knob 2 controls the LFO rate
+        if (rateKnob.SetNewValue(rate))
+        {
+            chorus.SetLfoFreq(rate);
 
-        debugPrintlnF(hw, "Updated the rate to: %f", rate);
-    }
+            debugPrintlnF(hw, "Updated the rate to: %f", rate);
+        }
 
-    // Knob 3 controls the LFO width
-    if (widthKnob.SetNewValue(width))
-    {
-        chorus.SetLfoDepth(width);
+        // Knob 3 controls the LFO width
+        if (widthKnob.SetNewValue(width))
+        {
+            chorus.SetLfoDepth(width);
 
-        debugPrintlnF(hw, "Updated the width to: %f", width);
-    }
+            debugPrintlnF(hw, "Updated the width to: %f", width);
+        }
 
-    // Knob 4 controls the delay
-    if (delayKnob.SetNewValue(delay))
-    {
-        chorus.SetDelay(delay);
+        // Knob 4 controls the delay
+        if (delayKnob.SetNewValue(delay))
+        {
+            chorus.SetDelay(delay);
 
-        debugPrintlnF(hw, "Updated the delay to: %f", delay);
+            debugPrintlnF(hw, "Updated the delay to: %f", delay);
+        }
     }
 }
 

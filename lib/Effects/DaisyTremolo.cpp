@@ -40,54 +40,58 @@ void DaisyTremolo::Cleanup()
 
 void DaisyTremolo::Loop(PedalState state)
 {
-    // Knob 1 controls the mix level
-    if (mixKnob.SetNewValue(mixLevel))
+    // Only adjust if we are in edit mode
+    if (state == PedalState::EDIT_MODE)
     {
-        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-    }
-
-    // Knob 2 controls the LFO rate
-    if (rateKnob.SetNewValue(rate))
-    {
-        tremolo.SetFreq(rate);
-
-        debugPrintlnF(hw, "Updated the rate to: %f", rate);
-    }
-
-    // Knob 3 controls the LFO width
-    if (widthKnob.SetNewValue(width))
-    {
-        tremolo.SetDepth(width);
-
-        debugPrintlnF(hw, "Updated the width to: %f", width);
-    }
-
-    // Read the toggle to set the tremolo waveform
-    if (waveformSelector.ReadToggle() == 0)
-    {
-        if (waveform != Oscillator::WAVE_SIN)
+        // Knob 1 controls the mix level
+        if (mixKnob.SetNewValue(mixLevel))
         {
-            waveform = Oscillator::WAVE_SIN;
-            tremolo.SetWaveform(waveform);
-            debugPrintln(hw, "Setting waveform to WAVE_SIN");
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
         }
-    }
-    else if (waveformSelector.ReadToggle() == 1)
-    {
-        if (waveform != Oscillator::WAVE_SQUARE)
+
+        // Knob 2 controls the LFO rate
+        if (rateKnob.SetNewValue(rate))
         {
-            waveform = Oscillator::WAVE_SQUARE;
-            tremolo.SetWaveform(waveform);
-            debugPrintln(hw, "Setting waveform to WAVE_SQUARE");
+            tremolo.SetFreq(rate);
+
+            debugPrintlnF(hw, "Updated the rate to: %f", rate);
         }
-    }
-    else
-    {
-        if (waveform != Oscillator::WAVE_RAMP)
+
+        // Knob 3 controls the LFO width
+        if (widthKnob.SetNewValue(width))
         {
-            waveform = Oscillator::WAVE_RAMP;
-            tremolo.SetWaveform(waveform);
-            debugPrintln(hw, "Setting waveform to WAVE_RAMP");
+            tremolo.SetDepth(width);
+
+            debugPrintlnF(hw, "Updated the width to: %f", width);
+        }
+
+        // Read the toggle to set the tremolo waveform
+        if (waveformSelector.ReadToggle() == 0)
+        {
+            if (waveform != Oscillator::WAVE_SIN)
+            {
+                waveform = Oscillator::WAVE_SIN;
+                tremolo.SetWaveform(waveform);
+                debugPrintln(hw, "Setting waveform to WAVE_SIN");
+            }
+        }
+        else if (waveformSelector.ReadToggle() == 1)
+        {
+            if (waveform != Oscillator::WAVE_SQUARE)
+            {
+                waveform = Oscillator::WAVE_SQUARE;
+                tremolo.SetWaveform(waveform);
+                debugPrintln(hw, "Setting waveform to WAVE_SQUARE");
+            }
+        }
+        else
+        {
+            if (waveform != Oscillator::WAVE_RAMP)
+            {
+                waveform = Oscillator::WAVE_RAMP;
+                tremolo.SetWaveform(waveform);
+                debugPrintln(hw, "Setting waveform to WAVE_RAMP");
+            }
         }
     }
 }

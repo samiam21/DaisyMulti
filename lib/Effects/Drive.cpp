@@ -47,28 +47,32 @@ void Drive::Cleanup()
 
 void Drive::Loop(PedalState state)
 {
-    // Update the pregain level
-    if (pregainKnob.SetNewValue(pregainLevel))
+    // Only adjust if we are in edit mode
+    if (state == PedalState::EDIT_MODE)
     {
-        debugPrintlnF(hw, "Updated the pregain level to: %f", pregainLevel);
-    }
+        // Update the pregain level
+        if (pregainKnob.SetNewValue(pregainLevel))
+        {
+            debugPrintlnF(hw, "Updated the pregain level to: %f", pregainLevel);
+        }
 
-    // Update the gain level
-    if (gainKnob.SetNewValue(gainLevel))
-    {
-        debugPrintlnF(hw, "Updated the gain level to: %f", gainLevel);
-    }
+        // Update the gain level
+        if (gainKnob.SetNewValue(gainLevel))
+        {
+            debugPrintlnF(hw, "Updated the gain level to: %f", gainLevel);
+        }
 
-    // Update the mix level
-    if (mixKnob.SetNewValue(mixLevel))
-    {
-        debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-    }
+        // Update the mix level
+        if (mixKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+        }
 
-    // Update the drive level
-    if (driveKnob.SetNewValue(driveLevel))
-    {
-        debugPrintlnF(hw, "Updated the drive level to: %f", driveLevel);
+        // Update the drive level
+        if (driveKnob.SetNewValue(driveLevel))
+        {
+            debugPrintlnF(hw, "Updated the drive level to: %f", driveLevel);
+        }
     }
 }
 
