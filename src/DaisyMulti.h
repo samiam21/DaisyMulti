@@ -47,4 +47,39 @@ bool isEffect2On = false;
 bool isEffect3On = false;
 bool isEffect4On = false;
 
+/**
+ * Audio callback to process each enabled effect
+ */
+void AudioCallback(float **in, float **out, size_t size);
+
+/**
+ * Initializes the input controls
+ */
+void InitializeControls();
+
+/**
+ * Initializes the effects
+ */
+void InitializeEffects();
+
+/**
+ * Handles the control button
+ */
+void HandleControlButton();
+
+/**
+ * Handles the effect buttons, turning on and off the effects
+ */
+void HandleEffectButtons();
+
+/**
+ * Updates the effect LEDs, turning them on and off based on the current state
+ */
+void UpdateEffectLeds();
+
+/**
+ * Handles reading the volume knob and setting the output level
+ */
+void HandleOutputVolumeControl();
+
 #endif

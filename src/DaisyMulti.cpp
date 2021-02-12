@@ -113,6 +113,9 @@ void HandleControlButton()
         // Turn on the control LED
         controlLed.Set(1.f);
         controlLed.Update();
+
+        // Update the effect LEDs
+        UpdateEffectLeds();
     }
 
     // Check for the button being released to transition into edit mode
@@ -121,6 +124,9 @@ void HandleControlButton()
         // Switch to edit mode
         debugPrintln(hw, "Switching to edit mode!");
         currentState = PedalState::EDIT_MODE;
+
+        // Update the effect LEDs
+        UpdateEffectLeds();
     }
 
     // Check if we are currently in edit mode and the control button is pressed
@@ -133,6 +139,9 @@ void HandleControlButton()
         // Turn off the control LED
         controlLed.Set(0);
         controlLed.Update();
+
+        // Update the effect LEDs
+        UpdateEffectLeds();
     }
 }
 
@@ -141,45 +150,119 @@ void HandleControlButton()
  */
 void HandleEffectButtons()
 {
-    // Poll effect button 1 to toggle effect 1
-    if (effect1Button.IsPressed())
+    // If in edit mode, buttons choose which effect to edit
+    if (currentState == PedalState::EDIT_MODE)
     {
-        isEffect1On = !isEffect1On;
+        // Poll effect button 1 to toggle editing effect 1
+        if (effect1Button.IsPressed())
+        {
+            // Set edit mode to edit effect 1
+            effect1Led.Set(isEffect1On ? 1.f : 0);
+            effect1Led.Update();
+
+            debugPrintlnF(hw, "Editing %s", effect1->GetEffectName());
+        }
+
+        // Poll effect button 2 to toggle editing effect 2
+        if (effect2Button.IsPressed())
+        {
+            // Set edit mode to edit effect 2
+            effect2Led.Set(isEffect2On ? 1.f : 0);
+            effect2Led.Update();
+
+            debugPrintlnF(hw, "Editing %s", effect2->GetEffectName());
+        }
+
+        // Poll effect button 3 to toggle editing effect 3
+        if (effect3Button.IsPressed())
+        {
+            // Set edit mode to edit effect 3
+            effect3Led.Set(isEffect3On ? 1.f : 0);
+            effect3Led.Update();
+
+            debugPrintlnF(hw, "Editing %s", effect3->GetEffectName());
+        }
+
+        // // Poll effect button 4 to toggle editing effect 4
+        // if (effect4Button.IsPressed())
+        // {
+        //     // Set edit mode to edit effect 4
+        //     effect4Led.Set(isEffect4On ? 1.f : 0);
+        //     effect4Led.Update();
+
+        //     debugPrintlnF(hw, "Editing %s", effect4->GetEffectName());
+        // }
+    }
+    // If not in edit mode, buttons enable/disable effects
+    else
+    {
+        // Poll effect button 1 to toggle effect 1
+        if (effect1Button.IsPressed())
+        {
+            isEffect1On = !isEffect1On;
+            UpdateEffectLeds();
+
+            debugPrintlnF(hw, "Turned %s %s", effect1->GetEffectName(), isEffect1On ? "ON" : "OFF");
+        }
+
+        // Poll effect button 2 to toggle effect 2
+        if (effect2Button.IsPressed())
+        {
+            isEffect2On = !isEffect2On;
+            UpdateEffectLeds();
+
+            debugPrintlnF(hw, "Turned %s %s", effect2->GetEffectName(), isEffect2On ? "ON" : "OFF");
+        }
+
+        // Poll effect button 3 to toggle effect 3
+        if (effect3Button.IsPressed())
+        {
+            isEffect3On = !isEffect3On;
+            UpdateEffectLeds();
+
+            debugPrintlnF(hw, "Turned %s %s", effect3->GetEffectName(), isEffect3On ? "ON" : "OFF");
+        }
+
+        // // Poll effect button 4 to toggle effect 4
+        // if (effect4Button.IsPressed())
+        // {
+        //     isEffect4On = !isEffect4On;
+        //     UpdateEffectLeds();
+
+        //     debugPrintlnF(hw, "Turned %s %s", effect4->GetEffectName(), isEffect4On ? "ON" : "OFF");
+        // }
+    }
+}
+
+/**
+ * Updates the effect LEDs, turning them on and off based on the current state
+ */
+void UpdateEffectLeds()
+{
+    // If in edit mode, only the effect being edited is turned on
+    if (currentState == PedalState::EDIT_MODE)
+    {
+        effect1Led.Set(0);
+        effect1Led.Update();
+        effect2Led.Set(0);
+        effect2Led.Update();
+        effect3Led.Set(0);
+        effect3Led.Update();
+        //effect4Led.Set(0);
+        //effect4Led.Update();
+    }
+    // If not in edit mode, turn on LEDs for effects that are enabled
+    else
+    {
         effect1Led.Set(isEffect1On ? 1.f : 0);
         effect1Led.Update();
-
-        debugPrintlnF(hw, "Turned %s %s", effect1->GetEffectName(), isEffect1On ? "ON" : "OFF");
-    }
-
-    // Poll effect button 2 to toggle effect 2
-    if (effect2Button.IsPressed())
-    {
-        isEffect2On = !isEffect2On;
         effect2Led.Set(isEffect2On ? 1.f : 0);
         effect2Led.Update();
-
-        debugPrintlnF(hw, "Turned %s %s", effect2->GetEffectName(), isEffect2On ? "ON" : "OFF");
-    }
-
-    // Poll effect button 3 to toggle effect 3
-    if (effect3Button.IsPressed())
-    {
-        isEffect3On = !isEffect3On;
         effect3Led.Set(isEffect3On ? 1.f : 0);
         effect3Led.Update();
-
-        debugPrintlnF(hw, "Turned %s %s", effect3->GetEffectName(), isEffect3On ? "ON" : "OFF");
+        //effect4Led.Set(isEffect4On ? 1.f : 0);
+        //effect4Led.Update();
     }
-
-    // // Poll effect button 4 to toggle effect 4
-    // if (effect4Button.IsPressed())
-    // {
-    //     isEffect4On = !isEffect4On;
-    //     effect4Led.Set(isEffect4On ? 1.f : 0);
-    //     effect4Led.Update();
-
-    //     debugPrintlnF(hw, "Turned %s %s", effect4->GetEffectName(), isEffect4On ? "ON" : "OFF");
-    // }
 }
 
 /**
