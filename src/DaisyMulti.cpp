@@ -101,13 +101,13 @@ void HandleControlButton()
 {
     // Get the button states (held must be checked before pressed)
     bool buttonHeld = controlButton.IsHeld();
-    bool buttonPressed = controlButton.IsPressed(false);
+    bool buttonPressed = controlButton.IsPressed();
 
     // Check if we are currently in play mode and the control button is held
     if (currentState == PedalState::PLAY_MODE && buttonHeld)
     {
         // Switch to edit mode
-        debugPrintln(hw, "Switching to transition mode!");
+        //debugPrintln(hw, "Switching to transition mode!");
         currentState = PedalState::TRANSITION_MODE;
 
         // Turn on the control LED
@@ -122,7 +122,7 @@ void HandleControlButton()
     if (currentState == PedalState::TRANSITION_MODE && !buttonPressed)
     {
         // Switch to edit mode
-        debugPrintln(hw, "Switching to edit mode!");
+        //debugPrintln(hw, "Switching to edit mode!");
         currentState = PedalState::EDIT_MODE;
 
         // Update the effect LEDs
@@ -133,7 +133,7 @@ void HandleControlButton()
     if (currentState == PedalState::EDIT_MODE && buttonPressed)
     {
         // Switch back to play mode
-        debugPrintln(hw, "Switching to play mode!");
+        //debugPrintln(hw, "Switching to play mode!");
         currentState = PedalState::PLAY_MODE;
 
         // Turn off the control LED
