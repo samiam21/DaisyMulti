@@ -38,10 +38,10 @@ void DaisyTremolo::Cleanup()
 {
 }
 
-void DaisyTremolo::Loop(PedalState state)
+void DaisyTremolo::Loop(bool allowEffectControl)
 {
     // Only adjust if we are in edit mode
-    if (state == PedalState::EDIT_MODE)
+    if (allowEffectControl)
     {
         // Knob 1 controls the mix level
         if (mixKnob.SetNewValue(mixLevel))

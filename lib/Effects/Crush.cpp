@@ -34,10 +34,10 @@ void Crush::Cleanup()
 {
 }
 
-void Crush::Loop(PedalState state)
+void Crush::Loop(bool allowEffectControl)
 {
     // Only adjust if we are in edit mode
-    if (state == PedalState::EDIT_MODE)
+    if (allowEffectControl)
     {
         // Update the mix level
         if (mixLevelKnob.SetNewValue(mixLevel))

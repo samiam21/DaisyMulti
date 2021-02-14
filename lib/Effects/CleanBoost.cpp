@@ -16,10 +16,10 @@ void CleanBoost::Cleanup()
 {
 }
 
-void CleanBoost::Loop(PedalState state)
+void CleanBoost::Loop(bool allowEffectControl)
 {
     // Only adjust if we are in edit mode
-    if (state == PedalState::EDIT_MODE)
+    if (allowEffectControl)
     {
         // Knob 1 controls the boost level
         if (boostKnob.SetNewValue(boostLevel))

@@ -19,15 +19,20 @@ Crush bitcrush;
 Distortion distortion;
 Drive overdrive;
 
+/**
+ * The rotary encoder is using Gray code, not standard hex.
+ * The sequence of decimal numbers that it produces is as follows:
+ * 0, 1, 3, 2, 6, 7, 5, 4, 12, 13, 15, 14, 10, 11, 9, 8
+ */
 enum EffectType
 {
     CLEANBOOST = 0,
     CHORUS = 1,
-    FLANGER = 2,
-    TREMOLO = 3,
-    BITCRUSH = 4,
-    DISTORTION = 5,
-    OVERDRIVE = 6,
+    FLANGER = 3,
+    TREMOLO = 2,
+    BITCRUSH = 6,
+    DISTORTION = 7,
+    OVERDRIVE = 5,
 
     UNSET = 99
 };
