@@ -120,7 +120,7 @@ void HandleControlButton()
     if (currentState == PedalState::TRANSITION_MODE && !buttonPressed)
     {
         // Switch to edit mode
-        //debugPrintln(hw, "Switching to edit mode!");
+        debugPrintln(hw, "Switching to edit mode!");
         currentState = PedalState::EDIT_MODE;
 
         // Update the effect LEDs
@@ -131,7 +131,7 @@ void HandleControlButton()
     if (currentState == PedalState::EDIT_MODE && buttonPressed)
     {
         // Switch back to play mode
-        //debugPrintln(hw, "Switching to play mode!");
+        debugPrintln(hw, "Switching to play mode!");
         currentState = PedalState::PLAY_MODE;
 
         // Turn off the control LED
