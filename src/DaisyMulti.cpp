@@ -95,6 +95,18 @@ void InitializeEffects()
 }
 
 /**
+ * Initializes the effect selector
+ */
+void InitializeEffectSelector()
+{
+    effectSelector.Init(hw,
+                        hw->GetPin(effectSelectorPin1),
+                        hw->GetPin(effectSelectorPin2),
+                        hw->GetPin(effectSelectorPin3),
+                        hw->GetPin(effectSelectorPin4));
+}
+
+/**
  * Handles the control button
  */
 void HandleControlButton()
@@ -238,6 +250,40 @@ void HandleEffectButtons()
 }
 
 /**
+ * Handles control of the effect selector, only enabled in edit mode
+ */
+void HandleEffectSelector()
+{
+    if (currentState == PedalState::EDIT_MODE)
+    {
+        // Read the currently selected effect
+        EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
+        IEffect *selectedEffect = GetEffectObject(selected);
+
+        // Check if the selected effect is different than the one we are editing
+        switch (selectedEditEffect)
+        {
+        case 1:
+            if (selectedEffect != effect1)
+            {
+                // New effect selected
+                effect1->Cleanup();
+                effect1 = selectedEffect;
+                effect1->Setup(hw);
+
+                debugPrintlnF(hw, "Set effect 1 to %s", effect1->GetEffectName());
+            }
+        case 2:
+        case 3:
+        case 4:
+        default:
+            // Do nothing, no effect selected
+            break;
+        }
+    }
+}
+
+/**
  * Updates the effect LEDs, turning them on and off based on the current state
  */
 void UpdateEffectLeds()
@@ -303,6 +349,9 @@ int main(void)
     // Initialize the effect objects
     InitializeEffects();
 
+    // Initialize the effect selector
+    InitializeEffectSelector();
+
     // Start the audio processing
     debugPrintln(hw, "Starting Audio");
     hw->StartAudio(AudioCallback);
@@ -321,6 +370,9 @@ int main(void)
 
         // Handle the output volume
         HandleOutputVolumeControl();
+
+        // Handle the effect selector
+        HandleEffectSelector();
 
         // Execute the effect loop commands
         effect1->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 1);

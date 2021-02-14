@@ -6,6 +6,7 @@
 #include "../include/EffectType.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
+#include "../lib/Inputs/Selector.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -36,6 +37,9 @@ Led effect2Led;
 Led effect3Led;
 Led effect4Led;
 
+// Effect Selector
+Selector effectSelector;
+
 // Output volume control
 Knob outputVolume;
 const float outputLevelMin = 0.0f;
@@ -64,6 +68,11 @@ void InitializeControls();
 void InitializeEffects();
 
 /**
+ * Initializes the effect selector
+ */
+void InitializeEffectSelector();
+
+/**
  * Handles the control button
  */
 void HandleControlButton();
@@ -72,6 +81,11 @@ void HandleControlButton();
  * Handles the effect buttons, turning on and off the effects
  */
 void HandleEffectButtons();
+
+/**
+ * Handles control of the effect selector, only enabled in edit mode
+ */
+void HandleEffectSelector();
 
 /**
  * Updates the effect LEDs, turning them on and off based on the current state
