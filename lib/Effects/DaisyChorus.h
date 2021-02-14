@@ -42,9 +42,6 @@ public:
     char *GetEffectName();
 
 private:
-    const float rateMin = 0.0f;
-    const float rateMax = 1.0f;
-
     float mixLevel = 0.0f;
     float rate = 0.0f;
     float width = 0.0f;

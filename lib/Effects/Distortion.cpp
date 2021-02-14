@@ -11,8 +11,7 @@ void Distortion::Setup(daisy::DaisySeed *hardware)
     // Initialize the knobs and effect values
     pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
     gainKnob.Init(hw, KNOB_2_CHN, gainLevel, gainLevelMin, gainLevelMax);
-    driveKnob.Init(hw, KNOB_3_CHN, driveLevel, driveLevelMin, driveLevelMax);
-    mixKnob.Init(hw, KNOB_4_CHN, mixLevel);
+    mixKnob.Init(hw, KNOB_3_CHN, mixLevel);
 
     // Initialize the balancer
     sample_rate = hw->AudioSampleRate();
@@ -21,10 +20,6 @@ void Distortion::Setup(daisy::DaisySeed *hardware)
 
 float Distortion::Process(float in)
 {
-    // Set overdrive signal parameters
-    float a = sin(((driveLevel + 1) / 101) * (PI_VAL / 2));
-    float k = (2 * a) / (1 - a);
-
     float wet, dry;
 
     // Adjust input signal by the pregain
@@ -36,7 +31,7 @@ float Distortion::Process(float in)
     wet *= gainLevel;
 
     // Wave shape the wet signal
-    wet = WaveShape(wet, k);
+    wet = WaveShape(wet);
 
     // Apply the hard clipping
     wet = HardClip(wet);
@@ -75,12 +70,6 @@ void Distortion::Loop(bool allowEffectControl)
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
         }
 
-        // Update the drive level
-        if (driveKnob.SetNewValue(driveLevel))
-        {
-            debugPrintlnF(hw, "Updated the drive level to: %f", driveLevel);
-        }
-
         // Update the clipping threshold
         SetClipThreshold();
     }
@@ -91,9 +80,11 @@ char *Distortion::GetEffectName()
     return (char *)"Distortion";
 }
 
-float Distortion::WaveShape(float in, float k)
+float Distortion::WaveShape(float in)
 {
-    return (1 + k) * in / (1 + k * abs(in));
+    if (in > 0)
+        return 1 - expf(-in);
+    return -1 + expf(in);
 }
 
 float Distortion::HardClip(float in)

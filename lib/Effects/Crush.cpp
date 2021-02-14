@@ -21,7 +21,7 @@ float Crush::Process(float in)
     float wet;
 
     // Read signal from I/O and apply gain
-    wet = in * mixLevel;
+    wet = in;
 
     // Get wet signal by adding bitcrush
     wet = decimator.Process(wet);

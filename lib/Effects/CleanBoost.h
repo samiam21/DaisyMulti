@@ -38,7 +38,7 @@ public:
     char *GetEffectName();
 
 private:
-    const float boostLevelMin = 10.0f;
+    const float boostLevelMin = 1.0f;
     const float boostLevelMax = 30.0f;
     float boostLevel = 10.0f;
 

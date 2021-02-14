@@ -37,20 +37,22 @@ void InitializeControls()
     hw->adc.Init(adcConfig, 4);
     hw->adc.Start();
 
-    // Initialize the control button and LED
-    controlButton.Init(hw, hw->GetPin(effectSPSTPins[MAX_EFFECTS - 1]), 3000, 300);
-    controlLed.Init(hw->GetPin(effectLedPins[MAX_EFFECTS - 1]), false);
+    // TODO: Find a better way to do this?
+    // Give the ADC time to start up
+    System::Delay(500);
 
-    /* TODO: Skipping the last button for the debug board */
+    // Initialize the control button and LED
+    controlButton.Init(hw, hw->GetPin(controlSPSTPin), 3000, 300);
+    controlLed.Init(hw->GetPin(controlLedPin), false);
+
     // Initialize the buttons
-    for (int i = 0; i < MAX_EFFECTS - 1; i++)
+    for (int i = 0; i < MAX_EFFECTS; i++)
     {
         effectButtons[i].Init(hw, hw->GetPin(effectSPSTPins[i]));
     }
 
-    /* TODO: Skipping the last LED for the debug board */
     // Initialize the LEDs
-    for (int i = 0; i < MAX_EFFECTS - 1; i++)
+    for (int i = 0; i < MAX_EFFECTS; i++)
     {
         effectLeds[i].Init(hw->GetPin(effectLedPins[i]), false);
     }
@@ -120,7 +122,7 @@ void HandleControlButton()
     if (currentState == PedalState::TRANSITION_MODE && !buttonPressed)
     {
         // Switch to edit mode
-        //debugPrintln(hw, "Switching to edit mode!");
+        debugPrintln(hw, "Switching to edit mode!");
         currentState = PedalState::EDIT_MODE;
 
         // Update the effect LEDs
@@ -131,7 +133,7 @@ void HandleControlButton()
     if (currentState == PedalState::EDIT_MODE && buttonPressed)
     {
         // Switch back to play mode
-        //debugPrintln(hw, "Switching to play mode!");
+        debugPrintln(hw, "Switching to play mode!");
         currentState = PedalState::PLAY_MODE;
 
         // Turn off the control LED
@@ -154,9 +156,8 @@ void HandleEffectButtons()
     // If in edit mode, buttons choose which effect to edit
     if (currentState == PedalState::EDIT_MODE)
     {
-        /* TODO: skipping last button for dev board */
         // Check each button
-        for (int i = 0; i < MAX_EFFECTS - 1; i++)
+        for (int i = 0; i < MAX_EFFECTS; i++)
         {
             if (effectButtons[i].IsPressed())
             {
@@ -171,9 +172,8 @@ void HandleEffectButtons()
     // If not in edit mode, buttons enable/disable effects
     else
     {
-        /* TODO: skipping last button for dev board */
         // Check each button
-        for (int i = 0; i < MAX_EFFECTS - 1; i++)
+        for (int i = 0; i < MAX_EFFECTS; i++)
         {
             if (effectButtons[i].IsPressed())
             {
@@ -219,8 +219,7 @@ void UpdateEffectLeds()
     // If in edit mode, only the effect being edited is turned on
     if (currentState == PedalState::EDIT_MODE)
     {
-        /* TODO: skipping last LED for dev board */
-        for (int i = 0; i < MAX_EFFECTS - 1; i++)
+        for (int i = 0; i < MAX_EFFECTS; i++)
         {
             // Turn on the selected edit effect, turn everything else off
             if (i == selectedEditEffect)
@@ -238,8 +237,7 @@ void UpdateEffectLeds()
     // If not in edit mode, turn on LEDs for effects that are enabled
     else
     {
-        /* TODO: skipping last LED for dev board */
-        for (int i = 0; i < MAX_EFFECTS - 1; i++)
+        for (int i = 0; i < MAX_EFFECTS; i++)
         {
             // Turn on the LED if the effect is enabled
             effectLeds[i].Set(currentEffectsState[i] ? 1.f : 0);
@@ -253,7 +251,6 @@ void UpdateEffectLeds()
  */
 void HandleOutputVolumeControl()
 {
-    // Knob 1 controls the boost level
     if (outputVolume.SetNewValue(outputLevel))
     {
         debugPrintlnF(hw, "Updated the output level to: %f", outputLevel);
@@ -269,12 +266,6 @@ int main(void)
     hw->Configure();
     hw->Init();
 
-    // Initialize the input controls
-    InitializeControls();
-
-    // Initialize the effect selector
-    InitializeEffectSelector();
-
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
     debugPrintln(hw, "Starting DaisyPedal...");
@@ -282,6 +273,12 @@ int main(void)
     // Update the block size and sample rate to minimize noise
     hw->SetAudioBlockSize(BLOCKSIZE);
     hw->SetAudioSampleRate(DAISY_SAMPLE_RATE);
+
+    // Initialize the input controls
+    InitializeControls();
+
+    // Initialize the effect selector
+    InitializeEffectSelector();
 
     // Initialize the effect objects
     InitializeEffects();

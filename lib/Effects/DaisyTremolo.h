@@ -46,7 +46,7 @@ private:
     const float rateMin = 0.0f;
     const float rateMax = 20.0f;
 
-    float mixLevel = 10.0f;
+    float mixLevel = 0.0f;
     float rate = 0.0f;
     float width = 0.0f;
     int waveform = Oscillator::WAVE_SIN;

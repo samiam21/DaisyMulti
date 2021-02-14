@@ -53,13 +53,15 @@ private:
 
     // Effect constants
     const float pregainLevelMin = 1.2f;
-    const float pregainLevelMax = 11.2f;
+    const float pregainLevelMax = 5.2f;
     const float gainLevelMin = 1.2f;
     const float gainLevelMax = 101.2f;
     const float driveLevelMin = 1.0f;
     const float driveLevelMax = 25.0f;
 
     // Effect parameters
+    float a = 0;
+    float k = 0;
     float pregainLevel = 0.0f;
     float gainLevel = 0.0f;
     float mixLevel = 0.0f;

@@ -25,7 +25,7 @@ float DaisyTremolo::Process(float in)
     float wet, dry;
 
     // Adjust the input signal by the boost
-    dry = in * mixLevel;
+    dry = in;
 
     // Process the tremolo
     wet = tremolo.Process(dry);

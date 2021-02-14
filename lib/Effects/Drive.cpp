@@ -17,10 +17,6 @@ void Drive::Setup(daisy::DaisySeed *hardware)
 
 float Drive::Process(float in)
 {
-    // Set overdrive signal parameters
-    float a = sin(((driveLevel + 1) / 101) * (PI_VAL / 2));
-    float k = (2 * a) / (1 - a);
-
     float wet, dry;
 
     // Adjust input signal by the pregain
@@ -71,6 +67,10 @@ void Drive::Loop(bool allowEffectControl)
         // Update the drive level
         if (driveKnob.SetNewValue(driveLevel))
         {
+            // Calculate overdrive signal parameters
+            a = sin(((driveLevel + 1) / 101) * (PI_VAL / 2));
+            k = (2 * a) / (1 - a);
+
             debugPrintlnF(hw, "Updated the drive level to: %f", driveLevel);
         }
     }

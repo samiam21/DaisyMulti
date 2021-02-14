@@ -6,7 +6,7 @@ void DaisyFlanger::Setup(daisy::DaisySeed *hardware)
 
     // Initialize the knobs
     mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
-    rateKnob.Init(hw, KNOB_2_CHN, rate, rateMin, rateMax);
+    rateKnob.Init(hw, KNOB_2_CHN, rate);
     widthKnob.Init(hw, KNOB_3_CHN, width);
     feedbackKnob.Init(hw, KNOB_4_CHN, feedback);
 
@@ -23,7 +23,7 @@ float DaisyFlanger::Process(float in)
     float wet, dry;
 
     // Adjust the input signal by the boost
-    dry = in * mixLevel;
+    dry = in;
 
     // Process the flanger
     wet = flanger.Process(dry);

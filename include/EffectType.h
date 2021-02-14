@@ -9,6 +9,8 @@
 #include "../lib/Effects/Crush.h"
 #include "../lib/Effects/Distortion.h"
 #include "../lib/Effects/Drive.h"
+#include "../lib/Effects/AutoWah.h"
+#include "../lib/Effects/Echo.h"
 
 // Effect Objects
 CleanBoost boost;
@@ -18,6 +20,8 @@ DaisyTremolo tremolo;
 Crush bitcrush;
 Distortion distortion;
 Drive overdrive;
+AutoWah autowah;
+Echo echo;
 
 /**
  * The rotary encoder is using Gray code, not standard hex.
@@ -30,9 +34,11 @@ enum EffectType
     CHORUS = 1,
     FLANGER = 3,
     TREMOLO = 2,
-    BITCRUSH = 6,
-    DISTORTION = 7,
-    OVERDRIVE = 5,
+    AUTOWAH = 6,
+    BITCRUSH = 7,
+    DISTORTION = 5,
+    OVERDRIVE = 4,
+    ECHO = 12,
 
     UNSET = 99
 };
@@ -50,12 +56,16 @@ extern IEffect *GetEffectObject(EffectType type)
         return (IEffect *)&flanger;
     case TREMOLO:
         return (IEffect *)&tremolo;
+    case AUTOWAH:
+        return (IEffect *)&autowah;
     case BITCRUSH:
         return (IEffect *)&bitcrush;
     case DISTORTION:
         return (IEffect *)&distortion;
     case OVERDRIVE:
         return (IEffect *)&overdrive;
+    case ECHO:
+        return (IEffect *)&echo;
     case CLEANBOOST:
     case UNSET:
     default:
