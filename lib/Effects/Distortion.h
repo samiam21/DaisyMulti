@@ -56,7 +56,7 @@ private:
 
     // Effect constants
     const float pregainLevelMin = 1.2f;
-    const float pregainLevelMax = 11.2f;
+    const float pregainLevelMax = 5.2f;
     const float gainLevelMin = 1.2f;
     const float gainLevelMax = 101.2f;
     const float clipThresholdHigh = 0.1f;
