@@ -269,6 +269,12 @@ int main(void)
     hw->Configure();
     hw->Init();
 
+    // Initialize the input controls
+    InitializeControls();
+
+    // Initialize the effect selector
+    InitializeEffectSelector();
+
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
     debugPrintln(hw, "Starting DaisyPedal...");
@@ -277,14 +283,8 @@ int main(void)
     hw->SetAudioBlockSize(BLOCKSIZE);
     hw->SetAudioSampleRate(DAISY_SAMPLE_RATE);
 
-    // Initialize the input controls
-    InitializeControls();
-
     // Initialize the effect objects
     InitializeEffects();
-
-    // Initialize the effect selector
-    InitializeEffectSelector();
 
     // Start the audio processing
     debugPrintln(hw, "Starting Audio");
