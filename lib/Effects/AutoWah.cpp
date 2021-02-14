@@ -65,5 +65,5 @@ void AutoWah::Loop(bool allowEffectControl)
 
 char *AutoWah::GetEffectName()
 {
-    return (char *)"AutoWah";
+    return (char *)"AUTOWAH";
 }

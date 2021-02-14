@@ -10,6 +10,7 @@
 #include "../lib/Effects/Distortion.h"
 #include "../lib/Effects/Drive.h"
 #include "../lib/Effects/AutoWah.h"
+#include "../lib/Effects/Echo.h"
 
 // Effect Objects
 CleanBoost boost;
@@ -20,6 +21,7 @@ Crush bitcrush;
 Distortion distortion;
 Drive overdrive;
 AutoWah autowah;
+Echo echo;
 
 /**
  * The rotary encoder is using Gray code, not standard hex.
@@ -36,6 +38,7 @@ enum EffectType
     BITCRUSH = 7,
     DISTORTION = 5,
     OVERDRIVE = 4,
+    ECHO = 12,
 
     UNSET = 99
 };
@@ -61,6 +64,8 @@ extern IEffect *GetEffectObject(EffectType type)
         return (IEffect *)&distortion;
     case OVERDRIVE:
         return (IEffect *)&overdrive;
+    case ECHO:
+        return (IEffect *)&echo;
     case CLEANBOOST:
     case UNSET:
     default:
