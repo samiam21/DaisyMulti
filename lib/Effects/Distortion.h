@@ -25,8 +25,8 @@ using namespace daisysp;
  * 
  * Knob 1 - Pregain
  * Knob 2 - Gain
- * Knob 3 - Drive
- * Knob 4 - Mix
+ * Knob 3 - Mix
+ * Knob 4 - 
  * 
  * LED 1 - 
  * LED 2 - 
@@ -44,7 +44,7 @@ public:
     char *GetEffectName();
 
 private:
-    float WaveShape(float in, float k);
+    float WaveShape(float in);
     float HardClip(float in);
     void SetClipThreshold();
 
@@ -59,8 +59,6 @@ private:
     const float pregainLevelMax = 11.2f;
     const float gainLevelMin = 1.2f;
     const float gainLevelMax = 101.2f;
-    const float driveLevelMin = 1.0f;
-    const float driveLevelMax = 25.0f;
     const float clipThresholdHigh = 0.1f;
     const float clipThresholdMid = 2.0f;
     const float clipThresholdLow = 5.0f;
@@ -69,13 +67,11 @@ private:
     float pregainLevel = 0.0f;
     float gainLevel = 0.0f;
     float mixLevel = 0.0f;
-    float driveLevel = 1.0f;
     float hardClipThreshold = 1.0f;
 
     Knob pregainKnob;
     Knob gainKnob;
     Knob mixKnob;
-    Knob driveKnob;
 
     NFNToggle clippingToggle;
 
