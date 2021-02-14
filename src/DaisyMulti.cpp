@@ -10,21 +10,12 @@ void AudioCallback(float **in, float **out, size_t size)
         float wet = in[AUDIO_IN_CH][i];
 
         // Apply each effect that is turned on
-        if (isEffect1On)
+        for (int j = 0; j < MAX_EFFECTS; j++)
         {
-            wet = effect1->Process(wet);
-        }
-        if (isEffect2On)
-        {
-            wet = effect2->Process(wet);
-        }
-        if (isEffect3On)
-        {
-            wet = effect3->Process(wet);
-        }
-        if (isEffect4On)
-        {
-            wet = effect4->Process(wet);
+            if (currentEffectsState[j])
+            {
+                wet = currentEffects[j]->Process(wet);
+            }
         }
 
         // Output the processed signal with the volume level control
@@ -47,33 +38,28 @@ void InitializeControls()
     hw->adc.Start();
 
     // Initialize the control button and LED
-    controlButton.Init(hw, hw->GetPin(effectSPSTPin4), 3000, 300);
-    controlLed.Init(hw->GetPin(effectLedPin4), false);
+    controlButton.Init(hw, hw->GetPin(effectSPSTPins[MAX_EFFECTS - 1]), 3000, 300);
+    controlLed.Init(hw->GetPin(effectLedPins[MAX_EFFECTS - 1]), false);
 
+    /* TODO: Skipping the last button for the debug board */
     // Initialize the buttons
-    effect1Button.Init(hw, hw->GetPin(effectSPSTPin1));
-    effect2Button.Init(hw, hw->GetPin(effectSPSTPin2));
-    effect3Button.Init(hw, hw->GetPin(effectSPSTPin3));
-    //effect4Button.Init(hw, hw->GetPin(effectSPSTPin4));
+    for (int i = 0; i < MAX_EFFECTS - 1; i++)
+    {
+        effectButtons[i].Init(hw, hw->GetPin(effectSPSTPins[i]));
+    }
 
+    /* TODO: Skipping the last LED for the debug board */
     // Initialize the LEDs
-    effect1Led.Init(hw->GetPin(effectLedPin1), false);
-    effect2Led.Init(hw->GetPin(effectLedPin2), false);
-    effect3Led.Init(hw->GetPin(effectLedPin3), false);
-    //effect4Led.Init(hw->GetPin(effectLedPin4), false);
+    for (int i = 0; i < MAX_EFFECTS - 1; i++)
+    {
+        effectLeds[i].Init(hw->GetPin(effectLedPins[i]), false);
+    }
 
     // Initialize the output volume knob
     outputVolume.Init(hw, KNOB_4_CHN, outputLevel, outputLevelMin, outputLevelMax);
 
-    // Set the LEDs based on whether the effect is on/off
-    effect1Led.Set(isEffect1On ? 1.f : 0);
-    effect1Led.Update();
-    effect2Led.Set(isEffect2On ? 1.f : 0);
-    effect2Led.Update();
-    effect3Led.Set(isEffect3On ? 1.f : 0);
-    effect3Led.Update();
-    effect4Led.Set(isEffect4On ? 1.f : 0);
-    effect4Led.Update();
+    // Update the LEDs
+    UpdateEffectLeds();
 }
 
 /**
@@ -81,17 +67,17 @@ void InitializeControls()
  */
 void InitializeEffects()
 {
-    // Get the effect objects
-    effect1 = GetEffectObject(EffectType::DISTORTION);
-    effect2 = GetEffectObject(EffectType::OVERDRIVE);
-    effect3 = GetEffectObject(EffectType::FLANGER);
-    effect4 = GetEffectObject(EffectType::CLEANBOOST);
+    // Initialize the effect objects to clean boost
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        currentEffects[i] = GetEffectObject(EffectType::CLEANBOOST);
+    }
 
     // Setup each effect object
-    effect1->Setup(hw);
-    effect2->Setup(hw);
-    effect3->Setup(hw);
-    effect4->Setup(hw);
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        currentEffects[i]->Setup(hw);
+    }
 }
 
 /**
@@ -168,84 +154,36 @@ void HandleEffectButtons()
     // If in edit mode, buttons choose which effect to edit
     if (currentState == PedalState::EDIT_MODE)
     {
-        // Poll effect button 1 to toggle editing effect 1
-        if (effect1Button.IsPressed())
+        /* TODO: skipping last button for dev board */
+        // Check each button
+        for (int i = 0; i < MAX_EFFECTS - 1; i++)
         {
-            // Set edit mode to edit effect 1
-            selectedEditEffect = 1;
-            UpdateEffectLeds();
+            if (effectButtons[i].IsPressed())
+            {
+                // Set edit mode to this effect and update the LEDs
+                selectedEditEffect = i;
+                UpdateEffectLeds();
 
-            debugPrintlnF(hw, "Editing %s", effect1->GetEffectName());
+                debugPrintlnF(hw, "Editing %s", currentEffects[selectedEditEffect]->GetEffectName());
+            }
         }
-
-        // Poll effect button 2 to toggle editing effect 2
-        if (effect2Button.IsPressed())
-        {
-            // Set edit mode to edit effect 2
-            selectedEditEffect = 2;
-            UpdateEffectLeds();
-
-            debugPrintlnF(hw, "Editing %s", effect2->GetEffectName());
-        }
-
-        // Poll effect button 3 to toggle editing effect 3
-        if (effect3Button.IsPressed())
-        {
-            // Set edit mode to edit effect 3
-            selectedEditEffect = 3;
-            UpdateEffectLeds();
-
-            debugPrintlnF(hw, "Editing %s", effect3->GetEffectName());
-        }
-
-        // // Poll effect button 4 to toggle editing effect 4
-        // if (effect4Button.IsPressed())
-        // {
-        //     // Set edit mode to edit effect 4
-        //     selectedEditEffect = 4;
-        //     UpdateEffectLeds();
-
-        //     debugPrintlnF(hw, "Editing %s", effect4->GetEffectName());
-        // }
     }
     // If not in edit mode, buttons enable/disable effects
     else
     {
-        // Poll effect button 1 to toggle effect 1
-        if (effect1Button.IsPressed())
+        /* TODO: skipping last button for dev board */
+        // Check each button
+        for (int i = 0; i < MAX_EFFECTS - 1; i++)
         {
-            isEffect1On = !isEffect1On;
-            UpdateEffectLeds();
+            if (effectButtons[i].IsPressed())
+            {
+                // Toggle the effect and update the LEDs
+                currentEffectsState[i] = !currentEffectsState[i];
+                UpdateEffectLeds();
 
-            debugPrintlnF(hw, "Turned %s %s", effect1->GetEffectName(), isEffect1On ? "ON" : "OFF");
+                debugPrintlnF(hw, "Turned %s %s", currentEffects[i]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
+            }
         }
-
-        // Poll effect button 2 to toggle effect 2
-        if (effect2Button.IsPressed())
-        {
-            isEffect2On = !isEffect2On;
-            UpdateEffectLeds();
-
-            debugPrintlnF(hw, "Turned %s %s", effect2->GetEffectName(), isEffect2On ? "ON" : "OFF");
-        }
-
-        // Poll effect button 3 to toggle effect 3
-        if (effect3Button.IsPressed())
-        {
-            isEffect3On = !isEffect3On;
-            UpdateEffectLeds();
-
-            debugPrintlnF(hw, "Turned %s %s", effect3->GetEffectName(), isEffect3On ? "ON" : "OFF");
-        }
-
-        // // Poll effect button 4 to toggle effect 4
-        // if (effect4Button.IsPressed())
-        // {
-        //     isEffect4On = !isEffect4On;
-        //     UpdateEffectLeds();
-
-        //     debugPrintlnF(hw, "Turned %s %s", effect4->GetEffectName(), isEffect4On ? "ON" : "OFF");
-        // }
     }
 }
 
@@ -261,24 +199,14 @@ void HandleEffectSelector()
         IEffect *selectedEffect = GetEffectObject(selected);
 
         // Check if the selected effect is different than the one we are editing
-        switch (selectedEditEffect)
+        if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
         {
-        case 1:
-            if (selectedEffect != effect1)
-            {
-                // New effect selected
-                effect1->Cleanup();
-                effect1 = selectedEffect;
-                effect1->Setup(hw);
+            // New effect selected
+            currentEffects[selectedEditEffect]->Cleanup();
+            currentEffects[selectedEditEffect] = selectedEffect;
+            currentEffects[selectedEditEffect]->Setup(hw);
 
-                debugPrintlnF(hw, "Set effect 1 to %s", effect1->GetEffectName());
-            }
-        case 2:
-        case 3:
-        case 4:
-        default:
-            // Do nothing, no effect selected
-            break;
+            debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
         }
     }
 }
@@ -291,26 +219,32 @@ void UpdateEffectLeds()
     // If in edit mode, only the effect being edited is turned on
     if (currentState == PedalState::EDIT_MODE)
     {
-        effect1Led.Set(selectedEditEffect == 1 ? 1.f : 0);
-        effect1Led.Update();
-        effect2Led.Set(selectedEditEffect == 2 ? 1.f : 0);
-        effect2Led.Update();
-        effect3Led.Set(selectedEditEffect == 3 ? 1.f : 0);
-        effect3Led.Update();
-        //effect4Led.Set(selectedEditEffect == 4 ? 1.f : 0);
-        //effect4Led.Update();
+        /* TODO: skipping last LED for dev board */
+        for (int i = 0; i < MAX_EFFECTS - 1; i++)
+        {
+            // Turn on the selected edit effect, turn everything else off
+            if (i == selectedEditEffect)
+            {
+                effectLeds[i].Set(1.f);
+                effectLeds[i].Update();
+            }
+            else
+            {
+                effectLeds[i].Set(0);
+                effectLeds[i].Update();
+            }
+        }
     }
     // If not in edit mode, turn on LEDs for effects that are enabled
     else
     {
-        effect1Led.Set(isEffect1On ? 1.f : 0);
-        effect1Led.Update();
-        effect2Led.Set(isEffect2On ? 1.f : 0);
-        effect2Led.Update();
-        effect3Led.Set(isEffect3On ? 1.f : 0);
-        effect3Led.Update();
-        //effect4Led.Set(isEffect4On ? 1.f : 0);
-        //effect4Led.Update();
+        /* TODO: skipping last LED for dev board */
+        for (int i = 0; i < MAX_EFFECTS - 1; i++)
+        {
+            // Turn on the LED if the effect is enabled
+            effectLeds[i].Set(currentEffectsState[i] ? 1.f : 0);
+            effectLeds[i].Update();
+        }
     }
 }
 
@@ -375,9 +309,9 @@ int main(void)
         HandleEffectSelector();
 
         // Execute the effect loop commands
-        effect1->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 1);
-        effect2->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 2);
-        effect3->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 3);
-        effect4->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == 4);
+        for (int i = 0; i < MAX_EFFECTS; i++)
+        {
+            currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
+        }
     }
 }

@@ -18,24 +18,14 @@ DaisySeed *hw;
 // Pedal state and effect objects
 volatile PedalState currentState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
-IEffect *effect1;
-IEffect *effect2;
-IEffect *effect3;
-IEffect *effect4;
+IEffect *currentEffects[MAX_EFFECTS];
+bool currentEffectsState[MAX_EFFECTS] = {false};
+Button effectButtons[MAX_EFFECTS];
+Led effectLeds[MAX_EFFECTS];
 
-// Buttons
+// Control button and LED
 Button controlButton;
-Button effect1Button;
-Button effect2Button;
-Button effect3Button;
-Button effect4Button;
-
-// LEDs
 Led controlLed;
-Led effect1Led;
-Led effect2Led;
-Led effect3Led;
-Led effect4Led;
 
 // Effect Selector
 Selector effectSelector;
@@ -45,12 +35,6 @@ Knob outputVolume;
 const float outputLevelMin = 0.0f;
 const float outputLevelMax = 5.0f;
 float outputLevel = 1.0f;
-
-// Effect on/off booleans
-bool isEffect1On = false;
-bool isEffect2On = false;
-bool isEffect3On = false;
-bool isEffect4On = false;
 
 /**
  * Audio callback to process each enabled effect
