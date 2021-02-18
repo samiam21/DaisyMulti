@@ -41,6 +41,7 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    EffectSettings GetEffectSettings();
 
 private:
     const float rateMin = 0.0f;

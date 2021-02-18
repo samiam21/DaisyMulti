@@ -77,3 +77,15 @@ char *DaisyChorus::GetEffectName()
 {
     return (char *)"CHORUS";
 }
+
+EffectSettings DaisyChorus::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = mixLevel;
+    effectSettings.knobSettings[1] = rate;
+    effectSettings.knobSettings[2] = width;
+    effectSettings.knobSettings[3] = delay;
+
+    // Return the settings
+    return effectSettings;
+}

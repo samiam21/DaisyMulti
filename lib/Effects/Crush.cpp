@@ -65,3 +65,14 @@ char *Crush::GetEffectName()
 {
     return (char *)"Bitcrush";
 }
+
+EffectSettings Crush::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = mixLevel;
+    effectSettings.knobSettings[1] = downsampleLevel;
+    effectSettings.knobSettings[2] = bitcrushLevel;
+
+    // Return the settings
+    return effectSettings;
+}

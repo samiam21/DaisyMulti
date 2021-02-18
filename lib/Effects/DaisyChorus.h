@@ -40,6 +40,7 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    EffectSettings GetEffectSettings();
 
 private:
     float mixLevel = 0.0f;

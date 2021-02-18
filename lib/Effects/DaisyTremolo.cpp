@@ -100,3 +100,17 @@ char *DaisyTremolo::GetEffectName()
 {
     return (char *)"TREMOLO";
 }
+
+EffectSettings DaisyTremolo::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = mixLevel;
+    effectSettings.knobSettings[1] = rate;
+    effectSettings.knobSettings[2] = width;
+
+    // Add the wave shape to the effect settings
+    effectSettings.togglePosition = waveformSelector.ReadToggle();
+
+    // Return the settings
+    return effectSettings;
+}

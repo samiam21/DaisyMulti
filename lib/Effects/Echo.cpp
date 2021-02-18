@@ -129,3 +129,17 @@ char *Echo::GetEffectName()
 {
     return (char *)"ECHO";
 }
+
+EffectSettings Echo::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = mixLevel;
+    effectSettings.knobSettings[1] = decayValue;
+    effectSettings.knobSettings[2] = speed;
+
+    // Add the wave shape to the effect settings
+    effectSettings.togglePosition = typeSwitcher.ReadToggle();
+
+    // Return the settings
+    return effectSettings;
+}

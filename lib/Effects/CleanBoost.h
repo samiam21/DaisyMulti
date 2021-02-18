@@ -44,8 +44,6 @@ private:
     float boostLevel = 10.0f;
 
     Knob boostKnob;
-
-    EffectSettings effectSettings;
 };
 
 #endif

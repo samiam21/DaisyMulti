@@ -96,7 +96,7 @@ float Distortion::HardClip(float in)
 
 void Distortion::SetClipThreshold()
 {
-    int togg = clippingToggle.ReadToggle();
+    u_int8_t togg = clippingToggle.ReadToggle();
     if (togg != currentClip)
     {
         if (togg == 0)
@@ -117,4 +117,18 @@ void Distortion::SetClipThreshold()
 
         currentClip = togg;
     }
+}
+
+EffectSettings Distortion::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = pregainLevel;
+    effectSettings.knobSettings[1] = gainLevel;
+    effectSettings.knobSettings[2] = mixLevel;
+
+    // Add the wave shape to the effect settings
+    effectSettings.togglePosition = clippingToggle.ReadToggle();
+
+    // Return the settings
+    return effectSettings;
 }

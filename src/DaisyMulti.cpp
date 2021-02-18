@@ -271,11 +271,13 @@ void SaveCurrentEffectSettings()
         currentEffectSettings[i] = currentEffects[i]->GetEffectSettings();
 
         // DEBUG - print out the settings
+        debugPrintlnF(hw, "SETTINGS FOR: %s", currentEffects[i]->GetEffectName());
         for (int j = 0; j < MAX_KNOBS; j++)
         {
             debugPrintlnF(hw, "Knob %d: %f", i, currentEffectSettings[i].knobSettings[j]);
         }
         debugPrintlnF(hw, "Toggle: %d", currentEffectSettings[i].togglePosition);
+        debugPrintln(hw, "");
     }
 }
 

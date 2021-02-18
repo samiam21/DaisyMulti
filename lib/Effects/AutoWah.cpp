@@ -67,3 +67,14 @@ char *AutoWah::GetEffectName()
 {
     return (char *)"AUTOWAH";
 }
+
+EffectSettings AutoWah::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = mixLevel;
+    effectSettings.knobSettings[1] = wahLevel;
+    effectSettings.knobSettings[2] = level;
+
+    // Return the settings
+    return effectSettings;
+}

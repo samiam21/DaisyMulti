@@ -85,3 +85,15 @@ float Drive::WaveShape(float in, float k)
 {
     return (1 + k) * in / (1 + k * abs(in));
 }
+
+EffectSettings Drive::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = pregainLevel;
+    effectSettings.knobSettings[1] = gainLevel;
+    effectSettings.knobSettings[2] = driveLevel;
+    effectSettings.knobSettings[3] = mixLevel;
+
+    // Return the settings
+    return effectSettings;
+}
