@@ -12,6 +12,7 @@ public:
     virtual float Process(float in) { return 0; }
     virtual void Loop(bool allowEffectControl) {}
     virtual char *GetEffectName() { return (char *)"uh-oh"; }
+    virtual EffectSettings GetEffectSettings() { }
 
 protected:
     daisy::DaisySeed *hw;

@@ -145,6 +145,9 @@ void HandleControlButton()
 
         // Update the effect LEDs
         UpdateEffectLeds();
+
+        // Persist current effect settings in flash
+        SaveCurrentEffectSettings();
     }
 }
 
@@ -254,6 +257,25 @@ void HandleOutputVolumeControl()
     if (outputVolume.SetNewValue(outputLevel))
     {
         debugPrintlnF(hw, "Updated the output level to: %f", outputLevel);
+    }
+}
+
+/**
+ * Saves the current effect settings to flash
+ */
+void SaveCurrentEffectSettings()
+{
+    // Get the settings for each selected effect
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        currentEffectSettings[i] = currentEffects[i]->GetEffectSettings();
+
+        // DEBUG - print out the settings
+        for (int j = 0; j < MAX_KNOBS; j++)
+        {
+            debugPrintlnF(hw, "Knob %d: %f", i, currentEffectSettings[i].knobSettings[j]);
+        }
+        debugPrintlnF(hw, "Toggle: %d", currentEffectSettings[i].togglePosition);
     }
 }
 

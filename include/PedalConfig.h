@@ -15,6 +15,7 @@
 
 #define MAX_EFFECTS 3
 
+#define MAX_KNOBS 4
 #define KNOB_1_CHN 0
 #define KNOB_2_CHN 1
 #define KNOB_3_CHN 2
@@ -54,6 +55,12 @@ enum PedalState
     PLAY_MODE = 0,
     TRANSITION_MODE = 10,
     EDIT_MODE = 20
+};
+
+struct EffectSettings
+{
+    float knobSettings[MAX_KNOBS];
+    u_int8_t togglePosition;
 };
 
 // Pin Definitions - Selector

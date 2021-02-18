@@ -6,7 +6,6 @@ void AutoWah::Setup(daisy::DaisySeed *hardware)
 
     float sample_rate = hw->AudioSampleRate();
     autowah.Init(sample_rate);
-    balance.Init(sample_rate);
 
     // Initialize the knobs and effect values
     mixLevelKnob.Init(hw, KNOB_1_CHN, mixLevel);

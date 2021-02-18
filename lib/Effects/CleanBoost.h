@@ -36,6 +36,7 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    EffectSettings GetEffectSettings();
 
 private:
     const float boostLevelMin = 1.0f;
@@ -43,6 +44,8 @@ private:
     float boostLevel = 10.0f;
 
     Knob boostKnob;
+
+    EffectSettings effectSettings;
 };
 
 #endif

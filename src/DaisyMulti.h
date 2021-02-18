@@ -20,6 +20,7 @@ volatile PedalState currentState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
 IEffect *currentEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
+EffectSettings currentEffectSettings[MAX_EFFECTS];
 Button effectButtons[MAX_EFFECTS];
 Led effectLeds[MAX_EFFECTS];
 
@@ -80,5 +81,10 @@ void UpdateEffectLeds();
  * Handles reading the volume knob and setting the output level
  */
 void HandleOutputVolumeControl();
+
+/**
+ * Saves the current effect settings to flash
+ */
+void SaveCurrentEffectSettings();
 
 #endif
