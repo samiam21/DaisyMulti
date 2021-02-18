@@ -42,7 +42,7 @@ void InitializeControls()
     System::Delay(500);
 
     // Initialize the control button and LED
-    controlButton.Init(hw, hw->GetPin(controlSPSTPin), 3000, 300);
+    controlButton.Init(hw, hw->GetPin(controlSPSTPin), 3000, 200);
     controlLed.Init(hw->GetPin(controlLedPin), false);
 
     // Initialize the buttons

@@ -4,15 +4,16 @@ void AutoWah::Setup(daisy::DaisySeed *hardware)
 {
     hw = hardware;
 
-    autowah.Init(hw->AudioSampleRate());
+    float sample_rate = hw->AudioSampleRate();
+    autowah.Init(sample_rate);
+    balance.Init(sample_rate);
 
     // Initialize the knobs and effect values
-    dryWetKnob.Init(hw, KNOB_1_CHN, dryWetLevel, dryWetLevelMin, dryWetLevelMax);
+    mixLevelKnob.Init(hw, KNOB_1_CHN, mixLevel);
     levelKnob.Init(hw, KNOB_2_CHN, level);
-    wahLevelKnob.Init(hw, KNOB_3_CHN, wahLevel, wahLevelMin, wahLevelMax);
+    wahLevelKnob.Init(hw, KNOB_3_CHN, wahLevel);
 
     // Set parameters for autowah
-    autowah.SetDryWet(dryWetLevel);
     autowah.SetWah(wahLevel);
     autowah.SetLevel(level);
 }
@@ -28,7 +29,7 @@ float AutoWah::Process(float in)
     wet = autowah.Process(wet);
 
     // Mix wet and dry and send to I/O
-    return wet * dryWetLevel + in * (1 - dryWetLevel);
+    return wet * mixLevel + in * (1 - mixLevel);
 }
 
 void AutoWah::Cleanup()
@@ -40,11 +41,11 @@ void AutoWah::Loop(bool allowEffectControl)
     // Only adjust if we are in edit mode
     if (allowEffectControl)
     {
-        // Update the dry/wet level
-        if (dryWetKnob.SetNewValue(dryWetLevel))
+        // Update the mix level
+        if (mixLevelKnob.SetNewValue(mixLevel))
         {
-            autowah.SetDryWet(dryWetLevel);
-            debugPrintlnF(hw, "Updated the dry/wet level to: %f", dryWetLevel);
+            //autowah.SetDryWet(dryWetLevel);
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
         }
 
         // Update the wah level
