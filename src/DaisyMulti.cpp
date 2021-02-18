@@ -99,16 +99,15 @@ void InitializeEffectSelector()
  */
 void HandleControlButton()
 {
-    // Get the button states (held must be checked before pressed)
-    bool buttonHeld = controlButton.IsHeld();
+    // Get the button states
     bool buttonPressed = controlButton.IsPressed();
 
-    // Check if we are currently in play mode and the control button is held
-    if (currentState == PedalState::PLAY_MODE && buttonHeld)
+    // Check if we are currently in play mode and the control button is pressed
+    if (currentState == PedalState::PLAY_MODE && buttonPressed)
     {
         // Switch to edit mode
-        //debugPrintln(hw, "Switching to transition mode!");
-        currentState = PedalState::TRANSITION_MODE;
+        debugPrintln(hw, "Switching to edit mode!");
+        currentState = PedalState::EDIT_MODE;
 
         // Turn on the control LED
         controlLed.Set(1.f);
@@ -118,19 +117,8 @@ void HandleControlButton()
         UpdateEffectLeds();
     }
 
-    // Check for the button being released to transition into edit mode
-    if (currentState == PedalState::TRANSITION_MODE && !buttonPressed)
-    {
-        // Switch to edit mode
-        debugPrintln(hw, "Switching to edit mode!");
-        currentState = PedalState::EDIT_MODE;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-    }
-
     // Check if we are currently in edit mode and the control button is pressed
-    if (currentState == PedalState::EDIT_MODE && buttonPressed)
+    else if (currentState == PedalState::EDIT_MODE && buttonPressed)
     {
         // Switch back to play mode
         debugPrintln(hw, "Switching to play mode!");
