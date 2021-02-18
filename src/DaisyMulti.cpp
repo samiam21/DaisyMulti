@@ -265,20 +265,75 @@ void HandleOutputVolumeControl()
  */
 void SaveCurrentEffectSettings()
 {
-    // Get the settings for each selected effect
-    for (int i = 0; i < MAX_EFFECTS; i++)
-    {
-        currentEffectSettings[i] = currentEffects[i]->GetEffectSettings();
+    // Initialize flash for writing
+    hw->qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
+	dsy_qspi_init(&hw->qspi_handle);
 
-        // DEBUG - print out the settings
-        debugPrintlnF(hw, "SETTINGS FOR: %s", currentEffects[i]->GetEffectName());
-        for (int j = 0; j < MAX_KNOBS; j++)
+    // Write the init memory to flash
+    uint32_t writesize = sizeof(memoryInit);
+    dsy_qspi_erase(memInitBase, memInitBase + writesize);
+	dsy_qspi_write(memInitBase, writesize, (uint8_t*)true);
+
+    // Update the current effects array to write it to flash
+	for (int i = 0; i < MAX_EFFECTS; i++) {
+		currentEffectsStorage[i] = currentEffects[i];
+	}
+
+    // Write the current effects array to flash
+	writesize = MAX_EFFECTS * sizeof(currentEffectsStorage[0]);
+	dsy_qspi_erase(currentEffectsBase, currentEffectsBase + writesize);
+	dsy_qspi_write(currentEffectsBase, writesize, (uint8_t*)currentEffects);
+
+    // // Get the settings for each selected effect
+    // for (int i = 0; i < MAX_EFFECTS; i++)
+    // {
+    //     currentEffectSettings[i] = currentEffects[i]->GetEffectSettings();
+
+    //     // DEBUG - print out the settings
+    //     debugPrintlnF(hw, "SETTINGS FOR: %s", currentEffects[i]->GetEffectName());
+    //     for (int j = 0; j < MAX_KNOBS; j++)
+    //     {
+    //         debugPrintlnF(hw, "Knob %d: %f", i, currentEffectSettings[i].knobSettings[j]);
+    //     }
+    //     debugPrintlnF(hw, "Toggle: %d", currentEffectSettings[i].togglePosition);
+    // }
+
+    // Write the effect settings array to flash
+    // writesize = MAX_EFFECTS * sizeof(currentEffectsStorage[0]);
+	// dsy_qspi_erase(currentEffectsBase, currentEffectsBase + writesize);
+	// dsy_qspi_write(currentEffectsBase, writesize, (uint8_t*)currentEffects);
+
+	dsy_qspi_deinit();
+}
+
+/**
+ * Reads the effect settings from flash
+ */
+void ReadCurrentEffectSettings()
+{
+    // Configure QSPI mode
+    hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
+	dsy_qspi_init(&hw->qspi_handle);
+
+    // Check to see if the pedal memory objects have been initialized
+    if (memoryInit)
+    {
+        // Read the current effect objects and settings
+        for (int i = 0; i < MAX_EFFECTS; i++)
         {
-            debugPrintlnF(hw, "Knob %d: %f", i, currentEffectSettings[i].knobSettings[j]);
+            // Read effect objects
+            debugPrintlnF(hw, "Effect %d: %s", i, currentEffectsStorage[i]->GetEffectName());
+
+            // // Read settings
+            // for (int j = 0; j < MAX_KNOBS; j++)
+            // {
+            //     debugPrintlnF(hw, "Knob %d: %f", i, currentEffectSettingsStorage[i].knobSettings[j]);
+            // }
+            // debugPrintlnF(hw, "Toggle: %d", currentEffectSettingsStorage[i].togglePosition);
         }
-        debugPrintlnF(hw, "Toggle: %d", currentEffectSettings[i].togglePosition);
-        debugPrintln(hw, "");
     }
+	
+	dsy_qspi_deinit();
 }
 
 /**
@@ -305,6 +360,7 @@ int main(void)
     InitializeEffectSelector();
 
     // Initialize the effect objects
+    ReadCurrentEffectSettings();
     InitializeEffects();
 
     // Start the audio processing

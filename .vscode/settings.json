@@ -2,6 +2,7 @@
     "files.associations": {
         "random": "cpp",
         "functional": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "ranges": "cpp"
     }
 }

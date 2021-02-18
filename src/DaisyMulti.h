@@ -15,12 +15,24 @@ using namespace daisy;
 // Declare a DaisySeed object called hw
 DaisySeed *hw;
 
-// Pedal state and effect objects
+// Flash addresses
+uint32_t memInitBase = 0x40000000;
+uint32_t currentEffectsBase = 0x50000000;
+uint32_t currentEffectsSettingsBase = 0x80000000;
+
+// Pedal state and effects objects
 volatile PedalState currentState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
-IEffect *currentEffects[MAX_EFFECTS];
+IEffect* currentEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
 EffectSettings currentEffectSettings[MAX_EFFECTS];
+
+// Flash objects
+static bool DSY_QSPI_BSS memoryInit;
+static IEffect* DSY_QSPI_BSS currentEffectsStorage[MAX_EFFECTS];
+static EffectSettings DSY_QSPI_BSS currentEffectSettingsStorage[MAX_EFFECTS];
+
+// Effect controls
 Button effectButtons[MAX_EFFECTS];
 Led effectLeds[MAX_EFFECTS];
 
@@ -86,5 +98,10 @@ void HandleOutputVolumeControl();
  * Saves the current effect settings to flash
  */
 void SaveCurrentEffectSettings();
+
+/**
+ * Reads the effect settings from flash
+ */
+void ReadCurrentEffectSettings();
 
 #endif
