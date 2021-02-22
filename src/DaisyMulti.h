@@ -6,7 +6,6 @@
 #include "../include/EffectType.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
-#include "../lib/Inputs/Selector.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -15,22 +14,15 @@ using namespace daisy;
 // Declare a DaisySeed object called hw
 DaisySeed *hw;
 
-// Flash addresses
-uint32_t memInitBase = 0x40000000;
-uint32_t currentEffectsBase = 0x50000000;
-uint32_t currentEffectsSettingsBase = 0x80000000;
+// Flash storage parameters
+uint32_t memBase = 0x90000000;
+static IEffect DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
 
 // Pedal state and effects objects
 volatile PedalState currentState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
-IEffect* currentEffects[MAX_EFFECTS];
+IEffect *currentEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
-EffectSettings currentEffectSettings[MAX_EFFECTS];
-
-// Flash objects
-static bool DSY_QSPI_BSS memoryInit;
-static IEffect* DSY_QSPI_BSS currentEffectsStorage[MAX_EFFECTS];
-static EffectSettings DSY_QSPI_BSS currentEffectSettingsStorage[MAX_EFFECTS];
 
 // Effect controls
 Button effectButtons[MAX_EFFECTS];
@@ -41,7 +33,7 @@ Button controlButton;
 Led controlLed;
 
 // Effect Selector
-Selector effectSelector;
+Encoder selector;
 
 // Output volume control
 Knob outputVolume;
@@ -63,11 +55,6 @@ void InitializeControls();
  * Initializes the effects
  */
 void InitializeEffects();
-
-/**
- * Initializes the effect selector
- */
-void InitializeEffectSelector();
 
 /**
  * Handles the control button

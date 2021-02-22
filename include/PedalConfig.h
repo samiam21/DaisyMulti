@@ -64,10 +64,9 @@ struct EffectSettings
 };
 
 // Pin Definitions - Selector
-const int effectSelectorPin1 = 29;
-const int effectSelectorPin2 = 28;
-const int effectSelectorPin3 = 27;
-const int effectSelectorPin4 = 26;
+const int effectSelectorPinA = 29;
+const int effectSelectorPinB = 28;
+const int effectSelectorPinSw = 27;
 
 // Pin Definitions - SPST
 const int effectSPSTPins[MAX_EFFECTS] = {5, 6, 7};
