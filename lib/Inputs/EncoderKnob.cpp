@@ -45,3 +45,16 @@ bool EncoderKnob::IsPressed(bool debounce)
 
     return ret;
 }
+
+int EncoderKnob::Increment()
+{
+    int ret = 0;
+
+    // Read the increment
+    encoder.Debounce();
+    int increment = encoder.Increment();
+
+    ret = increment;
+
+    return ret;
+}

@@ -24,6 +24,12 @@ public:
      */
     bool IsPressed(bool debounce = true);
 
+    /**
+     * Checks if the knob is turned
+     * @return -1 if decremented, 0 if not turned, 1 if incremented
+     */
+    int Increment();
+
 private:
     dsy_gpio_pin _pinA;
     dsy_gpio_pin _pinB;

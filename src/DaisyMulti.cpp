@@ -162,33 +162,32 @@ void HandleEffectButtons()
  */
 void HandleControlEncoder()
 {
-    // if (currentState == PedalState::EDIT_MODE)
-    // {
-    //     // // Read the currently selected effect
-    //     // EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
-    //     // IEffect *selectedEffect = GetEffectObject(selected);
+    if (currentState == PedalState::EDIT_MODE && selectedEditEffect > -1)
+    {
+        // // Read the currently selected effect
+        // EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
+        // IEffect *selectedEffect = GetEffectObject(selected);
 
-    //     // // Check if the selected effect is different than the one we are editing
-    //     // if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
-    //     // {
-    //     //     // New effect selected
-    //     //     currentEffects[selectedEditEffect]->Cleanup();
-    //     //     currentEffects[selectedEditEffect] = selectedEffect;
-    //     //     currentEffects[selectedEditEffect]->Setup(hw);
+        // // Check if the selected effect is different than the one we are editing
+        // if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
+        // {
+        //     // New effect selected
+        //     currentEffects[selectedEditEffect]->Cleanup();
+        //     currentEffects[selectedEditEffect] = selectedEffect;
+        //     currentEffects[selectedEditEffect]->Setup(hw);
 
-    //     //     debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
-    //     // }
+        //     debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
+        // }
 
-    //     controlEncoder.Debounce();
-    //     if (controlEncoder.Increment() == -1)
-    //     {
-    //         debugPrintln(hw, "Turned left");
-    //     }
-    //     else if (controlEncoder.Increment() == 1)
-    //     {
-    //         debugPrintln(hw, "Turned right");
-    //     }
-    // }
+        if (controlEncoder.Increment() == -1)
+        {
+            debugPrintln(hw, "Turned left");
+        }
+        else if (controlEncoder.Increment() == 1)
+        {
+            debugPrintln(hw, "Turned right");
+        }
+    }
 }
 
 /**
