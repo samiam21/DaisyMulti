@@ -6,6 +6,7 @@
 #include "../include/EffectType.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
+#include "../lib/Inputs/EncoderKnob.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -28,12 +29,8 @@ bool currentEffectsState[MAX_EFFECTS] = {false};
 Button effectButtons[MAX_EFFECTS];
 Led effectLeds[MAX_EFFECTS];
 
-// Control button and LED
-Button controlButton;
-Led controlLed;
-
-// Effect Selector
-Encoder selector;
+// Control Encoder
+EncoderKnob controlEncoder;
 
 // Output volume control
 Knob outputVolume;
@@ -67,9 +64,9 @@ void HandleControlButton();
 void HandleEffectButtons();
 
 /**
- * Handles control of the effect selector, only enabled in edit mode
+ * Handles control of the control encoder, only enabled in edit mode
  */
-void HandleEffectSelector();
+void HandleControlEncoder();
 
 /**
  * Updates the effect LEDs, turning them on and off based on the current state

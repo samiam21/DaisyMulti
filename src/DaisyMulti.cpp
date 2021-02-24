@@ -5,9 +5,6 @@
  */
 void AudioCallback(float **in, float **out, size_t size)
 {
-    // Handle the effect selector
-    HandleEffectSelector();
-
     for (size_t i = 0; i < size; i++)
     {
         float wet = in[AUDIO_IN_CH][i];
@@ -44,12 +41,8 @@ void InitializeControls()
     // Give the ADC time to start up
     System::Delay(500);
 
-    // Initialize the control button and LED
-    controlButton.Init(hw, hw->GetPin(controlSPSTPin), 3000, 200);
-    controlLed.Init(hw->GetPin(controlLedPin), false);
-
-    // Initialize the selector
-    selector.Init(hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw), hw->AudioCallbackRate());
+    // Initialize the controlEncoder
+    controlEncoder.Init(hw, hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw));
 
     // Initialize the buttons
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -93,8 +86,8 @@ void InitializeEffects()
  */
 void HandleControlButton()
 {
-    // Get the button states
-    bool buttonPressed = controlButton.IsPressed();
+    // Get the button press state
+    bool buttonPressed = controlEncoder.IsPressed();
 
     // Check if we are currently in play mode and the control button is pressed
     if (currentState == PedalState::PLAY_MODE && buttonPressed)
@@ -173,37 +166,37 @@ void HandleEffectButtons()
 }
 
 /**
- * Handles control of the effect selector, only enabled in edit mode
+ * Handles control of the effect controlEncoder, only enabled in edit mode
  */
-void HandleEffectSelector()
+void HandleControlEncoder()
 {
-    if (currentState == PedalState::EDIT_MODE)
-    {
-        // // Read the currently selected effect
-        // EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
-        // IEffect *selectedEffect = GetEffectObject(selected);
+    // if (currentState == PedalState::EDIT_MODE)
+    // {
+    //     // // Read the currently selected effect
+    //     // EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
+    //     // IEffect *selectedEffect = GetEffectObject(selected);
 
-        // // Check if the selected effect is different than the one we are editing
-        // if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
-        // {
-        //     // New effect selected
-        //     currentEffects[selectedEditEffect]->Cleanup();
-        //     currentEffects[selectedEditEffect] = selectedEffect;
-        //     currentEffects[selectedEditEffect]->Setup(hw);
+    //     // // Check if the selected effect is different than the one we are editing
+    //     // if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
+    //     // {
+    //     //     // New effect selected
+    //     //     currentEffects[selectedEditEffect]->Cleanup();
+    //     //     currentEffects[selectedEditEffect] = selectedEffect;
+    //     //     currentEffects[selectedEditEffect]->Setup(hw);
 
-        //     debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
-        // }
+    //     //     debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
+    //     // }
 
-        selector.Debounce();
-        if (selector.Increment() == -1)
-        {
-            debugPrintln(hw, "Turned left");
-        }
-        else if (selector.Increment() == 1)
-        {
-            debugPrintln(hw, "Turned right");
-        }
-    }
+    //     controlEncoder.Debounce();
+    //     if (controlEncoder.Increment() == -1)
+    //     {
+    //         debugPrintln(hw, "Turned left");
+    //     }
+    //     else if (controlEncoder.Increment() == 1)
+    //     {
+    //         debugPrintln(hw, "Turned right");
+    //     }
+    // }
 }
 
 /**
@@ -353,6 +346,9 @@ int main(void)
     {
         // Handle the control button
         HandleControlButton();
+
+        // Handle the control encoder
+        HandleControlEncoder();
 
         // Handle the effect buttons
         HandleEffectButtons();
