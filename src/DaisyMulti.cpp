@@ -96,10 +96,6 @@ void HandleControlButton()
         debugPrintln(hw, "Switching to edit mode!");
         currentState = PedalState::EDIT_MODE;
 
-        // Turn on the control LED
-        controlLed.Set(1.f);
-        controlLed.Update();
-
         // Update the effect LEDs
         UpdateEffectLeds();
     }
@@ -110,10 +106,6 @@ void HandleControlButton()
         // Switch back to play mode
         debugPrintln(hw, "Switching to play mode!");
         currentState = PedalState::PLAY_MODE;
-
-        // Turn off the control LED
-        controlLed.Set(0);
-        controlLed.Update();
 
         // Reset the selected edit effect
         selectedEditEffect = -1;
