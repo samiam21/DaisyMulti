@@ -5,6 +5,9 @@
  */
 void AudioCallback(float **in, float **out, size_t size)
 {
+    // Handle the control encoder
+    HandleControlEncoder();
+
     for (size_t i = 0; i < size; i++)
     {
         float wet = in[AUDIO_IN_CH][i];
@@ -42,7 +45,7 @@ void InitializeControls()
     System::Delay(500);
 
     // Initialize the controlEncoder
-    controlEncoder.Init(hw, hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw));
+    controlEncoder.Init(hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw), hw->AudioCallbackRate());
 
     // Initialize the buttons
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -78,43 +81,6 @@ void InitializeEffects()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         currentEffects[i]->Setup(hw);
-    }
-}
-
-/**
- * Handles the control button
- */
-void HandleControlButton()
-{
-    // Get the button press state
-    bool buttonPressed = controlEncoder.IsPressed();
-
-    // Check if we are currently in play mode and the control button is pressed
-    if (currentState == PedalState::PLAY_MODE && buttonPressed)
-    {
-        // Switch to edit mode
-        debugPrintln(hw, "Switching to edit mode!");
-        currentState = PedalState::EDIT_MODE;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-    }
-
-    // Check if we are currently in edit mode and the control button is pressed
-    else if (currentState == PedalState::EDIT_MODE && buttonPressed)
-    {
-        // Switch back to play mode
-        debugPrintln(hw, "Switching to play mode!");
-        currentState = PedalState::PLAY_MODE;
-
-        // Reset the selected edit effect
-        selectedEditEffect = -1;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-
-        // Persist current effect settings in flash
-        SaveCurrentEffectSettings();
     }
 }
 
@@ -162,7 +128,41 @@ void HandleEffectButtons()
  */
 void HandleControlEncoder()
 {
-    if (currentState == PedalState::EDIT_MODE && selectedEditEffect > -1)
+    controlEncoder.Debounce();
+
+    // Get the button press state
+    bool buttonPressed = controlEncoder.RisingEdge();
+
+    // Check if we are currently in play mode and the control button is pressed
+    if (currentState == PedalState::PLAY_MODE && buttonPressed)
+    {
+        // Switch to edit mode
+        debugPrintln(hw, "Switching to edit mode!");
+        currentState = PedalState::EDIT_MODE;
+
+        // Update the effect LEDs
+        UpdateEffectLeds();
+    }
+
+    // Check if we are currently in edit mode and the control button is pressed
+    else if (currentState == PedalState::EDIT_MODE && buttonPressed)
+    {
+        // Switch back to play mode
+        debugPrintln(hw, "Switching to play mode!");
+        currentState = PedalState::PLAY_MODE;
+
+        // Reset the selected edit effect
+        selectedEditEffect = -1;
+
+        // Update the effect LEDs
+        UpdateEffectLeds();
+
+        // Persist current effect settings in flash
+        SaveCurrentEffectSettings();
+    }
+
+    // Check for encoder turns in edit mode
+    if (currentState == PedalState::EDIT_MODE && selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS)
     {
         // // Read the currently selected effect
         // EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
@@ -179,13 +179,19 @@ void HandleControlEncoder()
         //     debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
         // }
 
-        if (controlEncoder.Increment() == -1)
+        // Check for a change in the selected effect
+        int inc = controlEncoder.Increment();
+        if (inc != 0)
         {
-            debugPrintln(hw, "Turned left");
-        }
-        else if (controlEncoder.Increment() == 1)
-        {
-            debugPrintln(hw, "Turned right");
+            // Effect has been changed, cleanup the old effect
+            currentEffects[selectedEditEffect]->Cleanup();
+
+            // Select the new effect
+
+            // Initialize the new effect
+
+            //debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
+            debugPrintlnF(hw, "Incremented %d", inc);
         }
     }
 }
@@ -335,12 +341,6 @@ int main(void)
     // Loop forever
     for (;;)
     {
-        // Handle the control button
-        HandleControlButton();
-
-        // Handle the control encoder
-        HandleControlEncoder();
-
         // Handle the effect buttons
         HandleEffectButtons();
 

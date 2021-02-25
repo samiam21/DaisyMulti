@@ -7,8 +7,8 @@
 
 #define WAIT_FOR_SERIAL true
 
-#define BLOCKSIZE 1
-#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
+#define BLOCKSIZE 24
+#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_48KHZ
 
 #define AUDIO_IN_CH 1
 #define AUDIO_OUT_CH 0
@@ -64,8 +64,8 @@ struct EffectSettings
 };
 
 // Pin Definitions - Selector
-const int effectSelectorPinA = 28;
-const int effectSelectorPinB = 29;
+const int effectSelectorPinA = 29;
+const int effectSelectorPinB = 28;
 const int effectSelectorPinSw = 27;
 
 // Pin Definitions - SPST
