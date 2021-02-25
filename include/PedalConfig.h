@@ -7,8 +7,8 @@
 
 #define WAIT_FOR_SERIAL true
 
-#define BLOCKSIZE 24
-#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_48KHZ
+#define BLOCKSIZE 12
+#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
 
 #define AUDIO_IN_CH 1
 #define AUDIO_OUT_CH 0
@@ -53,8 +53,7 @@
 enum PedalState
 {
     PLAY_MODE = 0,
-    TRANSITION_MODE = 10,
-    EDIT_MODE = 20
+    EDIT_MODE = 10
 };
 
 struct EffectSettings

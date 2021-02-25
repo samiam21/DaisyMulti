@@ -17,7 +17,7 @@ void AudioCallback(float **in, float **out, size_t size)
         {
             if (currentEffectsState[j])
             {
-                wet = currentEffects[j]->Process(wet);
+                wet = availableEffects[currentEffects[j]]->Process(wet);
             }
         }
 
@@ -74,13 +74,13 @@ void InitializeEffects()
     // Initialize the effect objects to clean boost
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        currentEffects[i] = GetEffectObject(EffectType::CLEANBOOST);
+        currentEffects[i] = 0;
     }
 
     // Setup each effect object
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        currentEffects[i]->Setup(hw);
+        availableEffects[currentEffects[i]]->Setup(hw);
     }
 }
 
@@ -101,7 +101,7 @@ void HandleEffectButtons()
                 selectedEditEffect = i;
                 UpdateEffectLeds();
 
-                debugPrintlnF(hw, "Editing %s", currentEffects[selectedEditEffect]->GetEffectName());
+                debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
         }
     }
@@ -117,7 +117,7 @@ void HandleEffectButtons()
                 currentEffectsState[i] = !currentEffectsState[i];
                 UpdateEffectLeds();
 
-                debugPrintlnF(hw, "Turned %s %s", currentEffects[i]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
+                debugPrintlnF(hw, "Turned %s %s", availableEffects[currentEffects[i]]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
             }
         }
     }
@@ -183,14 +183,6 @@ void HandleControlEncoder()
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
-            // Effect has been changed, cleanup the old effect
-            currentEffects[selectedEditEffect]->Cleanup();
-
-            // Select the new effect
-
-            // Initialize the new effect
-
-            //debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
             debugPrintlnF(hw, "Incremented %d", inc);
         }
     }
@@ -350,7 +342,7 @@ int main(void)
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
-            currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
+            availableEffects[currentEffects[i]]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
         }
     }
 }
