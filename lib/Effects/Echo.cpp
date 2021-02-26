@@ -143,3 +143,44 @@ EffectSettings Echo::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void Echo::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update delay type from effect settings
+    if (effectSettings.togglePosition == 0)
+    {
+        // Set the delay type and tempo modifier
+        currentDelayType = QUARTER;
+        tempoModifier = 1.0f;
+
+        // Update the delay tempo
+        del_line.SetDelay(currentTempoSamples * tempoModifier);
+    }
+    else if (effectSettings.togglePosition == 2)
+    {
+        // Set the delay type and tempo modifier
+        currentDelayType = TRIPLET;
+        tempoModifier = 0.333f;
+
+        // Update the delay tempo
+        del_line.SetDelay(currentTempoSamples * tempoModifier);
+    }
+    else
+    {
+        // Set the delay type and tempo modifier
+        currentDelayType = DOTTED_EIGHTH;
+        tempoModifier = 0.75f;
+
+        // Update the delay tempo
+        del_line.SetDelay(currentTempoSamples * tempoModifier);
+    }
+
+    // Update levels from effect settings
+    mixLevel = effectSettings.knobSettings[0];
+    decayValue = effectSettings.knobSettings[1];
+    speed = effectSettings.knobSettings[2];
+
+    // Update tempo from speed knob
+    currentTempoSamples = ((96000 / speed) * 30) * tempoModifier;
+    del_line.SetDelay(currentTempoSamples);
+}

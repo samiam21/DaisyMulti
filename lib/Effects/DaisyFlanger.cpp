@@ -89,3 +89,15 @@ EffectSettings DaisyFlanger::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void DaisyFlanger::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels with effect settings
+    mixLevel = effectSettings.knobSettings[0];
+    rate = effectSettings.knobSettings[1];
+    flanger.SetLfoFreq(rate);
+    width = effectSettings.knobSettings[2];
+    flanger.SetLfoDepth(width);
+    feedback = effectSettings.knobSettings[3];
+    flanger.SetFeedback(feedback);
+}

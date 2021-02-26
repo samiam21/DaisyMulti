@@ -89,3 +89,15 @@ EffectSettings DaisyChorus::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void DaisyChorus::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels from effect settings
+    mixLevel = effectSettings.knobSettings[0];
+    rate = effectSettings.knobSettings[1];
+    chorus.SetLfoFreq(rate);
+    width = effectSettings.knobSettings[2];
+    chorus.SetLfoDepth(width);
+    delay = effectSettings.knobSettings[3];
+    chorus.SetDelay(delay);
+}

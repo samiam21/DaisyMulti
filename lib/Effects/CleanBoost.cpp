@@ -45,3 +45,9 @@ EffectSettings CleanBoost::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void CleanBoost::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update boost level from the effect settings
+    boostLevel = effectSettings.knobSettings[0];
+}

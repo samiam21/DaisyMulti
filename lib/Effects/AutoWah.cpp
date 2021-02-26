@@ -78,3 +78,13 @@ EffectSettings AutoWah::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void AutoWah::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels from the effect settings
+    mixLevel = effectSettings.knobSettings[0];
+    wahLevel = effectSettings.knobSettings[1];
+    autowah.SetWah(wahLevel);
+    level = effectSettings.knobSettings[2];
+    autowah.SetLevel(level);
+}

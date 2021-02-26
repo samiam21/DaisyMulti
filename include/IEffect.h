@@ -13,6 +13,7 @@ public:
     virtual void Loop(bool allowEffectControl) {}
     virtual char *GetEffectName() { return (char *)"uh-oh"; }
     virtual EffectSettings GetEffectSettings() { return effectSettings; }
+    virtual void SetEffectSettings(EffectSettings effectSettings) {}
 
 protected:
     daisy::DaisySeed *hw;

@@ -43,6 +43,7 @@ public:
     void Loop(bool allowEffectControl);
     char *GetEffectName();
     EffectSettings GetEffectSettings();
+    void SetEffectSettings(EffectSettings effectSettings);
 
 private:
     float WaveShape(float in, float k);

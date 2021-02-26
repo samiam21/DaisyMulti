@@ -92,6 +92,7 @@ void InitializeEffects()
 
         // Initialize the effect
         availableEffects[currentEffects[i]]->Setup(hw);
+        availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
 
     dsy_qspi_deinit();

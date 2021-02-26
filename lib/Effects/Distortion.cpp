@@ -132,3 +132,26 @@ EffectSettings Distortion::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void Distortion::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels from effect settings
+    pregainLevel = effectSettings.knobSettings[0];
+    gainLevel = effectSettings.knobSettings[1];
+    mixLevel = effectSettings.knobSettings[2];
+
+    // Update clipping from effect settings
+    currentClip = effectSettings.togglePosition;
+    if (currentClip == 0)
+    {
+        hardClipThreshold = clipThresholdHigh;
+    }
+    else if (currentClip == 1)
+    {
+        hardClipThreshold = clipThresholdMid;
+    }
+    else
+    {
+        hardClipThreshold = clipThresholdLow;
+    }
+}

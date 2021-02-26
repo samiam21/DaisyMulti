@@ -114,3 +114,30 @@ EffectSettings DaisyTremolo::GetEffectSettings()
     // Return the settings
     return effectSettings;
 }
+
+void DaisyTremolo::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels from effect settings
+    mixLevel = effectSettings.knobSettings[0];
+    rate = effectSettings.knobSettings[1];
+    tremolo.SetFreq(rate);
+    width = effectSettings.knobSettings[2];
+    tremolo.SetDepth(width);
+
+    // Update wave shape from effect settings
+    if (effectSettings.togglePosition == 0)
+    {
+        waveform = Oscillator::WAVE_SIN;
+        tremolo.SetWaveform(waveform);
+    }
+    else if (effectSettings.togglePosition == 1)
+    {
+        waveform = Oscillator::WAVE_SQUARE;
+        tremolo.SetWaveform(waveform);
+    }
+    else
+    {
+        waveform = Oscillator::WAVE_RAMP;
+        tremolo.SetWaveform(waveform);
+    }
+}
