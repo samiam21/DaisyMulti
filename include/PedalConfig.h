@@ -13,8 +13,9 @@
 #define AUDIO_IN_CH 1
 #define AUDIO_OUT_CH 0
 
-#define MAX_EFFECTS 3
+#define MAX_EFFECTS 4
 
+#define MAX_KNOBS 4
 #define KNOB_1_CHN 0
 #define KNOB_2_CHN 1
 #define KNOB_3_CHN 2
@@ -52,19 +53,28 @@
 enum PedalState
 {
     PLAY_MODE = 0,
-    TRANSITION_MODE = 10,
-    EDIT_MODE = 20
+    EDIT_MODE = 10
+};
+
+struct EffectSettings
+{
+    float knobSettings[MAX_KNOBS];
+    u_int8_t togglePosition;
+};
+
+struct EffectStorage
+{
+    int availableEffectsPosition;
+    EffectSettings effectSettings;
 };
 
 // Pin Definitions - Selector
-const int effectSelectorPin1 = 29;
-const int effectSelectorPin2 = 28;
-const int effectSelectorPin3 = 27;
-const int effectSelectorPin4 = 26;
+const int effectSelectorPinA = 29;
+const int effectSelectorPinB = 28;
+const int effectSelectorPinSw = 27;
 
 // Pin Definitions - SPST
-const int effectSPSTPins[MAX_EFFECTS] = {5, 6, 7};
-const int controlSPSTPin = 8;
+const int effectSPSTPins[MAX_EFFECTS] = {5, 6, 7, 8};
 
 // Pin Definitions - SPDT
 const int effectSPDT1Pin1 = 12;
@@ -79,7 +89,6 @@ const int effectPotPin3 = 22;
 const int effectPotPin4 = 21;
 
 // Pin Definitions - LED
-const int effectLedPins[MAX_EFFECTS] = {18, 17, 15};
-const int controlLedPin = 16;
+const int effectLedPins[MAX_EFFECTS] = {18, 17, 15, 16};
 
 #endif

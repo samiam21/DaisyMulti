@@ -42,6 +42,8 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    EffectSettings GetEffectSettings();
+    void SetEffectSettings(EffectSettings effectSettings);
 
 private:
     float WaveShape(float in);
@@ -50,7 +52,7 @@ private:
 
     DaisySeed *hw;
     float sample_rate;
-    int currentClip = -1;
+    u_int8_t currentClip = -1;
     const int LED_MAX_VALUE = 256;
     const int LED_MIN_VALUE = 0;
 

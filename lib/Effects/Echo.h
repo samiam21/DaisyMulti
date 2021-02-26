@@ -52,6 +52,8 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    EffectSettings GetEffectSettings();
+    void SetEffectSettings(EffectSettings effectSettings);
 
 private:
     void TapTempoInterruptHandler();

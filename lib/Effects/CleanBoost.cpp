@@ -25,6 +25,9 @@ void CleanBoost::Loop(bool allowEffectControl)
         if (boostKnob.SetNewValue(boostLevel))
         {
             debugPrintlnF(hw, "Updated the boost level to: %f", boostLevel);
+
+            // Update the effect settings
+            effectSettings.knobSettings[0] = boostLevel;
         }
     }
 }
@@ -32,4 +35,19 @@ void CleanBoost::Loop(bool allowEffectControl)
 char *CleanBoost::GetEffectName()
 {
     return (char *)"CLEAN BOOST";
+}
+
+EffectSettings CleanBoost::GetEffectSettings()
+{
+    // Add boost level to the effect settings
+    effectSettings.knobSettings[0] = boostLevel;
+
+    // Return the settings
+    return effectSettings;
+}
+
+void CleanBoost::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update boost level from the effect settings
+    boostLevel = effectSettings.knobSettings[0];
 }

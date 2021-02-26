@@ -5,6 +5,9 @@
  */
 void AudioCallback(float **in, float **out, size_t size)
 {
+    // Interrupt handler for the control encoder
+    ControlEncoderInterrupt();
+
     for (size_t i = 0; i < size; i++)
     {
         float wet = in[AUDIO_IN_CH][i];
@@ -14,7 +17,7 @@ void AudioCallback(float **in, float **out, size_t size)
         {
             if (currentEffectsState[j])
             {
-                wet = currentEffects[j]->Process(wet);
+                wet = availableEffects[currentEffects[j]]->Process(wet);
             }
         }
 
@@ -41,9 +44,8 @@ void InitializeControls()
     // Give the ADC time to start up
     System::Delay(500);
 
-    // Initialize the control button and LED
-    controlButton.Init(hw, hw->GetPin(controlSPSTPin), 3000, 300);
-    controlLed.Init(hw->GetPin(controlLedPin), false);
+    // Initialize the controlEncoder
+    controlEncoder.Init(hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw), hw->AudioCallbackRate());
 
     // Initialize the buttons
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -69,83 +71,31 @@ void InitializeControls()
  */
 void InitializeEffects()
 {
-    // Initialize the effect objects to clean boost
+    // Configure QSPI mode
+    hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
+    dsy_qspi_init(&hw->qspi_handle);
+
+    // Read the current effect objects and settings
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        currentEffects[i] = GetEffectObject(EffectType::CLEANBOOST);
+        // Read and set the current effect
+        currentEffects[i] = effectsStorage[i].availableEffectsPosition;
+        newEffects[i] = effectsStorage[i].availableEffectsPosition;
+        debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
+
+        // Read settings
+        for (int j = 0; j < MAX_KNOBS; j++)
+        {
+            debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
+        }
+        debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
+
+        // Initialize the effect
+        availableEffects[currentEffects[i]]->Setup(hw);
+        availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
 
-    // Setup each effect object
-    for (int i = 0; i < MAX_EFFECTS; i++)
-    {
-        currentEffects[i]->Setup(hw);
-    }
-}
-
-/**
- * Initializes the effect selector
- */
-void InitializeEffectSelector()
-{
-    effectSelector.Init(hw,
-                        hw->GetPin(effectSelectorPin1),
-                        hw->GetPin(effectSelectorPin2),
-                        hw->GetPin(effectSelectorPin3),
-                        hw->GetPin(effectSelectorPin4));
-}
-
-/**
- * Handles the control button
- */
-void HandleControlButton()
-{
-    // Get the button states (held must be checked before pressed)
-    bool buttonHeld = controlButton.IsHeld();
-    bool buttonPressed = controlButton.IsPressed();
-
-    // Check if we are currently in play mode and the control button is held
-    if (currentState == PedalState::PLAY_MODE && buttonHeld)
-    {
-        // Switch to edit mode
-        //debugPrintln(hw, "Switching to transition mode!");
-        currentState = PedalState::TRANSITION_MODE;
-
-        // Turn on the control LED
-        controlLed.Set(1.f);
-        controlLed.Update();
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-    }
-
-    // Check for the button being released to transition into edit mode
-    if (currentState == PedalState::TRANSITION_MODE && !buttonPressed)
-    {
-        // Switch to edit mode
-        debugPrintln(hw, "Switching to edit mode!");
-        currentState = PedalState::EDIT_MODE;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-    }
-
-    // Check if we are currently in edit mode and the control button is pressed
-    if (currentState == PedalState::EDIT_MODE && buttonPressed)
-    {
-        // Switch back to play mode
-        debugPrintln(hw, "Switching to play mode!");
-        currentState = PedalState::PLAY_MODE;
-
-        // Turn off the control LED
-        controlLed.Set(0);
-        controlLed.Update();
-
-        // Reset the selected edit effect
-        selectedEditEffect = -1;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-    }
+    dsy_qspi_deinit();
 }
 
 /**
@@ -165,7 +115,7 @@ void HandleEffectButtons()
                 selectedEditEffect = i;
                 UpdateEffectLeds();
 
-                debugPrintlnF(hw, "Editing %s", currentEffects[selectedEditEffect]->GetEffectName());
+                debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
         }
     }
@@ -181,32 +131,93 @@ void HandleEffectButtons()
                 currentEffectsState[i] = !currentEffectsState[i];
                 UpdateEffectLeds();
 
-                debugPrintlnF(hw, "Turned %s %s", currentEffects[i]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
+                debugPrintlnF(hw, "Turned %s %s", availableEffects[currentEffects[i]]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
             }
         }
     }
 }
 
 /**
- * Handles control of the effect selector, only enabled in edit mode
+ * Reads the control encoder and triggers actions
  */
-void HandleEffectSelector()
+void ControlEncoderInterrupt()
 {
-    if (currentState == PedalState::EDIT_MODE)
+    // Get the button press state
+    controlEncoder.Debounce();
+    bool buttonPressed = controlEncoder.RisingEdge();
+
+    // Check if we are currently in play mode and the control button is pressed
+    if (currentState == PedalState::PLAY_MODE && buttonPressed)
     {
-        // Read the currently selected effect
-        EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
-        IEffect *selectedEffect = GetEffectObject(selected);
+        // Trigger a switch to edit mode
+        newState = PedalState::EDIT_MODE;
+    }
 
-        // Check if the selected effect is different than the one we are editing
-        if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
+    // Check if we are currently in edit mode and the control button is pressed
+    else if (currentState == PedalState::EDIT_MODE && buttonPressed)
+    {
+        // Trigger a switch to play mode
+        newState = PedalState::PLAY_MODE;
+    }
+
+    // Check for encoder turns in edit mode
+    if (currentState == PedalState::EDIT_MODE && selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS)
+    {
+        // Check for a change in the selected effect
+        int inc = controlEncoder.Increment();
+        if (inc != 0)
         {
-            // New effect selected
-            currentEffects[selectedEditEffect]->Cleanup();
-            currentEffects[selectedEditEffect] = selectedEffect;
-            currentEffects[selectedEditEffect]->Setup(hw);
+            // Check if we have looped around
+            int newEffect = currentEffects[selectedEditEffect] + inc;
+            if (newEffect < 0)
+            {
+                newEffect = AVAIL_EFFECTS - 1;
+            }
+            else if (newEffect >= AVAIL_EFFECTS)
+            {
+                newEffect = 0;
+            }
 
-            debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
+            // Trigger a change of the effect
+            newEffects[selectedEditEffect] = newEffect;
+        }
+    }
+}
+
+/**
+ * Handles control of the pedal state
+ */
+void HandlePedalState()
+{
+    // Has a new state been triggered?
+    if (currentState != newState)
+    {
+        // Switching to edit mode
+        if (newState == PedalState::EDIT_MODE)
+        {
+            // Switch to edit mode
+            debugPrintln(hw, "Switching to edit mode!");
+            currentState = PedalState::EDIT_MODE;
+
+            // Update the effect LEDs
+            UpdateEffectLeds();
+        }
+
+        // Switching to play mode
+        else if (newState == PedalState::PLAY_MODE)
+        {
+            // Switch back to play mode
+            debugPrintln(hw, "Switching to play mode!");
+            currentState = PedalState::PLAY_MODE;
+
+            // Reset the selected edit effect
+            selectedEditEffect = -1;
+
+            // Update the effect LEDs
+            UpdateEffectLeds();
+
+            // Persist current effect settings in flash
+            SaveCurrentEffectSettings();
         }
     }
 }
@@ -258,6 +269,35 @@ void HandleOutputVolumeControl()
 }
 
 /**
+ * Saves the current effect settings to flash
+ */
+void SaveCurrentEffectSettings()
+{
+    // Initialize flash for writing
+    hw->qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
+    dsy_qspi_init(&hw->qspi_handle);
+
+    // Fill in the effect storage buffer
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        effectsStorageBuffer[i].availableEffectsPosition = currentEffects[i];
+        effectsStorageBuffer[i].effectSettings = availableEffects[currentEffects[i]]->GetEffectSettings();
+    }
+
+    // Write the current effects array to flash
+    uint32_t writesize = MAX_EFFECTS * sizeof(effectsStorage[0]);
+    dsy_qspi_erase(memBase, memBase + writesize);
+    int success = dsy_qspi_write(memBase, writesize, (uint8_t *)effectsStorageBuffer);
+
+    if (success == DSY_MEMORY_ERROR)
+    {
+        debugPrintln(hw, "Failed to write to memory!");
+    }
+
+    dsy_qspi_deinit();
+}
+
+/**
  * Main Loop
  */
 int main(void)
@@ -277,9 +317,6 @@ int main(void)
     // Initialize the input controls
     InitializeControls();
 
-    // Initialize the effect selector
-    InitializeEffectSelector();
-
     // Initialize the effect objects
     InitializeEffects();
 
@@ -293,8 +330,8 @@ int main(void)
     // Loop forever
     for (;;)
     {
-        // Handle the control button
-        HandleControlButton();
+        // Handle the pedal state
+        HandlePedalState();
 
         // Handle the effect buttons
         HandleEffectButtons();
@@ -302,13 +339,24 @@ int main(void)
         // Handle the output volume
         HandleOutputVolumeControl();
 
-        // Handle the effect selector
-        HandleEffectSelector();
-
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
-            currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
+            // Check for a changed effect
+            if (currentEffects[i] != newEffects[i])
+            {
+                // Clean up the previous effect
+                availableEffects[currentEffects[i]]->Cleanup();
+
+                // Setup the new effect
+                currentEffects[i] = newEffects[i];
+                availableEffects[currentEffects[i]]->Setup(hw);
+
+                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+            }
+
+            // Call the effect's loop
+            availableEffects[currentEffects[i]]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
         }
     }
 }

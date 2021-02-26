@@ -21,7 +21,7 @@ using namespace daisysp;
  * SPDT 1 - 
  * SPDT 2 - 
  * 
- * Knob 1 - Dry/Wet
+ * Knob 1 - Mix
  * Knob 2 - Wah
  * Knob 3 - Level
  * Knob 4 - 
@@ -40,24 +40,20 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    EffectSettings GetEffectSettings();
+    void SetEffectSettings(EffectSettings effectSettings);
 
 private:
     DaisySeed *hw;
 
-    // Effect constants
-    const float dryWetLevelMin = 0.0f;
-    const float dryWetLevelMax = 200.0f;
-    const float wahLevelMin = 0.0f;
-    const float wahLevelMax = 5.0f;
-
     // Effect parameters
-    float dryWetLevel = 0.0f;
+    float mixLevel = 0.0f;
     float wahLevel = 0.0f;
     float level = 0.0f;
 
     Autowah autowah;
 
-    Knob dryWetKnob;
+    Knob mixLevelKnob;
     Knob wahLevelKnob;
     Knob levelKnob;
 };

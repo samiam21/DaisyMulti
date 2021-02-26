@@ -65,3 +65,24 @@ char *Crush::GetEffectName()
 {
     return (char *)"Bitcrush";
 }
+
+EffectSettings Crush::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = mixLevel;
+    effectSettings.knobSettings[1] = downsampleLevel;
+    effectSettings.knobSettings[2] = bitcrushLevel;
+
+    // Return the settings
+    return effectSettings;
+}
+
+void Crush::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels from effect settings
+    mixLevel = effectSettings.knobSettings[0];
+    downsampleLevel = effectSettings.knobSettings[1];
+    decimator.SetDownsampleFactor(downsampleLevel);
+    bitcrushLevel = effectSettings.knobSettings[2];
+    decimator.SetBitcrushFactor(bitcrushLevel);
+}

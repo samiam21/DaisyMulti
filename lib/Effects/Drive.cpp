@@ -85,3 +85,28 @@ float Drive::WaveShape(float in, float k)
 {
     return (1 + k) * in / (1 + k * abs(in));
 }
+
+EffectSettings Drive::GetEffectSettings()
+{
+    // Add levels to the effect settings
+    effectSettings.knobSettings[0] = pregainLevel;
+    effectSettings.knobSettings[1] = gainLevel;
+    effectSettings.knobSettings[2] = driveLevel;
+    effectSettings.knobSettings[3] = mixLevel;
+
+    // Return the settings
+    return effectSettings;
+}
+
+void Drive::SetEffectSettings(EffectSettings effectSettings)
+{
+    // Update levels from effect settings
+    pregainLevel = effectSettings.knobSettings[0];
+    gainLevel = effectSettings.knobSettings[1];
+    driveLevel = effectSettings.knobSettings[2];
+    mixLevel = effectSettings.knobSettings[3];
+
+    // Calculate overdrive signal parameters
+    a = sin(((driveLevel + 1) / 101) * (PI_VAL / 2));
+    k = (2 * a) / (1 - a);
+}
