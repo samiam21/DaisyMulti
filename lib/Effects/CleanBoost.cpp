@@ -37,15 +37,10 @@ char *CleanBoost::GetEffectName()
     return (char *)"CLEAN BOOST";
 }
 
-void CleanBoost::PrintEffectSettings()
-{
-    debugPrintlnF(hw, "BOOST: %f", boostLevel);
-}
-
 EffectSettings CleanBoost::GetEffectSettings()
 {
     // Add boost level to the effect settings
-    //effectSettings.knobSettings[0] = boostLevel;
+    effectSettings.knobSettings[0] = boostLevel;
 
     // Return the settings
     return effectSettings;

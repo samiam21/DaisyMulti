@@ -81,16 +81,14 @@ void InitializeEffects()
         // Read and set the current effect
         currentEffects[i] = effectsStorage[i].availableEffectsPosition;
         newEffects[i] = effectsStorage[i].availableEffectsPosition;
-        //currentEffects[i] = 0;
-        //newEffects[i] = 0;
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
 
-        // // Read settings
-        // for (int j = 0; j < MAX_KNOBS; j++)
-        // {
-        //     debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i]->GetEffectSettings().knobSettings[j]);
-        // }
-        // debugPrintlnF(hw, "Toggle: %d", effectsStorage[i]->GetEffectSettings().togglePosition);
+        // Read settings
+        for (int j = 0; j < MAX_KNOBS; j++)
+        {
+            debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
+        }
+        debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
         availableEffects[currentEffects[i]]->Setup(hw);
@@ -282,6 +280,7 @@ void SaveCurrentEffectSettings()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         effectsStorageBuffer[i].availableEffectsPosition = currentEffects[i];
+        effectsStorageBuffer[i].effectSettings = availableEffects[currentEffects[i]]->GetEffectSettings();
     }
 
     // Write the current effects array to flash

@@ -36,7 +36,6 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
-    void PrintEffectSettings();
     EffectSettings GetEffectSettings();
 
 private:

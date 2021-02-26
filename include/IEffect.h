@@ -12,7 +12,6 @@ public:
     virtual float Process(float in) { return 0; }
     virtual void Loop(bool allowEffectControl) {}
     virtual char *GetEffectName() { return (char *)"uh-oh"; }
-    virtual void PrintEffectSettings() {}
     virtual EffectSettings GetEffectSettings() { return effectSettings; }
 
 protected:
