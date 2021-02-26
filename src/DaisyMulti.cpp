@@ -5,8 +5,8 @@
  */
 void AudioCallback(float **in, float **out, size_t size)
 {
-    // Handle the control encoder
-    HandleControlEncoder();
+    // Interrupt handler for the control encoder
+    ControlEncoderInterrupt();
 
     for (size_t i = 0; i < size; i++)
     {
@@ -75,6 +75,7 @@ void InitializeEffects()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         currentEffects[i] = 0;
+        newEffects[i] = 0;
     }
 
     // Setup each effect object
@@ -124,66 +125,86 @@ void HandleEffectButtons()
 }
 
 /**
- * Handles control of the effect controlEncoder, only enabled in edit mode
+ * Reads the control encoder and triggers actions
  */
-void HandleControlEncoder()
+void ControlEncoderInterrupt()
 {
-    controlEncoder.Debounce();
-
     // Get the button press state
+    controlEncoder.Debounce();
     bool buttonPressed = controlEncoder.RisingEdge();
 
     // Check if we are currently in play mode and the control button is pressed
     if (currentState == PedalState::PLAY_MODE && buttonPressed)
     {
-        // Switch to edit mode
-        debugPrintln(hw, "Switching to edit mode!");
-        currentState = PedalState::EDIT_MODE;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
+        // Trigger a switch to edit mode
+        newState = PedalState::EDIT_MODE;
     }
 
     // Check if we are currently in edit mode and the control button is pressed
     else if (currentState == PedalState::EDIT_MODE && buttonPressed)
     {
-        // Switch back to play mode
-        debugPrintln(hw, "Switching to play mode!");
-        currentState = PedalState::PLAY_MODE;
-
-        // Reset the selected edit effect
-        selectedEditEffect = -1;
-
-        // Update the effect LEDs
-        UpdateEffectLeds();
-
-        // Persist current effect settings in flash
-        SaveCurrentEffectSettings();
+        // Trigger a switch to play mode
+        newState = PedalState::PLAY_MODE;
     }
 
     // Check for encoder turns in edit mode
     if (currentState == PedalState::EDIT_MODE && selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS)
     {
-        // // Read the currently selected effect
-        // EffectType selected = (EffectType)effectSelector.GetSelectedEffect();
-        // IEffect *selectedEffect = GetEffectObject(selected);
-
-        // // Check if the selected effect is different than the one we are editing
-        // if (selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS && currentEffects[selectedEditEffect] != selectedEffect)
-        // {
-        //     // New effect selected
-        //     currentEffects[selectedEditEffect]->Cleanup();
-        //     currentEffects[selectedEditEffect] = selectedEffect;
-        //     currentEffects[selectedEditEffect]->Setup(hw);
-
-        //     debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
-        // }
-
         // Check for a change in the selected effect
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
-            debugPrintlnF(hw, "Incremented %d", inc);
+            // Check if we have looped around
+            int newEffect = currentEffects[selectedEditEffect] + inc;
+            if (newEffect < 0)
+            {
+                newEffect = AVAIL_EFFECTS - 1;
+            }
+            else if (newEffect >= AVAIL_EFFECTS)
+            {
+                newEffect = 0;
+            }
+
+            // Trigger a change of the effect
+            newEffects[selectedEditEffect] = newEffect;
+        }
+    }
+}
+
+/**
+ * Handles control of the pedal state
+ */
+void HandlePedalState()
+{
+    // Has a new state been triggered?
+    if (currentState != newState)
+    {
+        // Switching to edit mode
+        if (newState == PedalState::EDIT_MODE)
+        {
+            // Switch to edit mode
+            debugPrintln(hw, "Switching to edit mode!");
+            currentState = PedalState::EDIT_MODE;
+
+            // Update the effect LEDs
+            UpdateEffectLeds();
+        }
+
+        // Switching to play mode
+        else if (newState == PedalState::PLAY_MODE)
+        {
+            // Switch back to play mode
+            debugPrintln(hw, "Switching to play mode!");
+            currentState = PedalState::PLAY_MODE;
+
+            // Reset the selected edit effect
+            selectedEditEffect = -1;
+
+            // Update the effect LEDs
+            UpdateEffectLeds();
+
+            // Persist current effect settings in flash
+            SaveCurrentEffectSettings();
         }
     }
 }
@@ -333,6 +354,9 @@ int main(void)
     // Loop forever
     for (;;)
     {
+        // Handle the pedal state
+        HandlePedalState();
+
         // Handle the effect buttons
         HandleEffectButtons();
 
@@ -342,6 +366,19 @@ int main(void)
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
+            // Check for a changed effect
+            if (currentEffects[i] != newEffects[i])
+            {
+                // Clean up the previous effect
+                availableEffects[currentEffects[i]]->Cleanup();
+
+                // Setup the new effect
+                currentEffects[i] = newEffects[i];
+                availableEffects[currentEffects[i]]->Setup(hw);
+
+                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+            }
+
             availableEffects[currentEffects[i]]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
         }
     }

@@ -36,13 +36,15 @@ IEffect *availableEffects[AVAIL_EFFECTS] = {
     new Echo()};
 
 // Flash storage parameters
-uint32_t memBase = 0x90000000;
-static IEffect DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
+// uint32_t memBase = 0x90000000;
+// static IEffect DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
 
 // Pedal state and effects objects
 volatile PedalState currentState = PedalState::PLAY_MODE;
+volatile PedalState newState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
-int currentEffects[MAX_EFFECTS];
+volatile int currentEffects[MAX_EFFECTS];
+volatile int newEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
 
 // Effect controls
@@ -79,9 +81,14 @@ void InitializeEffects();
 void HandleEffectButtons();
 
 /**
- * Handles control of the control encoder
+ * Handles control of the pedal state
  */
-void HandleControlEncoder();
+void HandlePedalState();
+
+/**
+ * Reads the control encoder and triggers actions
+ */
+void ControlEncoderInterrupt();
 
 /**
  * Updates the effect LEDs, turning them on and off based on the current state
