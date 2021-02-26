@@ -37,7 +37,8 @@ IEffect *availableEffects[AVAIL_EFFECTS] = {
 
 // Flash storage parameters
 uint32_t memBase = 0x90000000;
-static int DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
+static EffectStorage DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
+EffectStorage effectsStorageBuffer[MAX_EFFECTS];
 
 // Pedal state and effects objects
 volatile PedalState currentState = PedalState::PLAY_MODE;

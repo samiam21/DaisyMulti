@@ -7,7 +7,7 @@
 
 #define WAIT_FOR_SERIAL true
 
-#define BLOCKSIZE 12
+#define BLOCKSIZE 1
 #define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
 
 #define AUDIO_IN_CH 1
@@ -60,6 +60,12 @@ struct EffectSettings
 {
     float knobSettings[MAX_KNOBS];
     u_int8_t togglePosition;
+};
+
+struct EffectStorage
+{
+    int availableEffectsPosition;
+    EffectSettings effectSettings;
 };
 
 // Pin Definitions - Selector

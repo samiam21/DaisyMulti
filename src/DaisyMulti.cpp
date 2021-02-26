@@ -79,8 +79,10 @@ void InitializeEffects()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         // Read and set the current effect
-        currentEffects[i] = effectsStorage[i];
-        newEffects[i] = effectsStorage[i];
+        currentEffects[i] = effectsStorage[i].availableEffectsPosition;
+        newEffects[i] = effectsStorage[i].availableEffectsPosition;
+        //currentEffects[i] = 0;
+        //newEffects[i] = 0;
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
 
         // // Read settings
@@ -276,10 +278,16 @@ void SaveCurrentEffectSettings()
     hw->qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
     dsy_qspi_init(&hw->qspi_handle);
 
+    // Fill in the effect storage buffer
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        effectsStorageBuffer[i].availableEffectsPosition = currentEffects[i];
+    }
+
     // Write the current effects array to flash
     uint32_t writesize = MAX_EFFECTS * sizeof(effectsStorage[0]);
     dsy_qspi_erase(memBase, memBase + writesize);
-    int success = dsy_qspi_write(memBase, writesize, (uint8_t *)currentEffects);
+    int success = dsy_qspi_write(memBase, writesize, (uint8_t *)effectsStorageBuffer);
 
     if (success == DSY_MEMORY_ERROR)
     {
