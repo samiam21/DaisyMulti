@@ -56,10 +56,11 @@ Led effectLeds[MAX_EFFECTS];
 Encoder controlEncoder;
 
 // Output volume control
-Knob outputVolume;
+const float outputLevelIncrement = 0.2f;
 const float outputLevelMin = 0.0f;
 const float outputLevelMax = 5.0f;
 float outputLevel = 1.0f;
+float newOutputLevel = 1.0f;
 
 /**
  * Audio callback to process each enabled effect
@@ -95,11 +96,6 @@ void ControlEncoderInterrupt();
  * Updates the effect LEDs, turning them on and off based on the current state
  */
 void UpdateEffectLeds();
-
-/**
- * Handles reading the volume knob and setting the output level
- */
-void HandleOutputVolumeControl();
 
 /**
  * Saves the current effect settings to flash

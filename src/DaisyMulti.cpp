@@ -59,9 +59,6 @@ void InitializeControls()
         effectLeds[i].Init(hw->GetPin(effectLedPins[i]), false);
     }
 
-    // Initialize the output volume knob
-    outputVolume.Init(hw, KNOB_4_CHN, outputLevel, outputLevelMin, outputLevelMax);
-
     // Update the LEDs
     UpdateEffectLeds();
 }
@@ -182,6 +179,28 @@ void ControlEncoderInterrupt()
             newEffects[selectedEditEffect] = newEffect;
         }
     }
+
+    // Handle output volume whe in play mode
+    else if (currentState == PedalState::PLAY_MODE)
+    {
+        // Check for a change in the selected effect
+        int inc = controlEncoder.Increment();
+        if (inc != 0)
+        {
+            // Increment the output volume
+            newOutputLevel = outputLevel + ((float)inc * outputLevelIncrement);
+
+            // Check if we have hit an edge
+            if (newOutputLevel < outputLevelMin)
+            {
+                newOutputLevel = outputLevelMin;
+            }
+            else if (newOutputLevel > outputLevelMax)
+            {
+                newOutputLevel = outputLevelMax;
+            }
+        }
+    }
 }
 
 /**
@@ -258,17 +277,6 @@ void UpdateEffectLeds()
 }
 
 /**
- * Handles reading the volume knob and setting the output level
- */
-void HandleOutputVolumeControl()
-{
-    if (outputVolume.SetNewValue(outputLevel))
-    {
-        debugPrintlnF(hw, "Updated the output level to: %f", outputLevel);
-    }
-}
-
-/**
  * Saves the current effect settings to flash
  */
 void SaveCurrentEffectSettings()
@@ -336,8 +344,12 @@ int main(void)
         // Handle the effect buttons
         HandleEffectButtons();
 
-        // Handle the output volume
-        HandleOutputVolumeControl();
+        // Check for a change in output level
+        if (outputLevel != newOutputLevel)
+        {
+            outputLevel = newOutputLevel;
+            debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
+        }
 
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
