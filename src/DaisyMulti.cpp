@@ -314,9 +314,13 @@ int main(void)
     hw->Configure();
     hw->Init();
 
+    // Initialize the OLED display
+    display.Init(hw);
+
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
     debugPrintln(hw, "Starting DaisyPedal...");
+    display.WriteMessage((char *)"Booting...");
 
     // Update the block size and sample rate to minimize noise
     hw->SetAudioBlockSize(BLOCKSIZE);

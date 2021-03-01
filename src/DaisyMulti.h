@@ -2,6 +2,7 @@
 #define DAISY_MULTI_H
 
 #include "../include/PedalConfig.h"
+#include "DaisyDisplay.h"
 #include "../include/IEffect.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
@@ -54,6 +55,9 @@ Led effectLeds[MAX_EFFECTS];
 
 // Control Encoder
 Encoder controlEncoder;
+
+// OLED display
+DaisyDisplay display;
 
 // Output volume control
 const float outputLevelIncrement = 0.2f;

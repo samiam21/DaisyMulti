@@ -91,4 +91,8 @@ const int effectPotPin4 = 21;
 // Pin Definitions - LED
 const int effectLedPins[MAX_EFFECTS] = {18, 17, 15, 16};
 
+// Pin Definitions - OLED
+const int oledResetPin = 11;
+const int oledDCPin = 9;
+
 #endif
