@@ -1,10 +1,13 @@
 #ifndef DAISY_DISPLAY_H
 #define DAISY_DISPLAY_H
 
+#include <cstdarg>
 #include "daisy_seed.h"
 #include "../include/PedalConfig.h"
 
 using namespace daisy;
+
+#define MAX_MESSAGE_LEN 255
 
 /**
  * Class for handling writing data out to the OLED display
@@ -18,9 +21,9 @@ public:
     void Init(DaisySeed *hardware);
 
     /**
-     * Clears the screen and writes a message to the OLED
+     * Clears the screen and writes the formatted message to the OLED
      */
-    void WriteMessage(char *message);
+    void WriteMessage(char *message, ...);
 
     /**
      * Clears the OLED screen

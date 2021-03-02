@@ -13,13 +13,19 @@ void DaisyDisplay::Init(DaisySeed *hardware)
 }
 
 /**
- * Clears the screen and writes a message to the OLED
+ * Clears the screen and writes the formatted message to the OLED
  */
-void DaisyDisplay::WriteMessage(char *message)
+void DaisyDisplay::WriteMessage(char *message, ...)
 {
-    display.Fill(true);
+    char buffer[MAX_MESSAGE_LEN];
+    va_list args;
+    va_start(args, message);
+    vsnprintf(buffer, MAX_MESSAGE_LEN, message, args);
+    va_end(args);
+
+    display.Fill(false);
     display.SetCursor(0, 0);
-    display.WriteString(message, Font_7x10, false);
+    display.WriteString(buffer, Font_7x10, true);
     display.Update();
 }
 
@@ -28,6 +34,6 @@ void DaisyDisplay::WriteMessage(char *message)
  */
 void DaisyDisplay::ClearScreen()
 {
-    display.Fill(true);
+    display.Fill(false);
     display.Update();
 }

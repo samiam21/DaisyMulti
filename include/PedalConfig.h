@@ -69,9 +69,14 @@ struct EffectStorage
 };
 
 // Pin Definitions - Selector
-const int effectSelectorPinA = 28;
-const int effectSelectorPinB = 29;
-const int effectSelectorPinSw = 27;
+// const int effectSelectorPinA = 28;
+// const int effectSelectorPinB = 29;
+// const int effectSelectorPinSw = 27;
+/** DEBUG **/
+const int effectSelectorPinA = 12;
+const int effectSelectorPinB = 13;
+const int effectSelectorPinSw = 14;
+/** DEBUG **/
 
 // Pin Definitions - SPST
 const int effectSPSTPins[MAX_EFFECTS] = {5, 6, 7, 8};
