@@ -40,8 +40,6 @@ void DaisyDisplay::UpdatePlayModeEffects(char *currentEffectNames[MAX_EFFECTS])
  */
 void DaisyDisplay::UpdateOutputLevel(float outputLevel)
 {
-    debugPrintln(hw, "drawing box...");
-
     // Clear the output volume box
     display.DrawRect(0, 55, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
 
