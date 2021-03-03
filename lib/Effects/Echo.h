@@ -52,10 +52,13 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"DECAY", (char*)"SPEED", (char*)""};
+
     void TapTempoInterruptHandler();
     void TypeSwitcherLoopControl();
 

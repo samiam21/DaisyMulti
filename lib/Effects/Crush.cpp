@@ -66,6 +66,11 @@ char *Crush::GetEffectName()
     return (char *)"BITCRUSH";
 }
 
+char **Crush::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings Crush::GetEffectSettings()
 {
     // Add levels to the effect settings

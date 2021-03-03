@@ -41,10 +41,13 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"RATE", (char*)"WIDTH", (char*)"DELAY"};
+    
     const float rateMin = 0.0f;
     const float rateMax = 20.0f;
 

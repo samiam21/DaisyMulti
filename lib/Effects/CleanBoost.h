@@ -36,10 +36,13 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"BOOST", (char*)"", (char*)"", (char*)""};
+
     const float boostLevelMin = 1.0f;
     const float boostLevelMax = 30.0f;
     float boostLevel = 10.0f;

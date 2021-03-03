@@ -37,6 +37,11 @@ char *CleanBoost::GetEffectName()
     return (char *)"CLEAN BOOST";
 }
 
+char **CleanBoost::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings CleanBoost::GetEffectSettings()
 {
     // Add boost level to the effect settings

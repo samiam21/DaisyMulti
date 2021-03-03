@@ -42,10 +42,13 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"PREGAIN", (char*)"GAIN", (char*)"DRIVE", (char*)"MIX"};
+
     float WaveShape(float in, float k);
 
     DaisySeed *hw;

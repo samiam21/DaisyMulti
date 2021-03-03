@@ -130,6 +130,11 @@ char *Echo::GetEffectName()
     return (char *)"ECHO";
 }
 
+char **Echo::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings Echo::GetEffectSettings()
 {
     // Add levels to the effect settings

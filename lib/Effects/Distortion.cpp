@@ -80,6 +80,11 @@ char *Distortion::GetEffectName()
     return (char *)"DISTORTION";
 }
 
+char **Distortion::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 float Distortion::WaveShape(float in)
 {
     if (in > 0)

@@ -42,10 +42,13 @@ public:
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"PREGAIN", (char*)"GAIN", (char*)"MIX", (char*)""};
+
     float WaveShape(float in);
     float HardClip(float in);
     void SetClipThreshold();

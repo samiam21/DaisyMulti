@@ -78,6 +78,11 @@ char *DaisyFlanger::GetEffectName()
     return (char *)"FLANGER";
 }
 
+char **DaisyFlanger::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings DaisyFlanger::GetEffectSettings()
 {
     // Add levels to the effect settings

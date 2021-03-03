@@ -78,6 +78,11 @@ char *DaisyChorus::GetEffectName()
     return (char *)"CHORUS";
 }
 
+char **DaisyChorus::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings DaisyChorus::GetEffectSettings()
 {
     // Add levels to the effect settings

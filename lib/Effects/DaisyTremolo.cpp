@@ -101,6 +101,11 @@ char *DaisyTremolo::GetEffectName()
     return (char *)"TREMOLO";
 }
 
+char **DaisyTremolo::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings DaisyTremolo::GetEffectSettings()
 {
     // Add levels to the effect settings

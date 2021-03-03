@@ -68,6 +68,11 @@ char *AutoWah::GetEffectName()
     return (char *)"AUTOWAH";
 }
 
+char **AutoWah::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 EffectSettings AutoWah::GetEffectSettings()
 {
     // Add levels to the effect settings

@@ -76,7 +76,7 @@ void DaisyDisplay::ShowEditModeStartupScreen()
 /**
  * Displays the screen for editing an effect
  */
-void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char *knobNames[MAX_KNOBS])
+void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char **knobNames)
 {
     // Clear the entire screen
     display.Fill(false);

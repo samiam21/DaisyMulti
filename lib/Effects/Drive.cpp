@@ -81,6 +81,11 @@ char *Drive::GetEffectName()
     return (char *)"OVERDRIVE";
 }
 
+char **Drive::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
 float Drive::WaveShape(float in, float k)
 {
     return (1 + k) * in / (1 + k * abs(in));
