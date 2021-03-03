@@ -45,6 +45,7 @@ EffectStorage effectsStorageBuffer[MAX_EFFECTS];
 volatile PedalState currentState = PedalState::PLAY_MODE;
 volatile PedalState newState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
+char *currentEffectNames[MAX_EFFECTS];
 volatile int currentEffects[MAX_EFFECTS];
 volatile int newEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};

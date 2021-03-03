@@ -13,7 +13,7 @@
 #define AUDIO_IN_CH 1
 #define AUDIO_OUT_CH 0
 
-#define MAX_EFFECTS 4
+#define MAX_EFFECTS 6
 
 #define MAX_KNOBS 4
 #define KNOB_1_CHN 0

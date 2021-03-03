@@ -78,7 +78,7 @@ void Drive::Loop(bool allowEffectControl)
 
 char *Drive::GetEffectName()
 {
-    return (char *)"Overdrive";
+    return (char *)"OVERDRIVE";
 }
 
 float Drive::WaveShape(float in, float k)

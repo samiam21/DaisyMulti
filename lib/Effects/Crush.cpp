@@ -63,7 +63,7 @@ void Crush::Loop(bool allowEffectControl)
 
 char *Crush::GetEffectName()
 {
-    return (char *)"Bitcrush";
+    return (char *)"BITCRUSH";
 }
 
 EffectSettings Crush::GetEffectSettings()

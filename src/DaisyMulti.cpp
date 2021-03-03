@@ -78,6 +78,7 @@ void InitializeEffects()
     //     // Read and set the current effect
     //     currentEffects[i] = effectsStorage[i].availableEffectsPosition;
     //     newEffects[i] = effectsStorage[i].availableEffectsPosition;
+    //     currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
     //     debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
 
     //     // Read settings
@@ -99,14 +100,18 @@ void InitializeEffects()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         // Read and set the current effect
-        currentEffects[i] = 0;
-        newEffects[i] = 0;
+        currentEffects[i] = i;
+        newEffects[i] = i;
+        currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
 
         // Initialize the effect
         availableEffects[currentEffects[i]]->Setup(hw);
     }
     /** DEBUG **/
+
+    // Show the selected effects in play mode
+    display.DisplayPlayModeEffects(currentEffectNames);
 }
 
 /**
@@ -334,7 +339,7 @@ int main(void)
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
     debugPrintln(hw, "Starting DaisyPedal...");
-    display.WriteMessage((char *)"Booting...");
+    display.WriteMessage((char *)"BOOTING...");
 
     // Update the block size and sample rate to minimize noise
     hw->SetAudioBlockSize(BLOCKSIZE);

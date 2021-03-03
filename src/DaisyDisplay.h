@@ -8,6 +8,9 @@
 using namespace daisy;
 
 #define MAX_MESSAGE_LEN 255
+#define FONT_SIZE Font_6x8
+#define LINE_HEIGHT 9
+#define CHAR_WIDTH 7
 
 /**
  * Class for handling writing data out to the OLED display
@@ -19,6 +22,11 @@ public:
      * Initializes the OLED display
      */
     void Init(DaisySeed *hardware);
+
+    /**
+     * Displays the currently selected effects as part of play mode
+     */
+    void DisplayPlayModeEffects(char *currentEffectNames[MAX_EFFECTS]);
 
     /**
      * Clears the screen and writes the formatted message to the OLED

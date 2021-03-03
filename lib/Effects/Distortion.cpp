@@ -77,7 +77,7 @@ void Distortion::Loop(bool allowEffectControl)
 
 char *Distortion::GetEffectName()
 {
-    return (char *)"Distortion";
+    return (char *)"DISTORTION";
 }
 
 float Distortion::WaveShape(float in)
