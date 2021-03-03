@@ -131,6 +131,9 @@ void HandleEffectButtons()
                 selectedEditEffect = i;
                 UpdateEffectLeds();
 
+                // Update the OLED to display the effect edit screen
+                display.ShowEditModeEffectScreen(availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+
                 debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
         }

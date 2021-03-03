@@ -40,6 +40,11 @@ public:
     void ShowEditModeStartupScreen();
 
     /**
+     * Displays the screen for editing an effect
+     */
+    void ShowEditModeEffectScreen(char *effectName);
+
+    /**
      * Clears the screen and writes the formatted message to the OLED
      */
     void WriteMessage(char *message, ...);

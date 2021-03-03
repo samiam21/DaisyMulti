@@ -74,6 +74,25 @@ void DaisyDisplay::ShowEditModeStartupScreen()
 }
 
 /**
+ * Displays the screen for editing an effect
+ */
+void DaisyDisplay::ShowEditModeEffectScreen(char *effectName)
+{
+    // Clear the entire screen
+    display.Fill(false);
+
+    // Display the effect name
+    display.SetCursor(0,0);
+    display.WriteString(effectName, FONT_SIZE, true);
+
+    // Display the edit mode indicator
+    display.SetCursor(104,0);
+    display.WriteString("EDIT", FONT_SIZE, true);
+
+    display.Update();
+}
+
+/**
  * Clears the screen and writes the formatted message to the OLED
  */
 void DaisyDisplay::WriteMessage(char *message, ...)
