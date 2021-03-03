@@ -89,6 +89,41 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName)
     display.SetCursor(104,0);
     display.WriteString("EDIT", FONT_SIZE, true);
 
+    // Title separator
+    display.DrawLine(0, 9, SSD1309_WIDTH, 9, true);
+
+    // Knob A info
+    display.DrawCircle(10, 20, 6, true);
+    display.SetCursor(8,17);
+    display.WriteChar('A', FONT_SIZE, true);
+    display.SetCursor(19,17);
+    display.WriteString("0123456", FONT_SIZE, true);
+
+    // Knob B info
+    display.DrawCircle(72, 20, 6, true);
+    display.SetCursor(70,17);
+    display.WriteChar('B', FONT_SIZE, true);
+    display.SetCursor(81,17);
+    display.WriteString("0123456", FONT_SIZE, true);
+
+    // Knob C info
+    display.DrawCircle(10, 37, 6, true);
+    display.SetCursor(8,34);
+    display.WriteChar('C', FONT_SIZE, true);
+    display.SetCursor(19,34);
+    display.WriteString("0123456", FONT_SIZE, true);
+
+    // Knob D info
+    display.DrawCircle(72, 37, 6, true);
+    display.SetCursor(70,34);
+    display.WriteChar('D', FONT_SIZE, true);
+    display.SetCursor(81,34);
+    display.WriteString("0123456", FONT_SIZE, true);
+
+    // Toggle info
+    display.DrawCircle(10, 54, 4, true);
+    display.DrawLine(5, 49, 10, 54, true);
+
     display.Update();
 }
 
