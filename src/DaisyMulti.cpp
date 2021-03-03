@@ -47,20 +47,20 @@ void InitializeControls()
     // Initialize the controlEncoder
     controlEncoder.Init(hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw), hw->AudioCallbackRate());
 
-    // // Initialize the buttons
-    // for (int i = 0; i < MAX_EFFECTS; i++)
-    // {
-    //     effectButtons[i].Init(hw, hw->GetPin(effectSPSTPins[i]));
-    // }
+    // Initialize the buttons
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        effectButtons[i].Init(hw, hw->GetPin(effectSPSTPins[i]));
+    }
 
-    // // Initialize the LEDs
-    // for (int i = 0; i < MAX_EFFECTS; i++)
-    // {
-    //     effectLeds[i].Init(hw->GetPin(effectLedPins[i]), false);
-    // }
+    // Initialize the LEDs
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        effectLeds[i].Init(hw->GetPin(effectLedPins[i]), false);
+    }
 
-    // // Update the LEDs
-    // UpdateEffectLeds();
+    // Update the LEDs
+    UpdateEffectLeds();
 }
 
 /**
@@ -374,7 +374,7 @@ int main(void)
         HandlePedalState();
 
         // Handle the effect buttons
-        // HandleEffectButtons();
+        HandleEffectButtons();
 
         // Check for a change in output level
         if (outputLevel != newOutputLevel)
@@ -384,24 +384,24 @@ int main(void)
             display.UpdateOutputLevel(outputLevel);
         }
 
-        // // Execute the effect loop commands
-        // for (int i = 0; i < MAX_EFFECTS; i++)
-        // {
-        //     // Check for a changed effect
-        //     if (currentEffects[i] != newEffects[i])
-        //     {
-        //         // Clean up the previous effect
-        //         availableEffects[currentEffects[i]]->Cleanup();
+        // Execute the effect loop commands
+        for (int i = 0; i < MAX_EFFECTS; i++)
+        {
+            // Check for a changed effect
+            if (currentEffects[i] != newEffects[i])
+            {
+                // Clean up the previous effect
+                availableEffects[currentEffects[i]]->Cleanup();
 
-        //         // Setup the new effect
-        //         currentEffects[i] = newEffects[i];
-        //         availableEffects[currentEffects[i]]->Setup(hw);
+                // Setup the new effect
+                currentEffects[i] = newEffects[i];
+                availableEffects[currentEffects[i]]->Setup(hw);
 
-        //         debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
-        //     }
+                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+            }
 
-        //     // Call the effect's loop
-        //     availableEffects[currentEffects[i]]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
-        // }
+            // Call the effect's loop
+            availableEffects[currentEffects[i]]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
+        }
     }
 }
