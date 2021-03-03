@@ -132,7 +132,8 @@ void HandleEffectButtons()
                 UpdateEffectLeds();
 
                 // Update the OLED to display the effect edit screen
-                display.ShowEditModeEffectScreen(availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+                char *temp[MAX_KNOBS] = {"ABC", "DEF", "GHI", "JKL"};
+                display.ShowEditModeEffectScreen(availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(), temp);
 
                 debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
@@ -398,7 +399,12 @@ int main(void)
 
                 // Setup the new effect
                 currentEffects[i] = newEffects[i];
+                currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
                 availableEffects[currentEffects[i]]->Setup(hw);
+
+                // Update display for changed effect
+                char *temp[MAX_KNOBS] = {"ABC", "DEF", "GHI", "JKL"};
+                display.ShowEditModeEffectScreen(availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(), temp);
 
                 debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }

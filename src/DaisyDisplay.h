@@ -42,7 +42,7 @@ public:
     /**
      * Displays the screen for editing an effect
      */
-    void ShowEditModeEffectScreen(char *effectName);
+    void ShowEditModeEffectScreen(char *effectName, char *knobNames[MAX_KNOBS]);
 
     /**
      * Clears the screen and writes the formatted message to the OLED

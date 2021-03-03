@@ -18,7 +18,7 @@ void DaisyDisplay::Init(DaisySeed *hardware)
 void DaisyDisplay::UpdatePlayModeEffects(char *currentEffectNames[MAX_EFFECTS])
 {
     // Erase the effects portion of the screen
-    display.DrawRect(0, 0, SSD1309_WIDTH, LINE_HEIGHT * MAX_EFFECTS, false, true);
+    display.DrawRect(0, 0, SSD1309_WIDTH, 54, false, true);
 
     // Write each effect name
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -76,7 +76,7 @@ void DaisyDisplay::ShowEditModeStartupScreen()
 /**
  * Displays the screen for editing an effect
  */
-void DaisyDisplay::ShowEditModeEffectScreen(char *effectName)
+void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char *knobNames[MAX_KNOBS])
 {
     // Clear the entire screen
     display.Fill(false);
@@ -97,32 +97,34 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName)
     display.SetCursor(8,17);
     display.WriteChar('A', FONT_SIZE, true);
     display.SetCursor(19,17);
-    display.WriteString("0123456", FONT_SIZE, true);
+    display.WriteString(knobNames[0], FONT_SIZE, true);
 
     // Knob B info
     display.DrawCircle(72, 20, 6, true);
     display.SetCursor(70,17);
     display.WriteChar('B', FONT_SIZE, true);
     display.SetCursor(81,17);
-    display.WriteString("0123456", FONT_SIZE, true);
+    display.WriteString(knobNames[1], FONT_SIZE, true);
 
     // Knob C info
     display.DrawCircle(10, 37, 6, true);
     display.SetCursor(8,34);
     display.WriteChar('C', FONT_SIZE, true);
     display.SetCursor(19,34);
-    display.WriteString("0123456", FONT_SIZE, true);
+    display.WriteString(knobNames[2], FONT_SIZE, true);
 
     // Knob D info
     display.DrawCircle(72, 37, 6, true);
     display.SetCursor(70,34);
     display.WriteChar('D', FONT_SIZE, true);
     display.SetCursor(81,34);
-    display.WriteString("0123456", FONT_SIZE, true);
+    display.WriteString(knobNames[3], FONT_SIZE, true);
 
     // Toggle info
     display.DrawCircle(10, 54, 4, true);
     display.DrawLine(5, 49, 10, 54, true);
+    display.SetCursor(19,51);
+    display.WriteString("01234", FONT_SIZE, true);
 
     display.Update();
 }
