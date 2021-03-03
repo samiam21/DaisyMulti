@@ -18,7 +18,7 @@ void DaisyDisplay::Init(DaisySeed *hardware)
 void DaisyDisplay::UpdatePlayModeEffects(char *currentEffectNames[MAX_EFFECTS])
 {
     // Erase the effects portion of the screen
-    display.DrawRect(0, 0, LINE_HEIGHT * MAX_EFFECTS, SSD1309_WIDTH, false, true);
+    display.DrawRect(0, 0, SSD1309_WIDTH, LINE_HEIGHT * MAX_EFFECTS, false, true);
 
     // Write each effect name
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -51,6 +51,25 @@ void DaisyDisplay::UpdateOutputLevel(float outputLevel)
     display.DrawRect(3, 58, levelWidth + 3, SSD1309_HEIGHT - 3, true, true);
 
     // Update the view
+    display.Update();
+}
+
+/**
+ * Displays the startup screen for edit mode
+ */
+void DaisyDisplay::ShowEditModeStartupScreen()
+{
+    // Clear the entire screen
+    display.Fill(false);
+
+    // Display the edit mode title text
+    display.SetCursor(15,23);
+    display.WriteString("EDIT MODE", FONT_SIZE_LARGE, true);
+
+    // Display the edit mode subtitle text
+    display.SetCursor(16,44);
+    display.WriteString("SELECT AN EFFECT", FONT_SIZE, true);
+
     display.Update();
 }
 

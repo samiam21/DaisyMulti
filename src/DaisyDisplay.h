@@ -9,6 +9,7 @@ using namespace daisy;
 
 #define MAX_MESSAGE_LEN 255
 #define FONT_SIZE Font_6x8
+#define FONT_SIZE_LARGE Font_11x18
 #define LINE_HEIGHT 9
 #define CHAR_WIDTH 7
 
@@ -32,6 +33,11 @@ public:
      * Displays the output level in the corner of the display
      */
     void UpdateOutputLevel(float outputLevel);
+
+    /**
+     * Displays the startup screen for edit mode
+     */
+    void ShowEditModeStartupScreen();
 
     /**
      * Clears the screen and writes the formatted message to the OLED

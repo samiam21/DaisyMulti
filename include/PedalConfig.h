@@ -73,8 +73,8 @@ struct EffectStorage
 // const int effectSelectorPinB = 29;
 // const int effectSelectorPinSw = 27;
 /** DEBUG **/
-const int effectSelectorPinA = 12;
-const int effectSelectorPinB = 13;
+const int effectSelectorPinA = 13;
+const int effectSelectorPinB = 12;
 const int effectSelectorPinSw = 14;
 /** DEBUG **/
 

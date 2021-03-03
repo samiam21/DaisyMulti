@@ -239,6 +239,9 @@ void HandlePedalState()
 
             // Update the effect LEDs
             UpdateEffectLeds();
+
+            // Update the OLED display
+            display.ShowEditModeStartupScreen();
         }
 
         // Switching to play mode
@@ -253,6 +256,10 @@ void HandlePedalState()
 
             // Update the effect LEDs
             UpdateEffectLeds();
+
+            // Update the OLED display
+            display.UpdatePlayModeEffects(currentEffectNames);
+            display.UpdateOutputLevel(outputLevel);
 
             // Persist current effect settings in flash
             SaveCurrentEffectSettings();
@@ -339,7 +346,6 @@ int main(void)
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
     debugPrintln(hw, "Starting DaisyPedal...");
-    display.WriteMessage((char *)"BOOTING...");
 
     // Update the block size and sample rate to minimize noise
     hw->SetAudioBlockSize(BLOCKSIZE);
@@ -353,7 +359,6 @@ int main(void)
 
     // Start the audio processing
     debugPrintln(hw, "Starting Audio");
-    //display.WriteMessage((char *)"Starting Audio...");
     hw->StartAudio(AudioCallback);
 
     // Turn on the onboard LED
