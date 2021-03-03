@@ -15,10 +15,10 @@ void DaisyDisplay::Init(DaisySeed *hardware)
 /**
  * Displays the currently selected effects as part of play mode
  */
-void DaisyDisplay::DisplayPlayModeEffects(char *currentEffectNames[MAX_EFFECTS])
+void DaisyDisplay::UpdatePlayModeEffects(char *currentEffectNames[MAX_EFFECTS])
 {
-    // Erase the screen
-    display.Fill(false);
+    // Erase the effects portion of the screen
+    display.DrawRect(0, 0, LINE_HEIGHT * MAX_EFFECTS, SSD1309_WIDTH, false, true);
 
     // Write each effect name
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -33,8 +33,27 @@ void DaisyDisplay::DisplayPlayModeEffects(char *currentEffectNames[MAX_EFFECTS])
 
     // Update the view
     display.Update();
+}
 
-    // Write out the output volume
+/**
+ * Displays the output level in the corner of the display
+ */
+void DaisyDisplay::UpdateOutputLevel(float outputLevel)
+{
+    debugPrintln(hw, "drawing box...");
+
+    // Clear the output volume box
+    display.DrawRect(0, 55, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
+
+    // Draw the outer box
+    display.DrawRect(1, 56, SSD1309_WIDTH - 1, SSD1309_HEIGHT - 1, true, false);
+
+    // Draw the output level
+    int levelWidth = (int)(24.4f * outputLevel);
+    display.DrawRect(3, 58, levelWidth + 3, SSD1309_HEIGHT - 3, true, true);
+
+    // Update the view
+    display.Update();
 }
 
 /**

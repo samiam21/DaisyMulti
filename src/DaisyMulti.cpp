@@ -111,7 +111,7 @@ void InitializeEffects()
     /** DEBUG **/
 
     // Show the selected effects in play mode
-    display.DisplayPlayModeEffects(currentEffectNames);
+    display.UpdatePlayModeEffects(currentEffectNames);
 }
 
 /**
@@ -359,6 +359,9 @@ int main(void)
     // Turn on the onboard LED
     hw->SetLed(true);
 
+    // Update the output level display
+    display.UpdateOutputLevel(outputLevel);
+
     // Loop forever
     for (;;)
     {
@@ -373,7 +376,7 @@ int main(void)
         {
             outputLevel = newOutputLevel;
             debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
-            display.WriteMessage((char *)"OUTPUT: %.2f", outputLevel);
+            display.UpdateOutputLevel(outputLevel);
         }
 
         // // Execute the effect loop commands

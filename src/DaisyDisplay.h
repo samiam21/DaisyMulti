@@ -26,7 +26,12 @@ public:
     /**
      * Displays the currently selected effects as part of play mode
      */
-    void DisplayPlayModeEffects(char *currentEffectNames[MAX_EFFECTS]);
+    void UpdatePlayModeEffects(char *currentEffectNames[MAX_EFFECTS]);
+
+    /**
+     * Displays the output level in the corner of the display
+     */
+    void UpdateOutputLevel(float outputLevel);
 
     /**
      * Clears the screen and writes the formatted message to the OLED
