@@ -52,6 +52,7 @@ private:
     float WaveShape(float in);
     float HardClip(float in);
     void SetClipThreshold();
+    void SetToggleDisplay();
 
     DaisySeed *hw;
     float sample_rate;

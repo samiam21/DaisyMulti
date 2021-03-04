@@ -61,6 +61,7 @@ private:
 
     void TapTempoInterruptHandler();
     void TypeSwitcherLoopControl();
+    void SetToggleDisplay();
 
     DaisySeed *hw;
 

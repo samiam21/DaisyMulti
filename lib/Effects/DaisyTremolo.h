@@ -47,6 +47,8 @@ public:
 
 private:
     const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"RATE", (char*)"WIDTH", (char*)"DELAY"};
+
+    void SetToggleDisplay();
     
     const float rateMin = 0.0f;
     const float rateMax = 20.0f;
