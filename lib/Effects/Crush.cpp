@@ -1,8 +1,9 @@
 #include "Crush.h"
 
-void Crush::Setup(daisy::DaisySeed *hardware)
+void Crush::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     decimator.Init();
 

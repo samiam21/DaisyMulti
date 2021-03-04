@@ -1,12 +1,14 @@
 #include "Distortion.h"
 
-void Distortion::Setup(daisy::DaisySeed *hardware)
+void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the clipping toggle
     clippingToggle.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     SetClipThreshold();
+    display->UpdateEditModeToggleValue((char*)"BLAH");
 
     // Initialize the knobs and effect values
     pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);

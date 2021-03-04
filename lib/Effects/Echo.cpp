@@ -1,7 +1,10 @@
 #include "Echo.h"
 
-void Echo::Setup(daisy::DaisySeed *hardware)
+void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
+    hw = hardware;
+    display = daisyDisplay;
+
     // Init Delay Line
     del_line.Init();
 
@@ -19,6 +22,7 @@ void Echo::Setup(daisy::DaisySeed *hardware)
     // Initialize the type
     typeSwitcher.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     TypeSwitcherLoopControl();
+    display->UpdateEditModeToggleValue("OHNO");
 }
 
 float Echo::Process(float in)

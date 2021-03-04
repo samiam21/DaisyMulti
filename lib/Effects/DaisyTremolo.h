@@ -36,7 +36,7 @@ using namespace daisysp;
 class DaisyTremolo : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);

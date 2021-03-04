@@ -1,8 +1,9 @@
 #include "DaisyFlanger.h"
 
-void DaisyFlanger::Setup(daisy::DaisySeed *hardware)
+void DaisyFlanger::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the knobs
     mixKnob.Init(hw, KNOB_1_CHN, mixLevel);

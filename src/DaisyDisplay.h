@@ -45,6 +45,11 @@ public:
     void ShowEditModeEffectScreen(char *effectName, char **knobNames);
 
     /**
+     * Updates the toggle value in the edit effect screen
+     */
+    void UpdateEditModeToggleValue(char *newValue);
+
+    /**
      * Clears the screen and writes the formatted message to the OLED
      */
     void WriteMessage(char *message, ...);

@@ -37,7 +37,7 @@ using namespace daisysp;
 class Distortion : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);

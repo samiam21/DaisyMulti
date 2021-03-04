@@ -106,7 +106,7 @@ void InitializeEffects()
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
 
         // Initialize the effect
-        availableEffects[currentEffects[i]]->Setup(hw);
+        availableEffects[currentEffects[i]]->Setup(hw, &display);
     }
     /** DEBUG **/
 
@@ -398,15 +398,17 @@ int main(void)
                 // Clean up the previous effect
                 availableEffects[currentEffects[i]]->Cleanup();
 
-                // Setup the new effect
+                // Set the new effect
                 currentEffects[i] = newEffects[i];
                 currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
-                availableEffects[currentEffects[i]]->Setup(hw);
 
                 // Update display for changed effect
                 display.ShowEditModeEffectScreen(
                     availableEffects[currentEffects[i]]->GetEffectName(), 
                     availableEffects[currentEffects[i]]->GetKnobNames());
+
+                // Setup the new effect
+                availableEffects[currentEffects[i]]->Setup(hw, &display);
 
                 debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }

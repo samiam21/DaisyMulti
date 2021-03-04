@@ -123,8 +123,21 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char **knobNames)
     // Toggle info
     display.DrawCircle(10, 54, 4, true);
     display.DrawLine(5, 49, 10, 54, true);
+
+    display.Update();
+}
+
+/**
+ * Updates the toggle value in the edit effect screen
+ */
+void DaisyDisplay::UpdateEditModeToggleValue(char *newValue)
+{
+    // Erase the current value
+    display.DrawRect(19, 51, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
+
+    // Draw new value
     display.SetCursor(19,51);
-    display.WriteString("01234", FONT_SIZE, true);
+    display.WriteString(newValue, FONT_SIZE, true);
 
     display.Update();
 }

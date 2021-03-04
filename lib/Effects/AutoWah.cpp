@@ -1,8 +1,9 @@
 #include "AutoWah.h"
 
-void AutoWah::Setup(daisy::DaisySeed *hardware)
+void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     float sample_rate = hw->AudioSampleRate();
     autowah.Init(sample_rate);

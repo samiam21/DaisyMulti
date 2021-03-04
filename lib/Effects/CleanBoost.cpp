@@ -1,8 +1,9 @@
 #include "CleanBoost.h"
 
-void CleanBoost::Setup(daisy::DaisySeed *hardware)
+void CleanBoost::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     boostKnob.Init(hw, KNOB_1_CHN, boostLevel, boostLevelMin, boostLevelMax);
 }

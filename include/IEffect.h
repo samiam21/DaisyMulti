@@ -3,11 +3,12 @@
 
 #include "daisy_seed.h"
 #include "PedalConfig.h"
+#include "../src/DaisyDisplay.h"
 
 class IEffect
 {
 public:
-    virtual void Setup(daisy::DaisySeed *hardware) {}
+    virtual void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay) {}
     virtual void Cleanup() {}
     virtual float Process(float in) { return 0; }
     virtual void Loop(bool allowEffectControl) {}
@@ -18,6 +19,7 @@ public:
 
 protected:
     daisy::DaisySeed *hw;
+    DaisyDisplay *display;
     EffectSettings effectSettings;
 };
 

@@ -1,8 +1,9 @@
 #include "DaisyTremolo.h"
 
-void DaisyTremolo::Setup(daisy::DaisySeed *hardware)
+void DaisyTremolo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the knobs
     mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
@@ -11,6 +12,7 @@ void DaisyTremolo::Setup(daisy::DaisySeed *hardware)
 
     // Initialize the toggle
     waveformSelector.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
+    display->UpdateEditModeToggleValue("WHEE");
 
     // Initialize the Tremolo
     float sample_rate = hw->AudioSampleRate();

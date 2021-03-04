@@ -1,8 +1,9 @@
 #include "DaisyChorus.h"
 
-void DaisyChorus::Setup(daisy::DaisySeed *hardware)
+void DaisyChorus::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the knobs
     mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
