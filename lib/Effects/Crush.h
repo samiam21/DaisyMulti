@@ -35,15 +35,18 @@ using namespace daisysp;
 class Crush : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"DN-SAMP", (char*)"CRUSH", (char*)""};
+
     DaisySeed *hw;
     const int LED_MAX_VALUE = 256;
     const int LED_MIN_VALUE = 0;

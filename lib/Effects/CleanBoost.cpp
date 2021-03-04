@@ -1,8 +1,9 @@
 #include "CleanBoost.h"
 
-void CleanBoost::Setup(daisy::DaisySeed *hardware)
+void CleanBoost::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     boostKnob.Init(hw, KNOB_1_CHN, boostLevel, boostLevelMin, boostLevelMax);
 }
@@ -35,6 +36,11 @@ void CleanBoost::Loop(bool allowEffectControl)
 char *CleanBoost::GetEffectName()
 {
     return (char *)"CLEAN BOOST";
+}
+
+char **CleanBoost::GetKnobNames()
+{
+    return (char**)knobNames;
 }
 
 EffectSettings CleanBoost::GetEffectSettings()

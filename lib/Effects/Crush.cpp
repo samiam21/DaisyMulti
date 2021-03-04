@@ -1,8 +1,9 @@
 #include "Crush.h"
 
-void Crush::Setup(daisy::DaisySeed *hardware)
+void Crush::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     decimator.Init();
 
@@ -63,7 +64,12 @@ void Crush::Loop(bool allowEffectControl)
 
 char *Crush::GetEffectName()
 {
-    return (char *)"Bitcrush";
+    return (char *)"BITCRUSH";
+}
+
+char **Crush::GetKnobNames()
+{
+    return (char**)knobNames;
 }
 
 EffectSettings Crush::GetEffectSettings()

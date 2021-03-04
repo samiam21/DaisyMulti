@@ -1,7 +1,10 @@
 #include "Echo.h"
 
-void Echo::Setup(daisy::DaisySeed *hardware)
+void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
+    hw = hardware;
+    display = daisyDisplay;
+
     // Init Delay Line
     del_line.Init();
 
@@ -19,6 +22,7 @@ void Echo::Setup(daisy::DaisySeed *hardware)
     // Initialize the type
     typeSwitcher.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     TypeSwitcherLoopControl();
+    SetToggleDisplay();
 }
 
 float Echo::Process(float in)
@@ -91,6 +95,8 @@ void Echo::TypeSwitcherLoopControl()
 
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
+
+            SetToggleDisplay();
         }
     }
     else if (typeSwitcher.ReadToggle() == 2)
@@ -106,6 +112,8 @@ void Echo::TypeSwitcherLoopControl()
 
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
+
+            SetToggleDisplay();
         }
     }
     else
@@ -121,6 +129,8 @@ void Echo::TypeSwitcherLoopControl()
 
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
+
+            SetToggleDisplay();
         }
     }
 }
@@ -128,6 +138,30 @@ void Echo::TypeSwitcherLoopControl()
 char *Echo::GetEffectName()
 {
     return (char *)"ECHO";
+}
+
+char **Echo::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
+void Echo::SetToggleDisplay()
+{
+    switch (currentDelayType)
+    {
+        case QUARTER:
+            display->UpdateEditModeToggleValue((char *)"QUARTER");
+            break;
+        case DOTTED_EIGHTH:
+            display->UpdateEditModeToggleValue((char *)"DOT EIGHT");
+            break;
+        case TRIPLET:
+            display->UpdateEditModeToggleValue((char *)"TRIPLET");
+            break;
+        case DT_UNSET:
+            break;
+    }
+    
 }
 
 EffectSettings Echo::GetEffectSettings()

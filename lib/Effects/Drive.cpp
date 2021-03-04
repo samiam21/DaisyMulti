@@ -1,8 +1,9 @@
 #include "Drive.h"
 
-void Drive::Setup(daisy::DaisySeed *hardware)
+void Drive::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the knobs and effect values
     pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
@@ -78,7 +79,12 @@ void Drive::Loop(bool allowEffectControl)
 
 char *Drive::GetEffectName()
 {
-    return (char *)"Overdrive";
+    return (char *)"OVERDRIVE";
+}
+
+char **Drive::GetKnobNames()
+{
+    return (char**)knobNames;
 }
 
 float Drive::WaveShape(float in, float k)

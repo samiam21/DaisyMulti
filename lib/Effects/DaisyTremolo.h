@@ -36,15 +36,20 @@ using namespace daisysp;
 class DaisyTremolo : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
     char *GetEffectName();
+    char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
+    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"RATE", (char*)"WIDTH", (char*)"DELAY"};
+
+    void SetToggleDisplay();
+    
     const float rateMin = 0.0f;
     const float rateMax = 20.0f;
 

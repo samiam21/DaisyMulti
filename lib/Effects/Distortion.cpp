@@ -1,12 +1,14 @@
 #include "Distortion.h"
 
-void Distortion::Setup(daisy::DaisySeed *hardware)
+void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the clipping toggle
     clippingToggle.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     SetClipThreshold();
+    SetToggleDisplay();
 
     // Initialize the knobs and effect values
     pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
@@ -77,7 +79,29 @@ void Distortion::Loop(bool allowEffectControl)
 
 char *Distortion::GetEffectName()
 {
-    return (char *)"Distortion";
+    return (char *)"DISTORTION";
+}
+
+char **Distortion::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
+void Distortion::SetToggleDisplay()
+{
+    switch (currentClip)
+    {
+        case 0:
+            display->UpdateEditModeToggleValue((char *)"HIGH");
+            break;
+        case 1:
+            display->UpdateEditModeToggleValue((char *)"MIDDLE");
+            break;
+        case 2:
+            display->UpdateEditModeToggleValue((char *)"LOW");
+            break;
+    }
+    
 }
 
 float Distortion::WaveShape(float in)
@@ -103,16 +127,19 @@ void Distortion::SetClipThreshold()
         {
             hardClipThreshold = clipThresholdHigh;
             debugPrintln(hw, "Clipping set to high");
+            SetToggleDisplay();
         }
         else if (togg == 1)
         {
             hardClipThreshold = clipThresholdMid;
             debugPrintln(hw, "Clipping set to middle");
+            SetToggleDisplay();
         }
         else
         {
             hardClipThreshold = clipThresholdLow;
             debugPrintln(hw, "Clipping set to low");
+            SetToggleDisplay();
         }
 
         currentClip = togg;

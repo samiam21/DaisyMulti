@@ -1,8 +1,9 @@
 #include "DaisyTremolo.h"
 
-void DaisyTremolo::Setup(daisy::DaisySeed *hardware)
+void DaisyTremolo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the knobs
     mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
@@ -11,6 +12,7 @@ void DaisyTremolo::Setup(daisy::DaisySeed *hardware)
 
     // Initialize the toggle
     waveformSelector.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
+    SetToggleDisplay();
 
     // Initialize the Tremolo
     float sample_rate = hw->AudioSampleRate();
@@ -73,6 +75,7 @@ void DaisyTremolo::Loop(bool allowEffectControl)
                 waveform = Oscillator::WAVE_SIN;
                 tremolo.SetWaveform(waveform);
                 debugPrintln(hw, "Setting waveform to WAVE_SIN");
+                SetToggleDisplay();
             }
         }
         else if (waveformSelector.ReadToggle() == 1)
@@ -82,6 +85,7 @@ void DaisyTremolo::Loop(bool allowEffectControl)
                 waveform = Oscillator::WAVE_SQUARE;
                 tremolo.SetWaveform(waveform);
                 debugPrintln(hw, "Setting waveform to WAVE_SQUARE");
+                SetToggleDisplay();
             }
         }
         else
@@ -91,6 +95,7 @@ void DaisyTremolo::Loop(bool allowEffectControl)
                 waveform = Oscillator::WAVE_RAMP;
                 tremolo.SetWaveform(waveform);
                 debugPrintln(hw, "Setting waveform to WAVE_RAMP");
+                SetToggleDisplay();
             }
         }
     }
@@ -99,6 +104,28 @@ void DaisyTremolo::Loop(bool allowEffectControl)
 char *DaisyTremolo::GetEffectName()
 {
     return (char *)"TREMOLO";
+}
+
+char **DaisyTremolo::GetKnobNames()
+{
+    return (char**)knobNames;
+}
+
+void DaisyTremolo::SetToggleDisplay()
+{
+    switch (waveform)
+    {
+        case Oscillator::WAVE_SIN:
+            display->UpdateEditModeToggleValue((char *)"SIN");
+            break;
+        case Oscillator::WAVE_SQUARE:
+            display->UpdateEditModeToggleValue((char *)"SQUARE");
+            break;
+        case Oscillator::WAVE_RAMP:
+            display->UpdateEditModeToggleValue((char *)"RAMP");
+            break;
+    }
+    
 }
 
 EffectSettings DaisyTremolo::GetEffectSettings()

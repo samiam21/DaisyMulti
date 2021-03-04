@@ -1,8 +1,9 @@
 #include "AutoWah.h"
 
-void AutoWah::Setup(daisy::DaisySeed *hardware)
+void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     float sample_rate = hw->AudioSampleRate();
     autowah.Init(sample_rate);
@@ -66,6 +67,11 @@ void AutoWah::Loop(bool allowEffectControl)
 char *AutoWah::GetEffectName()
 {
     return (char *)"AUTOWAH";
+}
+
+char **AutoWah::GetKnobNames()
+{
+    return (char**)knobNames;
 }
 
 EffectSettings AutoWah::GetEffectSettings()

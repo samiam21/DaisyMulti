@@ -1,8 +1,9 @@
 #include "DaisyFlanger.h"
 
-void DaisyFlanger::Setup(daisy::DaisySeed *hardware)
+void DaisyFlanger::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 {
     hw = hardware;
+    display = daisyDisplay;
 
     // Initialize the knobs
     mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
@@ -76,6 +77,11 @@ void DaisyFlanger::Loop(bool allowEffectControl)
 char *DaisyFlanger::GetEffectName()
 {
     return (char *)"FLANGER";
+}
+
+char **DaisyFlanger::GetKnobNames()
+{
+    return (char**)knobNames;
 }
 
 EffectSettings DaisyFlanger::GetEffectSettings()
