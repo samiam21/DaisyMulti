@@ -15,6 +15,7 @@
 #include "../lib/Effects/Drive.h"
 #include "../lib/Effects/AutoWah.h"
 #include "../lib/Effects/Echo.h"
+#include "../lib/Effects/DaisyCompressor.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -24,7 +25,7 @@ using namespace daisy;
 DaisySeed *hw;
 
 // Available Effects
-#define AVAIL_EFFECTS 9
+#define AVAIL_EFFECTS 10
 IEffect *availableEffects[AVAIL_EFFECTS] = {
     new CleanBoost(),
     new DaisyChorus(),
@@ -34,7 +35,8 @@ IEffect *availableEffects[AVAIL_EFFECTS] = {
     new Distortion(),
     new Drive(),
     new AutoWah(),
-    new Echo()};
+    new Echo(),
+    new DaisyCompressor()};
 
 // Flash storage parameters
 uint32_t memBase = 0x90000000;
