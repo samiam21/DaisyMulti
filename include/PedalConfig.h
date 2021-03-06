@@ -5,7 +5,8 @@
 
 #define DEBUG 1
 
-#define WAIT_FOR_SERIAL false
+#define WAIT_FOR_SERIAL true
+#define ENABLE_DISPLAY false
 
 #define BLOCKSIZE 1
 #define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
@@ -21,6 +22,9 @@
 #define KNOB_3_CHN 2
 #define KNOB_4_CHN 3
 
+#define PI_VAL 3.14159265
+
+/** Serial debug print macros **/
 #define initDebugPrint(hw, pcBlock)                                                                    \
     {                                                                                                  \
         if (DEBUG)                                                                                     \
@@ -47,7 +51,37 @@
             hw->Print(msg, args);     \
     }
 
-#define PI_VAL 3.14159265
+/** OLED display macros **/
+#define initDisplay(hw, display) \
+    {                            \
+        if (ENABLE_DISPLAY)      \
+            display.Init(hw);    \
+    }
+#define updateOutputLevel(display, outputLevel)     \
+    {                                               \
+        if (ENABLE_DISPLAY)                         \
+            display.UpdateOutputLevel(outputLevel); \
+    }
+#define updatePlayModeEffects(display, currentEffectNames)     \
+    {                                                          \
+        if (ENABLE_DISPLAY)                                    \
+            display.UpdatePlayModeEffects(currentEffectNames); \
+    }
+#define showEditModeStartupScreen(display)       \
+    {                                            \
+        if (ENABLE_DISPLAY)                      \
+            display.ShowEditModeStartupScreen(); \
+    }
+#define showEditModeEffectScreen(display, effectName, knobNames)     \
+    {                                                                \
+        if (ENABLE_DISPLAY)                                          \
+            display.ShowEditModeEffectScreen(effectName, knobNames); \
+    }
+#define updateEditModeToggleValue(display, value)      \
+    {                                                  \
+        if (ENABLE_DISPLAY)                            \
+            display->UpdateEditModeToggleValue(value); \
+    }
 
 // State enum for the system
 enum PedalState

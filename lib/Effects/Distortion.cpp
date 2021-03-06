@@ -84,24 +84,23 @@ char *Distortion::GetEffectName()
 
 char **Distortion::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 void Distortion::SetToggleDisplay()
 {
     switch (currentClip)
     {
-        case 0:
-            display->UpdateEditModeToggleValue((char *)"HIGH");
-            break;
-        case 1:
-            display->UpdateEditModeToggleValue((char *)"MIDDLE");
-            break;
-        case 2:
-            display->UpdateEditModeToggleValue((char *)"LOW");
-            break;
+    case 0:
+        updateEditModeToggleValue(display, (char *)"HIGH");
+        break;
+    case 1:
+        updateEditModeToggleValue(display, (char *)"MIDDLE");
+        break;
+    case 2:
+        updateEditModeToggleValue(display, (char *)"LOW");
+        break;
     }
-    
 }
 
 float Distortion::WaveShape(float in)

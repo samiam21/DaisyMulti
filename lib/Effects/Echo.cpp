@@ -142,26 +142,25 @@ char *Echo::GetEffectName()
 
 char **Echo::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 void Echo::SetToggleDisplay()
 {
     switch (currentDelayType)
     {
-        case QUARTER:
-            display->UpdateEditModeToggleValue((char *)"QUARTER");
-            break;
-        case DOTTED_EIGHTH:
-            display->UpdateEditModeToggleValue((char *)"DOT EIGHT");
-            break;
-        case TRIPLET:
-            display->UpdateEditModeToggleValue((char *)"TRIPLET");
-            break;
-        case DT_UNSET:
-            break;
+    case QUARTER:
+        updateEditModeToggleValue(display, (char *)"QUARTER");
+        break;
+    case DOTTED_EIGHTH:
+        updateEditModeToggleValue(display, (char *)"DOT EIGHT");
+        break;
+    case TRIPLET:
+        updateEditModeToggleValue(display, (char *)"TRIPLET");
+        break;
+    case DT_UNSET:
+        break;
     }
-    
 }
 
 EffectSettings Echo::GetEffectSettings()

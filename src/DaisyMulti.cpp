@@ -111,7 +111,7 @@ void InitializeEffects()
     /** DEBUG **/
 
     // Show the selected effects in play mode
-    display.UpdatePlayModeEffects(currentEffectNames);
+    updatePlayModeEffects(display, currentEffectNames);
 }
 
 /**
@@ -132,9 +132,9 @@ void HandleEffectButtons()
                 UpdateEffectLeds();
 
                 // Update the OLED to display the effect edit screen
-                display.ShowEditModeEffectScreen(
-                    availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(), 
-                    availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
+                showEditModeEffectScreen(display,
+                                         availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(),
+                                         availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
 
                 debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
@@ -246,7 +246,7 @@ void HandlePedalState()
             UpdateEffectLeds();
 
             // Update the OLED display
-            display.ShowEditModeStartupScreen();
+            showEditModeStartupScreen(display);
         }
 
         // Switching to play mode
@@ -263,8 +263,8 @@ void HandlePedalState()
             UpdateEffectLeds();
 
             // Update the OLED display
-            display.UpdatePlayModeEffects(currentEffectNames);
-            display.UpdateOutputLevel(outputLevel);
+            updatePlayModeEffects(display, currentEffectNames);
+            updateOutputLevel(display, outputLevel);
 
             // Persist current effect settings in flash
             SaveCurrentEffectSettings();
@@ -346,7 +346,7 @@ int main(void)
     hw->Init();
 
     // Initialize the OLED display
-    display.Init(hw);
+    initDisplay(hw, display);
 
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
@@ -370,7 +370,7 @@ int main(void)
     hw->SetLed(true);
 
     // Update the output level display
-    display.UpdateOutputLevel(outputLevel);
+    updateOutputLevel(display, outputLevel);
 
     // Loop forever
     for (;;)
@@ -386,7 +386,7 @@ int main(void)
         {
             outputLevel = newOutputLevel;
             debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
-            display.UpdateOutputLevel(outputLevel);
+            updateOutputLevel(display, outputLevel);
         }
 
         // Execute the effect loop commands
@@ -403,9 +403,9 @@ int main(void)
                 currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
 
                 // Update display for changed effect
-                display.ShowEditModeEffectScreen(
-                    availableEffects[currentEffects[i]]->GetEffectName(), 
-                    availableEffects[currentEffects[i]]->GetKnobNames());
+                showEditModeEffectScreen(display,
+                                         availableEffects[currentEffects[i]]->GetEffectName(),
+                                         availableEffects[currentEffects[i]]->GetKnobNames());
 
                 // Setup the new effect
                 availableEffects[currentEffects[i]]->Setup(hw, &display);

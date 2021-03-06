@@ -108,24 +108,23 @@ char *DaisyTremolo::GetEffectName()
 
 char **DaisyTremolo::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 void DaisyTremolo::SetToggleDisplay()
 {
     switch (waveform)
     {
-        case Oscillator::WAVE_SIN:
-            display->UpdateEditModeToggleValue((char *)"SIN");
-            break;
-        case Oscillator::WAVE_SQUARE:
-            display->UpdateEditModeToggleValue((char *)"SQUARE");
-            break;
-        case Oscillator::WAVE_RAMP:
-            display->UpdateEditModeToggleValue((char *)"RAMP");
-            break;
+    case Oscillator::WAVE_SIN:
+        updateEditModeToggleValue(display, (char *)"SIN");
+        break;
+    case Oscillator::WAVE_SQUARE:
+        updateEditModeToggleValue(display, (char *)"SQUARE");
+        break;
+    case Oscillator::WAVE_RAMP:
+        updateEditModeToggleValue(display, (char *)"RAMP");
+        break;
     }
-    
 }
 
 EffectSettings DaisyTremolo::GetEffectSettings()
