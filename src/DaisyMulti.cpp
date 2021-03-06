@@ -68,47 +68,32 @@ void InitializeControls()
  */
 void InitializeEffects()
 {
-    // // Configure QSPI mode
-    // hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
-    // dsy_qspi_init(&hw->qspi_handle);
+    // Configure QSPI mode
+    hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
+    dsy_qspi_init(&hw->qspi_handle);
 
-    // // Read the current effect objects and settings
-    // for (int i = 0; i < MAX_EFFECTS; i++)
-    // {
-    //     // Read and set the current effect
-    //     currentEffects[i] = effectsStorage[i].availableEffectsPosition;
-    //     newEffects[i] = effectsStorage[i].availableEffectsPosition;
-    //     currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
-    //     debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
-
-    //     // Read settings
-    //     for (int j = 0; j < MAX_KNOBS; j++)
-    //     {
-    //         debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
-    //     }
-    //     debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
-
-    //     // Initialize the effect
-    //     availableEffects[currentEffects[i]]->Setup(hw);
-    //     availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
-    // }
-
-    // dsy_qspi_deinit();
-
-    /** DEBUG **/
     // Read the current effect objects and settings
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         // Read and set the current effect
-        currentEffects[i] = i;
-        newEffects[i] = i;
-        currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
+        currentEffects[i] = effectsStorage[i].availableEffectsPosition;
+        newEffects[i] = effectsStorage[i].availableEffectsPosition;
+        currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
+
+        // Read settings
+        for (int j = 0; j < MAX_KNOBS; j++)
+        {
+            debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
+        }
+        debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
         availableEffects[currentEffects[i]]->Setup(hw, &display);
+        availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
-    /** DEBUG **/
+
+    dsy_qspi_deinit();
 
     // Show the selected effects in play mode
     updatePlayModeEffects(display, currentEffectNames);
