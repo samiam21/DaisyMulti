@@ -31,18 +31,18 @@ void AudioCallback(float **in, float **out, size_t size)
  */
 void InitializeControls()
 {
-    // // Initialize the 4 knobs
-    // AdcChannelConfig adcConfig[4];
-    // adcConfig[KNOB_1_CHN].InitSingle(hw->GetPin(effectPotPin1));
-    // adcConfig[KNOB_2_CHN].InitSingle(hw->GetPin(effectPotPin2));
-    // adcConfig[KNOB_3_CHN].InitSingle(hw->GetPin(effectPotPin3));
-    // adcConfig[KNOB_4_CHN].InitSingle(hw->GetPin(effectPotPin4));
-    // hw->adc.Init(adcConfig, 4);
-    // hw->adc.Start();
+    // Initialize the 4 knobs
+    AdcChannelConfig adcConfig[4];
+    adcConfig[KNOB_1_CHN].InitSingle(hw->GetPin(effectPotPin1));
+    adcConfig[KNOB_2_CHN].InitSingle(hw->GetPin(effectPotPin2));
+    adcConfig[KNOB_3_CHN].InitSingle(hw->GetPin(effectPotPin3));
+    adcConfig[KNOB_4_CHN].InitSingle(hw->GetPin(effectPotPin4));
+    hw->adc.Init(adcConfig, 4);
+    hw->adc.Start();
 
-    // // TODO: Find a better way to do this?
-    // // Give the ADC time to start up
-    // System::Delay(500);
+    // TODO: Find a better way to do this?
+    // Give the ADC time to start up
+    System::Delay(500);
 
     // Initialize the controlEncoder
     controlEncoder.Init(hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw), hw->AudioCallbackRate());
