@@ -31,18 +31,18 @@ void AudioCallback(float **in, float **out, size_t size)
  */
 void InitializeControls()
 {
-    // // Initialize the 4 knobs
-    // AdcChannelConfig adcConfig[4];
-    // adcConfig[KNOB_1_CHN].InitSingle(hw->GetPin(effectPotPin1));
-    // adcConfig[KNOB_2_CHN].InitSingle(hw->GetPin(effectPotPin2));
-    // adcConfig[KNOB_3_CHN].InitSingle(hw->GetPin(effectPotPin3));
-    // adcConfig[KNOB_4_CHN].InitSingle(hw->GetPin(effectPotPin4));
-    // hw->adc.Init(adcConfig, 4);
-    // hw->adc.Start();
+    // Initialize the 4 knobs
+    AdcChannelConfig adcConfig[4];
+    adcConfig[KNOB_1_CHN].InitSingle(hw->GetPin(effectPotPin1));
+    adcConfig[KNOB_2_CHN].InitSingle(hw->GetPin(effectPotPin2));
+    adcConfig[KNOB_3_CHN].InitSingle(hw->GetPin(effectPotPin3));
+    adcConfig[KNOB_4_CHN].InitSingle(hw->GetPin(effectPotPin4));
+    hw->adc.Init(adcConfig, 4);
+    hw->adc.Start();
 
-    // // TODO: Find a better way to do this?
-    // // Give the ADC time to start up
-    // System::Delay(500);
+    // TODO: Find a better way to do this?
+    // Give the ADC time to start up
+    System::Delay(500);
 
     // Initialize the controlEncoder
     controlEncoder.Init(hw->GetPin(effectSelectorPinA), hw->GetPin(effectSelectorPinB), hw->GetPin(effectSelectorPinSw), hw->AudioCallbackRate());
@@ -68,50 +68,35 @@ void InitializeControls()
  */
 void InitializeEffects()
 {
-    // // Configure QSPI mode
-    // hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
-    // dsy_qspi_init(&hw->qspi_handle);
+    // Configure QSPI mode
+    hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
+    dsy_qspi_init(&hw->qspi_handle);
 
-    // // Read the current effect objects and settings
-    // for (int i = 0; i < MAX_EFFECTS; i++)
-    // {
-    //     // Read and set the current effect
-    //     currentEffects[i] = effectsStorage[i].availableEffectsPosition;
-    //     newEffects[i] = effectsStorage[i].availableEffectsPosition;
-    //     currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
-    //     debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
-
-    //     // Read settings
-    //     for (int j = 0; j < MAX_KNOBS; j++)
-    //     {
-    //         debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
-    //     }
-    //     debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
-
-    //     // Initialize the effect
-    //     availableEffects[currentEffects[i]]->Setup(hw);
-    //     availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
-    // }
-
-    // dsy_qspi_deinit();
-
-    /** DEBUG **/
     // Read the current effect objects and settings
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         // Read and set the current effect
-        currentEffects[i] = i;
-        newEffects[i] = i;
-        currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
+        currentEffects[i] = effectsStorage[i].availableEffectsPosition;
+        newEffects[i] = effectsStorage[i].availableEffectsPosition;
+        currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
+
+        // Read settings
+        for (int j = 0; j < MAX_KNOBS; j++)
+        {
+            debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
+        }
+        debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
         availableEffects[currentEffects[i]]->Setup(hw, &display);
+        availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
-    /** DEBUG **/
+
+    dsy_qspi_deinit();
 
     // Show the selected effects in play mode
-    display.UpdatePlayModeEffects(currentEffectNames);
+    updatePlayModeEffects(display, currentEffectNames);
 }
 
 /**
@@ -132,9 +117,9 @@ void HandleEffectButtons()
                 UpdateEffectLeds();
 
                 // Update the OLED to display the effect edit screen
-                display.ShowEditModeEffectScreen(
-                    availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(), 
-                    availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
+                showEditModeEffectScreen(display,
+                                         availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(),
+                                         availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
 
                 debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
@@ -246,7 +231,7 @@ void HandlePedalState()
             UpdateEffectLeds();
 
             // Update the OLED display
-            display.ShowEditModeStartupScreen();
+            showEditModeStartupScreen(display);
         }
 
         // Switching to play mode
@@ -263,8 +248,8 @@ void HandlePedalState()
             UpdateEffectLeds();
 
             // Update the OLED display
-            display.UpdatePlayModeEffects(currentEffectNames);
-            display.UpdateOutputLevel(outputLevel);
+            updatePlayModeEffects(display, currentEffectNames);
+            updateOutputLevel(display, outputLevel);
 
             // Persist current effect settings in flash
             SaveCurrentEffectSettings();
@@ -346,7 +331,7 @@ int main(void)
     hw->Init();
 
     // Initialize the OLED display
-    display.Init(hw);
+    initDisplay(hw, display);
 
     // Initialize debug printing (true = wait for COM connection before continuing)
     initDebugPrint(hw, WAIT_FOR_SERIAL);
@@ -370,7 +355,7 @@ int main(void)
     hw->SetLed(true);
 
     // Update the output level display
-    display.UpdateOutputLevel(outputLevel);
+    updateOutputLevel(display, outputLevel);
 
     // Loop forever
     for (;;)
@@ -386,7 +371,7 @@ int main(void)
         {
             outputLevel = newOutputLevel;
             debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
-            display.UpdateOutputLevel(outputLevel);
+            updateOutputLevel(display, outputLevel);
         }
 
         // Execute the effect loop commands
@@ -403,9 +388,9 @@ int main(void)
                 currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
 
                 // Update display for changed effect
-                display.ShowEditModeEffectScreen(
-                    availableEffects[currentEffects[i]]->GetEffectName(), 
-                    availableEffects[currentEffects[i]]->GetKnobNames());
+                showEditModeEffectScreen(display,
+                                         availableEffects[currentEffects[i]]->GetEffectName(),
+                                         availableEffects[currentEffects[i]]->GetKnobNames());
 
                 // Setup the new effect
                 availableEffects[currentEffects[i]]->Setup(hw, &display);
