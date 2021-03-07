@@ -47,7 +47,7 @@ void DaisyDisplay::UpdateOutputLevel(float outputLevel)
     display.DrawRect(1, 56, SSD1309_WIDTH - 1, SSD1309_HEIGHT - 1, true, false);
 
     // Draw the output level
-    int levelWidth = (int)(24.4f * outputLevel);
+    int levelWidth = (int)(12.2f * outputLevel);
     display.DrawRect(3, 58, levelWidth + 3, SSD1309_HEIGHT - 3, true, true);
 
     // Update the view
@@ -63,11 +63,11 @@ void DaisyDisplay::ShowEditModeStartupScreen()
     display.Fill(false);
 
     // Display the edit mode title text
-    display.SetCursor(15,23);
+    display.SetCursor(15, 23);
     display.WriteString("EDIT MODE", FONT_SIZE_LARGE, true);
 
     // Display the edit mode subtitle text
-    display.SetCursor(16,44);
+    display.SetCursor(16, 44);
     display.WriteString("SELECT AN EFFECT", FONT_SIZE, true);
 
     display.Update();
@@ -82,11 +82,11 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char **knobNames)
     display.Fill(false);
 
     // Display the effect name
-    display.SetCursor(0,0);
+    display.SetCursor(0, 0);
     display.WriteString(effectName, FONT_SIZE, true);
 
     // Display the edit mode indicator
-    display.SetCursor(104,0);
+    display.SetCursor(104, 0);
     display.WriteString("EDIT", FONT_SIZE, true);
 
     // Title separator
@@ -94,30 +94,30 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char **knobNames)
 
     // Knob A info
     display.DrawCircle(10, 20, 6, true);
-    display.SetCursor(8,17);
+    display.SetCursor(8, 17);
     display.WriteChar('A', FONT_SIZE, true);
-    display.SetCursor(19,17);
+    display.SetCursor(19, 17);
     display.WriteString(knobNames[0], FONT_SIZE, true);
 
     // Knob B info
     display.DrawCircle(72, 20, 6, true);
-    display.SetCursor(70,17);
+    display.SetCursor(70, 17);
     display.WriteChar('B', FONT_SIZE, true);
-    display.SetCursor(81,17);
+    display.SetCursor(81, 17);
     display.WriteString(knobNames[1], FONT_SIZE, true);
 
     // Knob C info
     display.DrawCircle(10, 37, 6, true);
-    display.SetCursor(8,34);
+    display.SetCursor(8, 34);
     display.WriteChar('C', FONT_SIZE, true);
-    display.SetCursor(19,34);
+    display.SetCursor(19, 34);
     display.WriteString(knobNames[2], FONT_SIZE, true);
 
     // Knob D info
     display.DrawCircle(72, 37, 6, true);
-    display.SetCursor(70,34);
+    display.SetCursor(70, 34);
     display.WriteChar('D', FONT_SIZE, true);
-    display.SetCursor(81,34);
+    display.SetCursor(81, 34);
     display.WriteString(knobNames[3], FONT_SIZE, true);
 
     // Toggle info
@@ -136,7 +136,7 @@ void DaisyDisplay::UpdateEditModeToggleValue(char *newValue)
     display.DrawRect(19, 51, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
 
     // Draw new value
-    display.SetCursor(19,51);
+    display.SetCursor(19, 51);
     display.WriteString(newValue, FONT_SIZE, true);
 
     display.Update();
