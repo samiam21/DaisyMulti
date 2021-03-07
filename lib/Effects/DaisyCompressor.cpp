@@ -13,6 +13,7 @@ void DaisyCompressor::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDispl
 
     // Initialize the compressor
     compressor.Init(hw->AudioSampleRate());
+    compressor.AutoMakeup(true);
 }
 
 float DaisyCompressor::Process(float in)
