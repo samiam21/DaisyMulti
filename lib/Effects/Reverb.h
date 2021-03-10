@@ -20,8 +20,8 @@ using namespace daisysp;
  * SPDT 1 -
  * SPDT 2 -
  *
- * Knob 1 - Feedback
- * Knob 2 - LP Frequency
+ * Knob 1 - Decay
+ * Knob 2 - Tone
  * Knob 3 - Mix
  * Knob 4 -
  *
@@ -46,9 +46,9 @@ public:
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char *)"FEEDBK", (char *)"LPFREQ", (char *)"MIX", (char *)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"DECAY", (char *)"TONE", (char *)"MIX", (char *)""};
 
-    const float feedbackMin = 0.0f;
+    const float feedbackMin = 0.4f;
     const float feedbackMax = 1.0f;
     const float lpfreqMin = 0.0f;
 
