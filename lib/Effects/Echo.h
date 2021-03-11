@@ -72,7 +72,7 @@ private:
     Knob speedKnob;
     //Button tapTempoButton;
 
-    static const size_t delayMaxSize = 96000;
+    static const size_t delayMaxSize = 48000;
     static const size_t initialTempoBpm = 90;
 
     // Decay constants

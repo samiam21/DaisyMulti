@@ -9,7 +9,7 @@ void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     del_line.Init();
 
     // Set Delay Time in Samples
-    currentTempoSamples = ((96000 / initialTempoBpm) * 30) * tempoModifier;
+    currentTempoSamples = ((delayMaxSize / initialTempoBpm) * 30) * tempoModifier;
     del_line.SetDelay(currentTempoSamples);
 
     // TODO: Initialize the tap tempo button
@@ -67,7 +67,7 @@ void Echo::Loop(bool allowEffectControl)
         // Update the speed if the knob has been moved
         if (speedKnob.SetNewValue(speed))
         {
-            currentTempoSamples = ((96000 / speed) * 30) * tempoModifier;
+            currentTempoSamples = ((delayMaxSize / speed) * 30) * tempoModifier;
             del_line.SetDelay(currentTempoSamples);
 
             debugPrintlnF(hw, "Updated the speed to: %f", speed);
@@ -214,6 +214,6 @@ void Echo::SetEffectSettings(EffectSettings effectSettings)
     speed = effectSettings.knobSettings[2];
 
     // Update tempo from speed knob
-    currentTempoSamples = ((96000 / speed) * 30) * tempoModifier;
+    currentTempoSamples = ((delayMaxSize / speed) * 30) * tempoModifier;
     del_line.SetDelay(currentTempoSamples);
 }
