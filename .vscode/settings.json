@@ -5,6 +5,9 @@
         "type_traits": "cpp",
         "ranges": "cpp",
         "cstdint": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "atomic": "cpp",
+        "*.tcc": "cpp",
+        "ostream": "cpp"
     }
 }

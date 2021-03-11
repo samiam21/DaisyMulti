@@ -338,7 +338,7 @@ int main(void)
     debugPrintln(hw, "Starting DaisyPedal...");
 
     // Update the block size and sample rate to minimize noise
-    hw->SetAudioBlockSize(BLOCKSIZE);
+    hw->SetAudioBlockSize(DAISY_BLOCKSIZE);
     hw->SetAudioSampleRate(DAISY_SAMPLE_RATE);
 
     // Initialize the input controls
