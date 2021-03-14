@@ -95,8 +95,23 @@ void InitializeEffects()
 
     dsy_qspi_deinit();
 
-    // Show the selected effects in play mode
-    updatePlayModeEffects(display, currentEffectNames);
+    // // Show the selected effects in play mode
+    // updatePlayModeEffects(display, currentEffectNames);
+
+    // /** DEBUG - Used when flashing to a new board **/
+    // for (int i = 0; i < MAX_EFFECTS; i++)
+    // {
+    //     // Read and set the current effect
+    //     currentEffects[i] = 0;
+    //     newEffects[i] = 0;
+    //     currentEffectNames[i] = availableEffects[0]->GetEffectName();
+    //     debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
+
+    //     // Initialize the effect
+    //     availableEffects[currentEffects[i]]->Setup(hw, &display);
+    //     availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
+    // }
+    // /** DEBUG - Used when flashing to a new board **/
 }
 
 /**
