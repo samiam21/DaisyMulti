@@ -5,8 +5,8 @@
 
 #define DEBUG 1
 
-#define WAIT_FOR_SERIAL true
-#define ENABLE_DISPLAY false
+#define WAIT_FOR_SERIAL false
+#define ENABLE_DISPLAY true
 
 #define DAISY_BLOCKSIZE 48
 #define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_48KHZ

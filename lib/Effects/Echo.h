@@ -55,13 +55,13 @@ public:
     char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
+    void UpdateToggleDisplay();
 
 private:
     const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"DECAY", (char*)"SPEED", (char*)""};
 
     void TapTempoInterruptHandler();
     void TypeSwitcherLoopControl();
-    void SetToggleDisplay();
 
     DaisySeed *hw;
 

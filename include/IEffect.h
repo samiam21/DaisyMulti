@@ -16,6 +16,7 @@ public:
     virtual char **GetKnobNames() { return (char **)""; }
     virtual EffectSettings GetEffectSettings() { return effectSettings; }
     virtual void SetEffectSettings(EffectSettings effectSettings) {}
+    virtual void UpdateToggleDisplay() { }
 
 protected:
     daisy::DaisySeed *hw;

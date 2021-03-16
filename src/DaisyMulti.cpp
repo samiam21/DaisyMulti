@@ -135,6 +135,7 @@ void HandleEffectButtons()
                 showEditModeEffectScreen(display,
                                          availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(),
                                          availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
+                availableEffects[currentEffects[selectedEditEffect]]->UpdateToggleDisplay();                                       
 
                 debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
@@ -369,7 +370,8 @@ int main(void)
     // Turn on the onboard LED
     hw->SetLed(true);
 
-    // Update the output level display
+    // Update the OLED display
+    updatePlayModeEffects(display, currentEffectNames);
     updateOutputLevel(display, outputLevel);
 
     // Loop forever

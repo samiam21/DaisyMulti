@@ -8,7 +8,7 @@ void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     // Initialize the clipping toggle
     clippingToggle.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     SetClipThreshold();
-    SetToggleDisplay();
+    UpdateToggleDisplay();
 
     // Initialize the knobs and effect values
     pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
@@ -87,7 +87,7 @@ char **Distortion::GetKnobNames()
     return (char **)knobNames;
 }
 
-void Distortion::SetToggleDisplay()
+void Distortion::UpdateToggleDisplay()
 {
     switch (currentClip)
     {
@@ -126,19 +126,19 @@ void Distortion::SetClipThreshold()
         {
             hardClipThreshold = clipThresholdHigh;
             debugPrintln(hw, "Clipping set to high");
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
         else if (togg == 1)
         {
             hardClipThreshold = clipThresholdMid;
             debugPrintln(hw, "Clipping set to middle");
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
         else
         {
             hardClipThreshold = clipThresholdLow;
             debugPrintln(hw, "Clipping set to low");
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
 
         currentClip = togg;

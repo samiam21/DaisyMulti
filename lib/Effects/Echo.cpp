@@ -22,7 +22,7 @@ void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     // Initialize the type
     typeSwitcher.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     TypeSwitcherLoopControl();
-    SetToggleDisplay();
+    UpdateToggleDisplay();
 }
 
 float Echo::Process(float in)
@@ -96,7 +96,7 @@ void Echo::TypeSwitcherLoopControl()
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
     }
     else if (typeSwitcher.ReadToggle() == 2)
@@ -113,7 +113,7 @@ void Echo::TypeSwitcherLoopControl()
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
     }
     else
@@ -130,7 +130,7 @@ void Echo::TypeSwitcherLoopControl()
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
     }
 }
@@ -145,7 +145,7 @@ char **Echo::GetKnobNames()
     return (char **)knobNames;
 }
 
-void Echo::SetToggleDisplay()
+void Echo::UpdateToggleDisplay()
 {
     switch (currentDelayType)
     {
