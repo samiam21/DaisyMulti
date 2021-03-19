@@ -40,6 +40,7 @@ void Reverb::Loop(bool allowEffectControl)
         {
             verb.SetFeedback(feedback);
             debugPrintlnF(hw, "Updated the feedback to: %f", feedback);
+            updateEditModeKnobValue(display, 0, feedback);
 
             // Update the effect settings
             effectSettings.knobSettings[0] = feedback;
@@ -50,6 +51,7 @@ void Reverb::Loop(bool allowEffectControl)
         {
             verb.SetLpFreq(lpfreq);
             debugPrintlnF(hw, "Updated the LP Frequency to: %f", lpfreq);
+            updateEditModeKnobValue(display, 1, lpfreq);
 
             // Update the effect settings
             effectSettings.knobSettings[1] = lpfreq;
@@ -59,6 +61,7 @@ void Reverb::Loop(bool allowEffectControl)
         if (mixKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 2, mixLevel);
         }
     }
 }

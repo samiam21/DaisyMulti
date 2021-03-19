@@ -44,6 +44,7 @@ void Crush::Loop(bool allowEffectControl)
         if (mixLevelKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Update the bitcrush level
@@ -51,6 +52,7 @@ void Crush::Loop(bool allowEffectControl)
         {
             decimator.SetBitcrushFactor(bitcrushLevel);
             debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
+            updateEditModeKnobValue(display, 1, bitcrushLevel);
         }
 
         // Update the downsample level
@@ -58,6 +60,7 @@ void Crush::Loop(bool allowEffectControl)
         {
             decimator.SetDownsampleFactor(downsampleLevel);
             debugPrintlnF(hw, "Updated the downsample factor to: %f", downsampleLevel);
+            updateEditModeKnobValue(display, 2, downsampleLevel);
         }
     }
 }
@@ -69,7 +72,7 @@ char *Crush::GetEffectName()
 
 char **Crush::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings Crush::GetEffectSettings()

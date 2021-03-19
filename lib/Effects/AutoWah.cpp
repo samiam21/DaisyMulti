@@ -46,6 +46,7 @@ void AutoWah::Loop(bool allowEffectControl)
         {
             //autowah.SetDryWet(dryWetLevel);
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Update the wah level
@@ -53,6 +54,7 @@ void AutoWah::Loop(bool allowEffectControl)
         {
             autowah.SetWah(wahLevel);
             debugPrintlnF(hw, "Updated the wah level to: %f", wahLevel);
+            updateEditModeKnobValue(display, 1, wahLevel);
         }
 
         // Update the level
@@ -60,6 +62,7 @@ void AutoWah::Loop(bool allowEffectControl)
         {
             autowah.SetLevel(level);
             debugPrintlnF(hw, "Updated the level to: %f", level);
+            updateEditModeKnobValue(display, 2, level);
         }
     }
 }
@@ -71,7 +74,7 @@ char *AutoWah::GetEffectName()
 
 char **AutoWah::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings AutoWah::GetEffectSettings()

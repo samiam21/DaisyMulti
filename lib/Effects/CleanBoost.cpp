@@ -26,6 +26,7 @@ void CleanBoost::Loop(bool allowEffectControl)
         if (boostKnob.SetNewValue(boostLevel))
         {
             debugPrintlnF(hw, "Updated the boost level to: %f", boostLevel);
+            updateEditModeKnobValue(display, 0, boostLevel);
 
             // Update the effect settings
             effectSettings.knobSettings[0] = boostLevel;
@@ -40,7 +41,7 @@ char *CleanBoost::GetEffectName()
 
 char **CleanBoost::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings CleanBoost::GetEffectSettings()

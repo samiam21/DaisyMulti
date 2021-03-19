@@ -45,6 +45,7 @@ void DaisyPhaser::Loop(bool allowEffectControl)
         if (mixKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Knob 2 controls the LFO depth
@@ -53,6 +54,7 @@ void DaisyPhaser::Loop(bool allowEffectControl)
             phaser.SetLfoDepth(depth);
 
             debugPrintlnF(hw, "Updated the depth to: %f", depth);
+            updateEditModeKnobValue(display, 1, depth);
         }
 
         // Knob 3 controls the frequency
@@ -61,6 +63,7 @@ void DaisyPhaser::Loop(bool allowEffectControl)
             phaser.SetFreq(frequency);
 
             debugPrintlnF(hw, "Updated the frequency to: %f", frequency);
+            updateEditModeKnobValue(display, 2, frequency);
         }
 
         // Knob 4 controls the feedback
@@ -69,6 +72,7 @@ void DaisyPhaser::Loop(bool allowEffectControl)
             phaser.SetFeedback(feedback);
 
             debugPrintlnF(hw, "Updated the feedback to to: %f", feedback);
+            updateEditModeKnobValue(display, 3, feedback);
         }
     }
 }

@@ -58,18 +58,21 @@ void Distortion::Loop(bool allowEffectControl)
         if (pregainKnob.SetNewValue(pregainLevel))
         {
             debugPrintlnF(hw, "Updated the pregain level to: %f", pregainLevel);
+            updateEditModeKnobValue(display, 0, pregainLevel);
         }
 
         // Update the gain level
         if (gainKnob.SetNewValue(gainLevel))
         {
             debugPrintlnF(hw, "Updated the gain level to: %f", gainLevel);
+            updateEditModeKnobValue(display, 1, gainLevel);
         }
 
         // Update the mix level
         if (mixKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 2, mixLevel);
         }
 
         // Update the clipping threshold

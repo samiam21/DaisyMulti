@@ -51,18 +51,21 @@ void Drive::Loop(bool allowEffectControl)
         if (pregainKnob.SetNewValue(pregainLevel))
         {
             debugPrintlnF(hw, "Updated the pregain level to: %f", pregainLevel);
+            updateEditModeKnobValue(display, 0, pregainLevel);
         }
 
         // Update the gain level
         if (gainKnob.SetNewValue(gainLevel))
         {
             debugPrintlnF(hw, "Updated the gain level to: %f", gainLevel);
+            updateEditModeKnobValue(display, 1, gainLevel);
         }
 
         // Update the mix level
         if (mixKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 2, mixLevel);
         }
 
         // Update the drive level
@@ -73,6 +76,7 @@ void Drive::Loop(bool allowEffectControl)
             k = (2 * a) / (1 - a);
 
             debugPrintlnF(hw, "Updated the drive level to: %f", driveLevel);
+            updateEditModeKnobValue(display, 3, driveLevel);
         }
     }
 }
@@ -84,7 +88,7 @@ char *Drive::GetEffectName()
 
 char **Drive::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 float Drive::WaveShape(float in, float k)

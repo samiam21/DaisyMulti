@@ -124,6 +124,9 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char **knobNames)
     display.DrawCircle(10, 54, 4, true);
     display.DrawLine(5, 49, 10, 54, true);
 
+    // Clear the value section
+    display.DrawRect(SSD1309_WIDTH - 44, 51, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
+
     display.Update();
 }
 
@@ -133,11 +136,48 @@ void DaisyDisplay::ShowEditModeEffectScreen(char *effectName, char **knobNames)
 void DaisyDisplay::UpdateEditModeToggleValue(char *newValue)
 {
     // Erase the current value
-    display.DrawRect(19, 51, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
+    display.DrawRect(19, 51, SSD1309_WIDTH - 45, SSD1309_HEIGHT, false, true);
 
     // Draw new value
     display.SetCursor(19, 51);
     display.WriteString(newValue, FONT_SIZE, true);
+
+    display.Update();
+}
+
+/**
+ * Updates the knob value display in the edit effect screen
+ */
+void DaisyDisplay::UpdateEditModeKnobValue(int knobPosition, float newValue)
+{
+    // Erase the current value
+    display.DrawRect(SSD1309_WIDTH - 44, 51, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
+
+    // Write the knob indicator
+    display.SetCursor(SSD1309_WIDTH - 44, 51);
+    switch (knobPosition)
+    {
+    case 0:
+        display.WriteChar('A', FONT_SIZE, true);
+        break;
+    case 1:
+        display.WriteChar('B', FONT_SIZE, true);
+        break;
+    case 2:
+        display.WriteChar('C', FONT_SIZE, true);
+        break;
+    case 3:
+        display.WriteChar('D', FONT_SIZE, true);
+        break;
+    }
+    display.SetCursor(SSD1309_WIDTH - 38, 51);
+    display.WriteChar('-', FONT_SIZE, true);
+
+    // Write the new value
+    char buffer[6];
+    sprintf(buffer, "%.2f", newValue);
+    display.SetCursor(SSD1309_WIDTH - 32, 51);
+    display.WriteString(buffer, FONT_SIZE, true);
 
     display.Update();
 }

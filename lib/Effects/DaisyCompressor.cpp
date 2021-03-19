@@ -35,6 +35,7 @@ void DaisyCompressor::Loop(bool allowEffectControl)
         {
             compressor.SetRatio(ratio);
             debugPrintlnF(hw, "Updated the ratio to: %f", ratio);
+            updateEditModeKnobValue(display, 0, ratio);
 
             // Update the effect settings
             effectSettings.knobSettings[0] = ratio;
@@ -45,6 +46,7 @@ void DaisyCompressor::Loop(bool allowEffectControl)
         {
             compressor.SetThreshold(threshold);
             debugPrintlnF(hw, "Updated the threshold to: %f", threshold);
+            updateEditModeKnobValue(display, 1, threshold);
 
             // Update the effect settings
             effectSettings.knobSettings[1] = threshold;
@@ -55,6 +57,7 @@ void DaisyCompressor::Loop(bool allowEffectControl)
         {
             compressor.SetAttack(attack);
             debugPrintlnF(hw, "Updated the attack to: %f", attack);
+            updateEditModeKnobValue(display, 2, attack);
 
             // Update the effect settings
             effectSettings.knobSettings[2] = attack;
@@ -65,6 +68,7 @@ void DaisyCompressor::Loop(bool allowEffectControl)
         {
             compressor.SetRelease(release);
             debugPrintlnF(hw, "Updated the release to: %f", release);
+            updateEditModeKnobValue(display, 3, release);
 
             // Update the effect settings
             effectSettings.knobSettings[3] = release;

@@ -432,13 +432,13 @@ int main(void)
                 currentEffects[i] = newEffects[i];
                 currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
 
+                // Setup the new effect
+                availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
+
                 // Update display for changed effect
                 showEditModeEffectScreen(display,
                                          availableEffects[currentEffects[i]]->GetEffectName(),
                                          availableEffects[currentEffects[i]]->GetKnobNames());
-
-                // Setup the new effect
-                availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
 
                 debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }

@@ -57,12 +57,14 @@ void Echo::Loop(bool allowEffectControl)
         if (decayKnob.SetNewValue(decayValue))
         {
             debugPrintlnF(hw, "Updated the decay level to: %f", decayValue);
+            updateEditModeKnobValue(display, 0, decayValue);
         }
 
         // Update the effect level if the knob has been moved
         if (mixLevelKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 1, mixLevel);
         }
 
         // Update the speed if the knob has been moved
@@ -72,6 +74,7 @@ void Echo::Loop(bool allowEffectControl)
             del_line.SetDelay(currentTempoSamples);
 
             debugPrintlnF(hw, "Updated the speed to: %f", speed);
+            updateEditModeKnobValue(display, 2, speed);
         }
 
         // Handle type
