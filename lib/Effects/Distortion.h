@@ -45,6 +45,7 @@ public:
     char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
+    void UpdateToggleDisplay();
 
 private:
     const char *knobNames[MAX_KNOBS] = {(char*)"PREGAIN", (char*)"GAIN", (char*)"MIX", (char*)""};
@@ -52,7 +53,6 @@ private:
     float WaveShape(float in);
     float HardClip(float in);
     void SetClipThreshold();
-    void SetToggleDisplay();
 
     DaisySeed *hw;
     float sample_rate;

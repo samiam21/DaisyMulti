@@ -12,7 +12,7 @@ void DaisyTremolo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 
     // Initialize the toggle
     waveformSelector.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
-    SetToggleDisplay();
+    UpdateToggleDisplay();
 
     // Initialize the Tremolo
     float sample_rate = hw->AudioSampleRate();
@@ -75,7 +75,7 @@ void DaisyTremolo::Loop(bool allowEffectControl)
                 waveform = Oscillator::WAVE_SIN;
                 tremolo.SetWaveform(waveform);
                 debugPrintln(hw, "Setting waveform to WAVE_SIN");
-                SetToggleDisplay();
+                UpdateToggleDisplay();
             }
         }
         else if (waveformSelector.ReadToggle() == 1)
@@ -85,7 +85,7 @@ void DaisyTremolo::Loop(bool allowEffectControl)
                 waveform = Oscillator::WAVE_SQUARE;
                 tremolo.SetWaveform(waveform);
                 debugPrintln(hw, "Setting waveform to WAVE_SQUARE");
-                SetToggleDisplay();
+                UpdateToggleDisplay();
             }
         }
         else
@@ -95,7 +95,7 @@ void DaisyTremolo::Loop(bool allowEffectControl)
                 waveform = Oscillator::WAVE_RAMP;
                 tremolo.SetWaveform(waveform);
                 debugPrintln(hw, "Setting waveform to WAVE_RAMP");
-                SetToggleDisplay();
+                UpdateToggleDisplay();
             }
         }
     }
@@ -111,7 +111,7 @@ char **DaisyTremolo::GetKnobNames()
     return (char **)knobNames;
 }
 
-void DaisyTremolo::SetToggleDisplay()
+void DaisyTremolo::UpdateToggleDisplay()
 {
     switch (waveform)
     {

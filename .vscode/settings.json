@@ -3,6 +3,11 @@
         "random": "cpp",
         "functional": "cpp",
         "type_traits": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "cstdint": "cpp",
+        "utility": "cpp",
+        "atomic": "cpp",
+        "*.tcc": "cpp",
+        "ostream": "cpp"
     }
 }

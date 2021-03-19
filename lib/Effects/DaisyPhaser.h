@@ -1,31 +1,30 @@
-#ifndef TREMOLO_H
-#define TREMOLO_H
+#ifndef PHASER_H
+#define PHASER_H
 
 #include "daisy_seed.h"
 #include "daisysp.h"
 #include "../../../include/IEffect.h"
 #include "../../../include/PedalConfig.h"
 #include "../Inputs/Knob.h"
-#include "../Inputs/NFNToggle.h"
 
 using namespace daisy;
 using namespace daisysp;
 
 /**********************************************
- * Tremolo Effect
+ * Phaser Effect
  * 
  * SPST 1 - 
  * SPST 2 - 
  * SPST 3 - 
  * SPST 4 - 
  * 
- * SPDT 1 - Waveform selector (SIN, SQUARE, RAMP)
+ * SPDT 1 - 
  * SPDT 2 - 
  * 
  * Knob 1 - Mix
- * Knob 2 - Rate
+ * Knob 2 - LFO Rate
  * Knob 3 - Width
- * Knob 4 - 
+ * Knob 4 - Feedback
  * 
  * LED 1 - 
  * LED 2 - 
@@ -33,7 +32,7 @@ using namespace daisysp;
  * LED 4 - 
  **********************************************/
 
-class DaisyTremolo : public IEffect
+class DaisyPhaser : public IEffect
 {
 public:
     void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
@@ -44,26 +43,24 @@ public:
     char **GetKnobNames();
     EffectSettings GetEffectSettings();
     void SetEffectSettings(EffectSettings effectSettings);
-    void UpdateToggleDisplay();
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"RATE", (char*)"WIDTH", (char*)"DELAY"};
-    
-    const float rateMin = 0.0f;
-    const float rateMax = 20.0f;
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"DEPTH", (char *)"FREQ", (char *)"FEEDBK"};
+
+    const float frequencyMin = 0.0f;
+    const float frequencyMax = 1000.0f;
 
     float mixLevel = 0.0f;
-    float rate = 0.0f;
-    float width = 0.0f;
-    int waveform = Oscillator::WAVE_SIN;
+    float depth = 0.0f;
+    float frequency = 0.0f;
+    float feedback = 0.0f;
 
     Knob mixKnob;
-    Knob rateKnob;
-    Knob widthKnob;
+    Knob depthKnob;
+    Knob frequencyKnob;
+    Knob feedbackKnob;
 
-    NFNToggle waveformSelector;
-
-    Tremolo tremolo;
+    Phaser phaser;
 };
 
 #endif

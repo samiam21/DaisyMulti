@@ -1,6 +1,6 @@
 #include "Echo.h"
 
-void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -9,10 +9,11 @@ void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     del_line.Init();
 
     // Set Delay Time in Samples
-    currentTempoSamples = ((96000 / initialTempoBpm) * 30) * tempoModifier;
+    currentTempoSamples = ((delayMaxSize / initialTempoBpm) * 30) * tempoModifier;
     del_line.SetDelay(currentTempoSamples);
 
-    // TODO: Initialize the tap tempo button
+    // Initialize the tap tempo parameters
+    pedalTapTempoAvg = avgTempo;
 
     // Initialize the knobs
     decayKnob.Init(hw, KNOB_1_CHN, decayValue, minDecayValue, maxDecayValue);
@@ -22,7 +23,7 @@ void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     // Initialize the type
     typeSwitcher.Init(hw->GetPin(effectSPDT1Pin1), hw->GetPin(effectSPDT1Pin2));
     TypeSwitcherLoopControl();
-    SetToggleDisplay();
+    UpdateToggleDisplay();
 }
 
 float Echo::Process(float in)
@@ -67,7 +68,7 @@ void Echo::Loop(bool allowEffectControl)
         // Update the speed if the knob has been moved
         if (speedKnob.SetNewValue(speed))
         {
-            currentTempoSamples = ((96000 / speed) * 30) * tempoModifier;
+            currentTempoSamples = ((delayMaxSize / speed) * 30) * tempoModifier;
             del_line.SetDelay(currentTempoSamples);
 
             debugPrintlnF(hw, "Updated the speed to: %f", speed);
@@ -75,6 +76,16 @@ void Echo::Loop(bool allowEffectControl)
 
         // Handle type
         TypeSwitcherLoopControl();
+    }
+
+    // Check for an updated tap tempo
+    if (currentTapTempoAvg != *pedalTapTempoAvg)
+    {
+        currentTapTempoAvg = *pedalTapTempoAvg;
+
+        // Set the new delay based on the calculated duration
+        currentTempoSamples = ((delayMaxSize * (size_t)currentTapTempoAvg) / 1000) * tempoModifier;
+        del_line.SetDelay(currentTempoSamples);
     }
 }
 
@@ -96,7 +107,7 @@ void Echo::TypeSwitcherLoopControl()
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
     }
     else if (typeSwitcher.ReadToggle() == 2)
@@ -113,7 +124,7 @@ void Echo::TypeSwitcherLoopControl()
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
     }
     else
@@ -130,7 +141,7 @@ void Echo::TypeSwitcherLoopControl()
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
-            SetToggleDisplay();
+            UpdateToggleDisplay();
         }
     }
 }
@@ -145,7 +156,7 @@ char **Echo::GetKnobNames()
     return (char **)knobNames;
 }
 
-void Echo::SetToggleDisplay()
+void Echo::UpdateToggleDisplay()
 {
     switch (currentDelayType)
     {
@@ -214,6 +225,6 @@ void Echo::SetEffectSettings(EffectSettings effectSettings)
     speed = effectSettings.knobSettings[2];
 
     // Update tempo from speed knob
-    currentTempoSamples = ((96000 / speed) * 30) * tempoModifier;
+    currentTempoSamples = ((delayMaxSize / speed) * 30) * tempoModifier;
     del_line.SetDelay(currentTempoSamples);
 }

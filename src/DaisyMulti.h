@@ -3,6 +3,7 @@
 
 #include "../include/PedalConfig.h"
 #include "DaisyDisplay.h"
+#include "../lib/Helpers/TempoArray.h"
 #include "../include/IEffect.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
@@ -16,6 +17,8 @@
 #include "../lib/Effects/AutoWah.h"
 #include "../lib/Effects/Echo.h"
 #include "../lib/Effects/DaisyCompressor.h"
+#include "../lib/Effects/Reverb.h"
+#include "../lib/Effects/DaisyPhaser.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -25,18 +28,20 @@ using namespace daisy;
 DaisySeed *hw;
 
 // Available Effects
-#define AVAIL_EFFECTS 10
+#define AVAIL_EFFECTS 12
 IEffect *availableEffects[AVAIL_EFFECTS] = {
     new CleanBoost(),
     new DaisyChorus(),
     new DaisyFlanger(),
     new DaisyTremolo(),
+    new DaisyPhaser(),
+    new AutoWah(),
     new Crush(),
     new Distortion(),
     new Drive(),
-    new AutoWah(),
     new Echo(),
-    new DaisyCompressor()};
+    new DaisyCompressor(),
+    new Reverb()};
 
 // Flash storage parameters
 uint32_t memBase = 0x90000000;
@@ -55,6 +60,13 @@ bool currentEffectsState[MAX_EFFECTS] = {false};
 // Effect controls
 Button effectButtons[MAX_EFFECTS];
 Led effectLeds[MAX_EFFECTS];
+
+// Tap tempo
+Button tapTempoButton;
+TempoArray tempoArray;
+size_t currentTempoSamples;
+unsigned long tapTempoTime = 0;
+unsigned long tapTempoAvg = 0;
 
 // Control Encoder
 Encoder controlEncoder;
