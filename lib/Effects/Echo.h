@@ -47,7 +47,7 @@ enum DelayType
 class Echo : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
@@ -58,7 +58,7 @@ public:
     void UpdateToggleDisplay();
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"DECAY", (char*)"SPEED", (char*)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"DECAY", (char *)"SPEED", (char *)""};
 
     void TapTempoInterruptHandler();
     void TypeSwitcherLoopControl();
@@ -96,7 +96,8 @@ private:
     // Tap tempo mutables
     size_t currentTempoSamples;
     unsigned long tapTempoTime = 0;
-    //TempoArray tempoArray;
+    unsigned long currentTapTempoAvg = 0;
+    unsigned long *pedalTapTempoAvg;
 
     // Type switcher mutables
     DelayType currentDelayType = DT_UNSET;

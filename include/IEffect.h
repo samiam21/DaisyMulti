@@ -8,7 +8,7 @@
 class IEffect
 {
 public:
-    virtual void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay) {}
+    virtual void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo = nullptr) {}
     virtual void Cleanup() {}
     virtual float Process(float in) { return 0; }
     virtual void Loop(bool allowEffectControl) {}
@@ -16,7 +16,7 @@ public:
     virtual char **GetKnobNames() { return (char **)""; }
     virtual EffectSettings GetEffectSettings() { return effectSettings; }
     virtual void SetEffectSettings(EffectSettings effectSettings) {}
-    virtual void UpdateToggleDisplay() { }
+    virtual void UpdateToggleDisplay() {}
 
 protected:
     daisy::DaisySeed *hw;

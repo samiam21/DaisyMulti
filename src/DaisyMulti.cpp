@@ -52,6 +52,7 @@ void InitializeControls()
     {
         effectButtons[i].Init(hw, hw->GetPin(effectSPSTPins[i]));
     }
+    tapTempoButton.Init(hw, hw->GetPin((tapButtonPin)), 2000U, 300UL);
 
     // Initialize the LEDs
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -89,7 +90,7 @@ void InitializeEffects()
         debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
-        availableEffects[currentEffects[i]]->Setup(hw, &display);
+        availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
         availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
 
@@ -135,7 +136,7 @@ void HandleEffectButtons()
                 showEditModeEffectScreen(display,
                                          availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(),
                                          availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
-                availableEffects[currentEffects[selectedEditEffect]]->UpdateToggleDisplay();                                       
+                availableEffects[currentEffects[selectedEditEffect]]->UpdateToggleDisplay();
 
                 debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
@@ -156,6 +157,33 @@ void HandleEffectButtons()
                 debugPrintlnF(hw, "Turned %s %s", availableEffects[currentEffects[i]]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
             }
         }
+    }
+
+    // Handle tap tempo button
+    if (tapTempoButton.IsPressed())
+    {
+        //writeDisplayMessage(display, (char *)"tap pressed");
+
+        // Calculate the duration (ignore a duration longer than 2 seconds)
+        unsigned long duration = System::GetNow() - tapTempoTime;
+        if (duration < 2000)
+        {
+            // Add the duration to the tempo array (cast is safe because duration will never be greater than 2000)
+            tempoArray.push(duration);
+
+            // Calculate the average duration of the items in the array
+            tapTempoAvg = tempoArray.average();
+            //writeDisplayMessageF(display, (char *)"tap avg: %d", tapTempoAvg);
+        }
+        else
+        {
+            // Duration was too long, reset the array for new tempo calculations
+            tempoArray.clear();
+            //writeDisplayMessage(display, (char *)"array cleared");
+        }
+
+        // Update the time
+        tapTempoTime = System::GetNow();
     }
 }
 
@@ -410,7 +438,7 @@ int main(void)
                                          availableEffects[currentEffects[i]]->GetKnobNames());
 
                 // Setup the new effect
-                availableEffects[currentEffects[i]]->Setup(hw, &display);
+                availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
 
                 debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }

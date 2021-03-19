@@ -3,6 +3,7 @@
 
 #include "../include/PedalConfig.h"
 #include "DaisyDisplay.h"
+#include "../lib/Helpers/TempoArray.h"
 #include "../include/IEffect.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
@@ -59,6 +60,13 @@ bool currentEffectsState[MAX_EFFECTS] = {false};
 // Effect controls
 Button effectButtons[MAX_EFFECTS];
 Led effectLeds[MAX_EFFECTS];
+
+// Tap tempo
+Button tapTempoButton;
+TempoArray tempoArray;
+size_t currentTempoSamples;
+unsigned long tapTempoTime = 0;
+unsigned long tapTempoAvg = 0;
 
 // Control Encoder
 Encoder controlEncoder;

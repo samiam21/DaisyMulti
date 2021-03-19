@@ -87,6 +87,16 @@
         if (ENABLE_DISPLAY)                            \
             display->UpdateEditModeToggleValue(value); \
     }
+#define writeDisplayMessage(display, message) \
+    {                                         \
+        if (ENABLE_DISPLAY)                   \
+            display.WriteMessage(message);    \
+    }
+#define writeDisplayMessageF(display, message, args...) \
+    {                                                   \
+        if (ENABLE_DISPLAY)                             \
+            display.WriteMessage(message, args);        \
+    }
 
 // State enum for the system
 enum PedalState
@@ -106,18 +116,6 @@ struct EffectStorage
     int availableEffectsPosition;
     EffectSettings effectSettings;
 };
-
-// /** DEBUG **/
-// const int effectSelectorPinA = 13;
-// const int effectSelectorPinB = 12;
-// const int effectSelectorPinSw = 14;
-
-// const int effectSPDT1Pin1 = 15;
-// const int effectSPDT1Pin2 = 17;
-
-// const int effectSPSTPins[MAX_EFFECTS] = {23};
-// const int effectLedPins[MAX_EFFECTS] = {16};
-// /** DEBUG **/
 
 // Pin Definitions - Selector
 const int effectSelectorPinA = 27;

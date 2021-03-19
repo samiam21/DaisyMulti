@@ -1,6 +1,6 @@
 #include "Echo.h"
 
-void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -12,7 +12,8 @@ void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     currentTempoSamples = ((delayMaxSize / initialTempoBpm) * 30) * tempoModifier;
     del_line.SetDelay(currentTempoSamples);
 
-    // TODO: Initialize the tap tempo button
+    // Initialize the tap tempo parameters
+    pedalTapTempoAvg = avgTempo;
 
     // Initialize the knobs
     decayKnob.Init(hw, KNOB_1_CHN, decayValue, minDecayValue, maxDecayValue);
@@ -75,6 +76,16 @@ void Echo::Loop(bool allowEffectControl)
 
         // Handle type
         TypeSwitcherLoopControl();
+    }
+
+    // Check for an updated tap tempo
+    if (currentTapTempoAvg != *pedalTapTempoAvg)
+    {
+        currentTapTempoAvg = *pedalTapTempoAvg;
+
+        // Set the new delay based on the calculated duration
+        currentTempoSamples = ((delayMaxSize * (size_t)currentTapTempoAvg) / 1000) * tempoModifier;
+        del_line.SetDelay(currentTempoSamples);
     }
 }
 
