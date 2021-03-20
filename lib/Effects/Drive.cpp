@@ -6,10 +6,10 @@ void Drive::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsign
     display = daisyDisplay;
 
     // Initialize the knobs and effect values
-    pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
-    gainKnob.Init(hw, KNOB_2_CHN, gainLevel, gainLevelMin, gainLevelMax);
-    driveKnob.Init(hw, KNOB_3_CHN, driveLevel, driveLevelMin, driveLevelMax);
-    mixKnob.Init(hw, KNOB_4_CHN, mixLevel);
+    mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
+    pregainKnob.Init(hw, KNOB_2_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
+    gainKnob.Init(hw, KNOB_3_CHN, gainLevel, gainLevelMin, gainLevelMax);
+    driveKnob.Init(hw, KNOB_4_CHN, driveLevel, driveLevelMin, driveLevelMax);
 
     // Initialize the balancer
     sample_rate = hw->AudioSampleRate();

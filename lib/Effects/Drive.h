@@ -23,10 +23,10 @@ using namespace daisysp;
  * SPDT 1 - 
  * SPDT 2 - 
  * 
- * Knob 1 - Pregain
- * Knob 2 - Gain
- * Knob 3 - Drive
- * Knob 4 - Mix
+ * Knob 1 - Mix
+ * Knob 2 - Pregain
+ * Knob 3 - Gain
+ * Knob 4 - Drive
  * 
  * LED 1 - 
  * LED 2 - 
@@ -47,7 +47,7 @@ public:
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char *)"PREGAIN", (char *)"GAIN", (char *)"DRIVE", (char *)"MIX"};
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"PREGAIN", (char *)"GAIN", (char *)"DRIVE"};
 
     float WaveShape(float in, float k);
 

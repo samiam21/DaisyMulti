@@ -23,9 +23,9 @@ using namespace daisysp;
  * SPDT 1 - Clipping Level
  * SPDT 2 - 
  * 
- * Knob 1 - Pregain
- * Knob 2 - Gain
- * Knob 3 - Mix
+ * Knob 1 - Mix
+ * Knob 2 - Pregain
+ * Knob 3 - Gain
  * Knob 4 - 
  * 
  * LED 1 - 
@@ -48,7 +48,7 @@ public:
     void UpdateToggleDisplay();
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char *)"PREGAIN", (char *)"GAIN", (char *)"MIX", (char *)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"PREGAIN", (char *)"GAIN", (char *)""};
 
     float WaveShape(float in);
     float HardClip(float in);

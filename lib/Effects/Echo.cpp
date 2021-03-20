@@ -16,8 +16,8 @@ void Echo::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigne
     pedalTapTempoAvg = avgTempo;
 
     // Initialize the knobs
-    decayKnob.Init(hw, KNOB_1_CHN, decayValue, minDecayValue, maxDecayValue);
-    mixLevelKnob.Init(hw, KNOB_2_CHN, mixLevel, mixLevelMin, mixLevelMax);
+    mixLevelKnob.Init(hw, KNOB_1_CHN, mixLevel, mixLevelMin, mixLevelMax);
+    decayKnob.Init(hw, KNOB_2_CHN, decayValue, minDecayValue, maxDecayValue);
     speedKnob.Init(hw, KNOB_3_CHN, speed, speedMin, speedMax);
 
     // Initialize the type

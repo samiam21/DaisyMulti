@@ -10,8 +10,8 @@ void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsi
 
     // Initialize the knobs and effect values
     mixLevelKnob.Init(hw, KNOB_1_CHN, mixLevel);
-    levelKnob.Init(hw, KNOB_2_CHN, level);
-    wahLevelKnob.Init(hw, KNOB_3_CHN, wahLevel);
+    wahLevelKnob.Init(hw, KNOB_2_CHN, wahLevel);
+    levelKnob.Init(hw, KNOB_3_CHN, level);
 
     // Set parameters for autowah
     autowah.SetWah(wahLevel);

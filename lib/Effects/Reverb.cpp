@@ -9,9 +9,9 @@ void Reverb::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsig
     sample_rate = hw->AudioSampleRate();
 
     // Initialize the knobs
-    feedbackKnob.Init(hw, KNOB_1_CHN, feedback, feedbackMin, feedbackMax);
-    lpfreqKnob.Init(hw, KNOB_2_CHN, lpfreq, lpfreqMin, sample_rate / 2.0f);
-    mixKnob.Init(hw, KNOB_3_CHN, mixLevel);
+    mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
+    decayKnob.Init(hw, KNOB_2_CHN, feedback, feedbackMin, feedbackMax);
+    toneKnob.Init(hw, KNOB_3_CHN, lpfreq, lpfreqMin, sample_rate / 2.0f);
 
     // Initialize the compressor
     int ret = verb.Init(sample_rate);
@@ -36,7 +36,7 @@ void Reverb::Loop(bool allowEffectControl)
     if (allowEffectControl)
     {
         // Knob 1 controls the ratio
-        if (feedbackKnob.SetNewValue(feedback))
+        if (decayKnob.SetNewValue(feedback))
         {
             verb.SetFeedback(feedback);
             debugPrintlnF(hw, "Updated the feedback to: %f", feedback);
@@ -47,7 +47,7 @@ void Reverb::Loop(bool allowEffectControl)
         }
 
         // Knob 2 controls the threshold
-        if (lpfreqKnob.SetNewValue(lpfreq))
+        if (toneKnob.SetNewValue(lpfreq))
         {
             verb.SetLpFreq(lpfreq);
             debugPrintlnF(hw, "Updated the LP Frequency to: %f", lpfreq);
