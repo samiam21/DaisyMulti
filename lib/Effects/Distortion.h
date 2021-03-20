@@ -37,7 +37,7 @@ using namespace daisysp;
 class Distortion : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
@@ -48,7 +48,7 @@ public:
     void UpdateToggleDisplay();
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char*)"PREGAIN", (char*)"GAIN", (char*)"MIX", (char*)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"PREGAIN", (char *)"GAIN", (char *)"MIX", (char *)""};
 
     float WaveShape(float in);
     float HardClip(float in);

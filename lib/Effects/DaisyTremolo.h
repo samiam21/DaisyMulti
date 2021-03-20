@@ -36,7 +36,7 @@ using namespace daisysp;
 class DaisyTremolo : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
@@ -47,8 +47,8 @@ public:
     void UpdateToggleDisplay();
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"RATE", (char*)"WIDTH", (char*)"DELAY"};
-    
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"RATE", (char *)"WIDTH", (char *)""};
+
     const float rateMin = 0.0f;
     const float rateMax = 20.0f;
 

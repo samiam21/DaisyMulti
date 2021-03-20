@@ -1,6 +1,6 @@
 #include "DaisyPhaser.h"
 
-void DaisyPhaser::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void DaisyPhaser::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;

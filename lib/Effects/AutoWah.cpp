@@ -1,6 +1,6 @@
 #include "AutoWah.h"
 
-void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;

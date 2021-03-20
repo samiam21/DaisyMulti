@@ -1,6 +1,6 @@
 #include "CleanBoost.h"
 
-void CleanBoost::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void CleanBoost::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;

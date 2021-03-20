@@ -1,6 +1,6 @@
 #include "Distortion.h"
 
-void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;

@@ -1,6 +1,6 @@
 #include "Reverb.h"
 
-void Reverb::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Reverb::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;

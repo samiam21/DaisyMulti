@@ -1,6 +1,6 @@
 #include "Crush.h"
 
-void Crush::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Crush::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;

@@ -35,7 +35,7 @@ using namespace daisysp;
 class AutoWah : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
@@ -45,7 +45,7 @@ public:
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char*)"MIX", (char*)"WAH", (char*)"LEVEL", (char*)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"WAH", (char *)"LEVEL", (char *)""};
 
     DaisySeed *hw;
 
