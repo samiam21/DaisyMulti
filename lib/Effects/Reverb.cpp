@@ -35,12 +35,19 @@ void Reverb::Loop(bool allowEffectControl)
     // Only adjust if we are in edit mode
     if (allowEffectControl)
     {
+        // Update the mix level
+        if (mixKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
+        }
+
         // Knob 1 controls the ratio
         if (decayKnob.SetNewValue(feedback))
         {
             verb.SetFeedback(feedback);
-            debugPrintlnF(hw, "Updated the feedback to: %f", feedback);
-            updateEditModeKnobValue(display, 0, feedback);
+            debugPrintlnF(hw, "Updated the decay to: %f", feedback);
+            updateEditModeKnobValue(display, 1, feedback);
 
             // Update the effect settings
             effectSettings.knobSettings[0] = feedback;
@@ -50,18 +57,11 @@ void Reverb::Loop(bool allowEffectControl)
         if (toneKnob.SetNewValue(lpfreq))
         {
             verb.SetLpFreq(lpfreq);
-            debugPrintlnF(hw, "Updated the LP Frequency to: %f", lpfreq);
-            updateEditModeKnobValue(display, 1, lpfreq);
+            debugPrintlnF(hw, "Updated the tone to: %f", lpfreq);
+            updateEditModeKnobValue(display, 2, lpfreq);
 
             // Update the effect settings
             effectSettings.knobSettings[1] = lpfreq;
-        }
-
-        // Update the mix level
-        if (mixKnob.SetNewValue(mixLevel))
-        {
-            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-            updateEditModeKnobValue(display, 2, mixLevel);
         }
     }
 }

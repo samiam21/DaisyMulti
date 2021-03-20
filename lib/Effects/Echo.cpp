@@ -53,18 +53,18 @@ void Echo::Loop(bool allowEffectControl)
     // Only adjust if we are in edit mode
     if (allowEffectControl)
     {
-        // Update the decay if the knob has been moved
-        if (decayKnob.SetNewValue(decayValue))
-        {
-            debugPrintlnF(hw, "Updated the decay level to: %f", decayValue);
-            updateEditModeKnobValue(display, 0, decayValue);
-        }
-
         // Update the effect level if the knob has been moved
         if (mixLevelKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-            updateEditModeKnobValue(display, 1, mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
+        }
+
+        // Update the decay if the knob has been moved
+        if (decayKnob.SetNewValue(decayValue))
+        {
+            debugPrintlnF(hw, "Updated the decay level to: %f", decayValue);
+            updateEditModeKnobValue(display, 1, decayValue);
         }
 
         // Update the speed if the knob has been moved

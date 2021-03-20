@@ -47,20 +47,20 @@ void Crush::Loop(bool allowEffectControl)
             updateEditModeKnobValue(display, 0, mixLevel);
         }
 
-        // Update the bitcrush level
-        if (bitcrushFactorKnob.SetNewValue(bitcrushLevel))
-        {
-            decimator.SetBitcrushFactor(bitcrushLevel);
-            debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
-            updateEditModeKnobValue(display, 1, bitcrushLevel);
-        }
-
         // Update the downsample level
         if (downsamplingFactorKnob.SetNewValue(downsampleLevel))
         {
             decimator.SetDownsampleFactor(downsampleLevel);
             debugPrintlnF(hw, "Updated the downsample factor to: %f", downsampleLevel);
-            updateEditModeKnobValue(display, 2, downsampleLevel);
+            updateEditModeKnobValue(display, 1, downsampleLevel);
+        }
+
+        // Update the bitcrush level
+        if (bitcrushFactorKnob.SetNewValue(bitcrushLevel))
+        {
+            decimator.SetBitcrushFactor(bitcrushLevel);
+            debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
+            updateEditModeKnobValue(display, 2, bitcrushLevel);
         }
     }
 }

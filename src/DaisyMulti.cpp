@@ -439,6 +439,7 @@ int main(void)
                 showEditModeEffectScreen(display,
                                          availableEffects[currentEffects[i]]->GetEffectName(),
                                          availableEffects[currentEffects[i]]->GetKnobNames());
+                availableEffects[currentEffects[i]]->UpdateToggleDisplay();
 
                 debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
             }
