@@ -1,6 +1,7 @@
 #ifndef SHIFTER_H
 #define SHIFTER_H
 
+#include <cmath>
 #include "daisy_seed.h"
 #include "daisysp.h"
 #include "../../../include/IEffect.h"
@@ -46,8 +47,11 @@ public:
 private:
     const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"TRANS", (char *)"DEL", (char *)"FUN"};
 
-    const float transMin = 0.0f;
-    const float transMax = -20.0f;
+    uint32_t GetDelay();
+    float GetTranspose();
+
+    const float transMin = -12.0f;
+    const float transMax = 24.0f;
     const float delayMin = SHIFT_BUFFER_SIZE / 2;
     const float delayMax = SHIFT_BUFFER_SIZE * 2;
     const float funMin = 0.0f;

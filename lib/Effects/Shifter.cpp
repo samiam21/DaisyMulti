@@ -11,9 +11,17 @@ void Shifter::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsi
     delayKnob.Init(hw, KNOB_3_CHN, delay, delayMin, delayMax);
     funKnob.Init(hw, KNOB_4_CHN, fun, funMin, funMax);
 
-    // Initialize the compressor
+    // Initialize the shifter
     shifter.Init(hw->AudioSampleRate());
-    shifter.SetTransposition(12.0f);
+    shifter.SetFun(fun);
+
+    // Convert the delay to an int and update the shifter
+    uint32_t del = (uint32_t)delay;
+    shifter.SetDelSize(del);
+
+    // Round the transpose to the nearest 0.5
+    float trans = floor((transpose * 2) + 0.5) / 2;
+    shifter.SetTransposition(trans);
 }
 
 float Shifter::Process(float in)
@@ -43,8 +51,12 @@ void Shifter::Loop(bool allowEffectControl)
         // Knob 2 controls the transpose
         if (transKnob.SetNewValue(transpose))
         {
-            debugPrintlnF(hw, "Updated the transpose to: %f", transpose);
-            updateEditModeKnobValue(display, 1, transpose);
+            // Round the transpose to the nearest 0.5
+            float trans = floor((transpose * 2) + 0.5) / 2;
+            shifter.SetTransposition(trans);
+
+            debugPrintlnF(hw, "Updated the transpose to: %f", trans);
+            updateEditModeKnobValue(display, 1, trans);
         }
 
         // Knob 3 controls the delay
