@@ -16,7 +16,10 @@ void DaisyFold::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, un
 
 float DaisyFold::Process(float in)
 {
-    return fold.Process(in);
+    float wet = fold.Process(in);
+
+    // Mix wet and dry and send to I/O
+    return wet * mix + in * (1 - mix);
 }
 
 void DaisyFold::Cleanup()

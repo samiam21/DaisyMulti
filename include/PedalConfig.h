@@ -92,6 +92,11 @@
         if (ENABLE_DISPLAY)                                        \
             display->UpdateEditModeKnobValue(knobPosition, value); \
     }
+#define updateEditModeKnobValueI(display, knobPosition, value)      \
+    {                                                               \
+        if (ENABLE_DISPLAY)                                         \
+            display->UpdateEditModeKnobValueI(knobPosition, value); \
+    }
 #define writeDisplayMessage(display, message) \
     {                                         \
         if (ENABLE_DISPLAY)                   \
