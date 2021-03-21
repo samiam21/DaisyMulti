@@ -50,6 +50,11 @@ public:
     void UpdateEditModeToggleValue(char *newValue);
 
     /**
+     * Updates the knob value display in the edit effect screen
+     */
+    void UpdateEditModeKnobValue(int knobPosition, float newValue);
+
+    /**
      * Clears the screen and writes the formatted message to the OLED
      */
     void WriteMessage(char *message, ...);

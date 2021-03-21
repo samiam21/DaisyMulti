@@ -31,7 +31,7 @@
 class CleanBoost : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
@@ -41,7 +41,7 @@ public:
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char*)"BOOST", (char*)"", (char*)"", (char*)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"BOOST", (char *)"", (char *)"", (char *)""};
 
     const float boostLevelMin = 1.0f;
     const float boostLevelMax = 30.0f;

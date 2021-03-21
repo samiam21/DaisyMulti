@@ -1,6 +1,6 @@
 #include "Distortion.h"
 
-void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -11,9 +11,9 @@ void Distortion::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     UpdateToggleDisplay();
 
     // Initialize the knobs and effect values
-    pregainKnob.Init(hw, KNOB_1_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
-    gainKnob.Init(hw, KNOB_2_CHN, gainLevel, gainLevelMin, gainLevelMax);
-    mixKnob.Init(hw, KNOB_3_CHN, mixLevel);
+    mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
+    pregainKnob.Init(hw, KNOB_2_CHN, pregainLevel, pregainLevelMin, pregainLevelMax);
+    gainKnob.Init(hw, KNOB_3_CHN, gainLevel, gainLevelMin, gainLevelMax);
 
     // Initialize the balancer
     sample_rate = hw->AudioSampleRate();
@@ -54,22 +54,25 @@ void Distortion::Loop(bool allowEffectControl)
     // Only adjust if we are in edit mode
     if (allowEffectControl)
     {
+        // Update the mix level
+        if (mixKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
+        }
+
         // Update the pregain level
         if (pregainKnob.SetNewValue(pregainLevel))
         {
             debugPrintlnF(hw, "Updated the pregain level to: %f", pregainLevel);
+            updateEditModeKnobValue(display, 1, pregainLevel);
         }
 
         // Update the gain level
         if (gainKnob.SetNewValue(gainLevel))
         {
             debugPrintlnF(hw, "Updated the gain level to: %f", gainLevel);
-        }
-
-        // Update the mix level
-        if (mixKnob.SetNewValue(mixLevel))
-        {
-            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 2, gainLevel);
         }
 
         // Update the clipping threshold
@@ -122,26 +125,26 @@ void Distortion::SetClipThreshold()
     u_int8_t togg = clippingToggle.ReadToggle();
     if (togg != currentClip)
     {
-        if (togg == 0)
+        currentClip = togg;
+
+        switch (currentClip)
         {
+        case 0:
             hardClipThreshold = clipThresholdHigh;
             debugPrintln(hw, "Clipping set to high");
             UpdateToggleDisplay();
-        }
-        else if (togg == 1)
-        {
+            break;
+        case 1:
             hardClipThreshold = clipThresholdMid;
             debugPrintln(hw, "Clipping set to middle");
             UpdateToggleDisplay();
-        }
-        else
-        {
+            break;
+        case 2:
             hardClipThreshold = clipThresholdLow;
             debugPrintln(hw, "Clipping set to low");
             UpdateToggleDisplay();
+            break;
         }
-
-        currentClip = togg;
     }
 }
 

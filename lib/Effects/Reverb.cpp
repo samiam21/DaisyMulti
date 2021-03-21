@@ -1,6 +1,6 @@
 #include "Reverb.h"
 
-void Reverb::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Reverb::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -9,9 +9,9 @@ void Reverb::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
     sample_rate = hw->AudioSampleRate();
 
     // Initialize the knobs
-    feedbackKnob.Init(hw, KNOB_1_CHN, feedback, feedbackMin, feedbackMax);
-    lpfreqKnob.Init(hw, KNOB_2_CHN, lpfreq, lpfreqMin, sample_rate / 2.0f);
-    mixKnob.Init(hw, KNOB_3_CHN, mixLevel);
+    mixKnob.Init(hw, KNOB_1_CHN, mixLevel);
+    decayKnob.Init(hw, KNOB_2_CHN, feedback, feedbackMin, feedbackMax);
+    toneKnob.Init(hw, KNOB_3_CHN, lpfreq, lpfreqMin, sample_rate / 2.0f);
 
     // Initialize the compressor
     int ret = verb.Init(sample_rate);
@@ -35,30 +35,33 @@ void Reverb::Loop(bool allowEffectControl)
     // Only adjust if we are in edit mode
     if (allowEffectControl)
     {
+        // Update the mix level
+        if (mixKnob.SetNewValue(mixLevel))
+        {
+            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
+        }
+
         // Knob 1 controls the ratio
-        if (feedbackKnob.SetNewValue(feedback))
+        if (decayKnob.SetNewValue(feedback))
         {
             verb.SetFeedback(feedback);
-            debugPrintlnF(hw, "Updated the feedback to: %f", feedback);
+            debugPrintlnF(hw, "Updated the decay to: %f", feedback);
+            updateEditModeKnobValue(display, 1, feedback);
 
             // Update the effect settings
             effectSettings.knobSettings[0] = feedback;
         }
 
         // Knob 2 controls the threshold
-        if (lpfreqKnob.SetNewValue(lpfreq))
+        if (toneKnob.SetNewValue(lpfreq))
         {
             verb.SetLpFreq(lpfreq);
-            debugPrintlnF(hw, "Updated the LP Frequency to: %f", lpfreq);
+            debugPrintlnF(hw, "Updated the tone to: %f", lpfreq);
+            updateEditModeKnobValue(display, 2, lpfreq);
 
             // Update the effect settings
             effectSettings.knobSettings[1] = lpfreq;
-        }
-
-        // Update the mix level
-        if (mixKnob.SetNewValue(mixLevel))
-        {
-            debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
         }
     }
 }

@@ -20,9 +20,9 @@ using namespace daisysp;
  * SPDT 1 -
  * SPDT 2 -
  *
- * Knob 1 - Decay
- * Knob 2 - Tone
- * Knob 3 - Mix
+ * Knob 1 - Mix
+ * Knob 2 - Decay
+ * Knob 3 - Tone
  * Knob 4 -
  *
  * LED 1 -
@@ -36,7 +36,7 @@ static ReverbSc DSY_SDRAM_BSS verb;
 class Reverb : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);
@@ -46,7 +46,7 @@ public:
     void SetEffectSettings(EffectSettings effectSettings);
 
 private:
-    const char *knobNames[MAX_KNOBS] = {(char *)"DECAY", (char *)"TONE", (char *)"MIX", (char *)""};
+    const char *knobNames[MAX_KNOBS] = {(char *)"MIX", (char *)"DECAY", (char *)"TONE", (char *)""};
 
     const float feedbackMin = 0.4f;
     const float feedbackMax = 1.0f;
@@ -57,8 +57,8 @@ private:
     float lpfreq = 0.0f;
     float mixLevel = 0.0f;
 
-    Knob feedbackKnob;
-    Knob lpfreqKnob;
+    Knob decayKnob;
+    Knob toneKnob;
     Knob mixKnob;
 };
 

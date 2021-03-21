@@ -1,6 +1,6 @@
 #include "DaisyChorus.h"
 
-void DaisyChorus::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void DaisyChorus::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -46,6 +46,7 @@ void DaisyChorus::Loop(bool allowEffectControl)
         if (mixKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Knob 2 controls the LFO rate
@@ -54,6 +55,7 @@ void DaisyChorus::Loop(bool allowEffectControl)
             chorus.SetLfoFreq(rate);
 
             debugPrintlnF(hw, "Updated the rate to: %f", rate);
+            updateEditModeKnobValue(display, 1, rate);
         }
 
         // Knob 3 controls the LFO width
@@ -62,6 +64,7 @@ void DaisyChorus::Loop(bool allowEffectControl)
             chorus.SetLfoDepth(width);
 
             debugPrintlnF(hw, "Updated the width to: %f", width);
+            updateEditModeKnobValue(display, 2, width);
         }
 
         // Knob 4 controls the delay
@@ -70,6 +73,7 @@ void DaisyChorus::Loop(bool allowEffectControl)
             chorus.SetDelay(delay);
 
             debugPrintlnF(hw, "Updated the delay to: %f", delay);
+            updateEditModeKnobValue(display, 3, delay);
         }
     }
 }
@@ -81,7 +85,7 @@ char *DaisyChorus::GetEffectName()
 
 char **DaisyChorus::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings DaisyChorus::GetEffectSettings()

@@ -34,7 +34,7 @@ using namespace daisysp;
 class DaisyCompressor : public IEffect
 {
 public:
-    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay);
+    void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo);
     void Cleanup();
     float Process(float in);
     void Loop(bool allowEffectControl);

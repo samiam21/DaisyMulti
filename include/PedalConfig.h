@@ -87,6 +87,11 @@
         if (ENABLE_DISPLAY)                            \
             display->UpdateEditModeToggleValue(value); \
     }
+#define updateEditModeKnobValue(display, knobPosition, value)      \
+    {                                                              \
+        if (ENABLE_DISPLAY)                                        \
+            display->UpdateEditModeKnobValue(knobPosition, value); \
+    }
 #define writeDisplayMessage(display, message) \
     {                                         \
         if (ENABLE_DISPLAY)                   \

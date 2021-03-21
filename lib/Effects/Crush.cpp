@@ -1,6 +1,6 @@
 #include "Crush.h"
 
-void Crush::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void Crush::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -44,13 +44,7 @@ void Crush::Loop(bool allowEffectControl)
         if (mixLevelKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
-        }
-
-        // Update the bitcrush level
-        if (bitcrushFactorKnob.SetNewValue(bitcrushLevel))
-        {
-            decimator.SetBitcrushFactor(bitcrushLevel);
-            debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Update the downsample level
@@ -58,6 +52,15 @@ void Crush::Loop(bool allowEffectControl)
         {
             decimator.SetDownsampleFactor(downsampleLevel);
             debugPrintlnF(hw, "Updated the downsample factor to: %f", downsampleLevel);
+            updateEditModeKnobValue(display, 1, downsampleLevel);
+        }
+
+        // Update the bitcrush level
+        if (bitcrushFactorKnob.SetNewValue(bitcrushLevel))
+        {
+            decimator.SetBitcrushFactor(bitcrushLevel);
+            debugPrintlnF(hw, "Updated the bitcrush factor to: %f", bitcrushLevel);
+            updateEditModeKnobValue(display, 2, bitcrushLevel);
         }
     }
 }
@@ -69,7 +72,7 @@ char *Crush::GetEffectName()
 
 char **Crush::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings Crush::GetEffectSettings()

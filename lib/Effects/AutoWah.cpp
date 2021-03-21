@@ -1,6 +1,6 @@
 #include "AutoWah.h"
 
-void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -10,8 +10,8 @@ void AutoWah::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
 
     // Initialize the knobs and effect values
     mixLevelKnob.Init(hw, KNOB_1_CHN, mixLevel);
-    levelKnob.Init(hw, KNOB_2_CHN, level);
-    wahLevelKnob.Init(hw, KNOB_3_CHN, wahLevel);
+    wahLevelKnob.Init(hw, KNOB_2_CHN, wahLevel);
+    levelKnob.Init(hw, KNOB_3_CHN, level);
 
     // Set parameters for autowah
     autowah.SetWah(wahLevel);
@@ -46,6 +46,7 @@ void AutoWah::Loop(bool allowEffectControl)
         {
             //autowah.SetDryWet(dryWetLevel);
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Update the wah level
@@ -53,6 +54,7 @@ void AutoWah::Loop(bool allowEffectControl)
         {
             autowah.SetWah(wahLevel);
             debugPrintlnF(hw, "Updated the wah level to: %f", wahLevel);
+            updateEditModeKnobValue(display, 1, wahLevel);
         }
 
         // Update the level
@@ -60,6 +62,7 @@ void AutoWah::Loop(bool allowEffectControl)
         {
             autowah.SetLevel(level);
             debugPrintlnF(hw, "Updated the level to: %f", level);
+            updateEditModeKnobValue(display, 2, level);
         }
     }
 }
@@ -71,7 +74,7 @@ char *AutoWah::GetEffectName()
 
 char **AutoWah::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings AutoWah::GetEffectSettings()

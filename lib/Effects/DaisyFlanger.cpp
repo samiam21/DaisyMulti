@@ -1,6 +1,6 @@
 #include "DaisyFlanger.h"
 
-void DaisyFlanger::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay)
+void DaisyFlanger::Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo)
 {
     hw = hardware;
     display = daisyDisplay;
@@ -46,6 +46,7 @@ void DaisyFlanger::Loop(bool allowEffectControl)
         if (mixKnob.SetNewValue(mixLevel))
         {
             debugPrintlnF(hw, "Updated the mix level to: %f", mixLevel);
+            updateEditModeKnobValue(display, 0, mixLevel);
         }
 
         // Knob 2 controls the LFO rate
@@ -54,6 +55,7 @@ void DaisyFlanger::Loop(bool allowEffectControl)
             flanger.SetLfoFreq(rate);
 
             debugPrintlnF(hw, "Updated the rate to: %f", rate);
+            updateEditModeKnobValue(display, 1, rate);
         }
 
         // Knob 3 controls the LFO width
@@ -62,6 +64,7 @@ void DaisyFlanger::Loop(bool allowEffectControl)
             flanger.SetLfoDepth(width);
 
             debugPrintlnF(hw, "Updated the width to: %f", width);
+            updateEditModeKnobValue(display, 2, width);
         }
 
         // Knob 4 controls the feedback
@@ -70,6 +73,7 @@ void DaisyFlanger::Loop(bool allowEffectControl)
             flanger.SetFeedback(feedback);
 
             debugPrintlnF(hw, "Updated the feedback to to: %f", feedback);
+            updateEditModeKnobValue(display, 3, feedback);
         }
     }
 }
@@ -81,7 +85,7 @@ char *DaisyFlanger::GetEffectName()
 
 char **DaisyFlanger::GetKnobNames()
 {
-    return (char**)knobNames;
+    return (char **)knobNames;
 }
 
 EffectSettings DaisyFlanger::GetEffectSettings()
