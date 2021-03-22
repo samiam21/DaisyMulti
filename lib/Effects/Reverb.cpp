@@ -93,4 +93,7 @@ void Reverb::SetEffectSettings(EffectSettings effectSettings)
     feedback = effectSettings.knobSettings[0];
     lpfreq = effectSettings.knobSettings[1];
     mixLevel = effectSettings.knobSettings[2];
+
+    verb.SetFeedback(feedback);
+    verb.SetLpFreq(lpfreq);
 }

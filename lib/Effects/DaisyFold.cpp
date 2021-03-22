@@ -73,4 +73,6 @@ void DaisyFold::SetEffectSettings(EffectSettings effectSettings)
     // Update from the effect settings
     mix = effectSettings.knobSettings[0];
     increment = effectSettings.knobSettings[1];
+
+    fold.SetIncrement(increment);
 }

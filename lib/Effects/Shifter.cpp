@@ -110,4 +110,14 @@ void Shifter::SetEffectSettings(EffectSettings effectSettings)
     transpose = effectSettings.knobSettings[1];
     delay = effectSettings.knobSettings[2];
     fun = effectSettings.knobSettings[3];
+
+    shifter.SetFun(fun);
+
+    // Round the transpose to the nearest 0.5
+    float trans = floor((transpose * 2) + 0.5) / 2;
+    shifter.SetTransposition(trans);
+
+    // Convert the delay to an int and update the shifter
+    uint32_t del = (uint32_t)delay;
+    shifter.SetDelSize(del);
 }
