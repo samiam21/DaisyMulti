@@ -19,6 +19,8 @@
 #include "../lib/Effects/DaisyCompressor.h"
 #include "../lib/Effects/Reverb.h"
 #include "../lib/Effects/DaisyPhaser.h"
+#include "../lib/Effects/DaisyFold.h"
+#include "../lib/Effects/Shifter.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
@@ -28,15 +30,17 @@ using namespace daisy;
 DaisySeed *hw;
 
 // Available Effects
-#define AVAIL_EFFECTS 12
+#define AVAIL_EFFECTS 14
 IEffect *availableEffects[AVAIL_EFFECTS] = {
     new CleanBoost(),
     new DaisyChorus(),
     new DaisyFlanger(),
     new DaisyTremolo(),
     new DaisyPhaser(),
+    new Shifter(),
     new AutoWah(),
     new Crush(),
+    new DaisyFold(),
     new Distortion(),
     new Drive(),
     new Echo(),

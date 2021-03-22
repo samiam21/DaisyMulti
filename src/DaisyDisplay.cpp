@@ -183,6 +183,43 @@ void DaisyDisplay::UpdateEditModeKnobValue(int knobPosition, float newValue)
 }
 
 /**
+ * Updates the knob value display in the edit effect screen
+ */
+void DaisyDisplay::UpdateEditModeKnobValueI(int knobPosition, int newValue)
+{
+    // Erase the current value
+    display.DrawRect(SSD1309_WIDTH - 44, 51, SSD1309_WIDTH, SSD1309_HEIGHT, false, true);
+
+    // Write the knob indicator
+    display.SetCursor(SSD1309_WIDTH - 44, 51);
+    switch (knobPosition)
+    {
+    case 0:
+        display.WriteChar('A', FONT_SIZE, true);
+        break;
+    case 1:
+        display.WriteChar('B', FONT_SIZE, true);
+        break;
+    case 2:
+        display.WriteChar('C', FONT_SIZE, true);
+        break;
+    case 3:
+        display.WriteChar('D', FONT_SIZE, true);
+        break;
+    }
+    display.SetCursor(SSD1309_WIDTH - 38, 51);
+    display.WriteChar('-', FONT_SIZE, true);
+
+    // Write the new value
+    char buffer[6];
+    sprintf(buffer, "%d", newValue);
+    display.SetCursor(SSD1309_WIDTH - 32, 51);
+    display.WriteString(buffer, FONT_SIZE, true);
+
+    display.Update();
+}
+
+/**
  * Clears the screen and writes the formatted message to the OLED
  */
 void DaisyDisplay::WriteMessage(char *message, ...)
