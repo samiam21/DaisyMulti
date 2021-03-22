@@ -77,9 +77,9 @@ void InitializeEffects()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         // Read and set the current effect
-        currentEffects[i] = effectsStorage[i].availableEffectsPosition;
-        newEffects[i] = effectsStorage[i].availableEffectsPosition;
-        currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
+        currentEffects[i] = effectsStorage[i].effectType;
+        newEffects[i] = effectsStorage[i].effectType;
+        currentEffectNames[i] = availableEffects[effectsStorage[i].effectType]->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
 
         // Read settings
@@ -348,7 +348,7 @@ void SaveCurrentEffectSettings()
     // Fill in the effect storage buffer
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        effectsStorageBuffer[i].availableEffectsPosition = currentEffects[i];
+        effectsStorageBuffer[i].effectType = currentEffects[i];
         effectsStorageBuffer[i].effectSettings = availableEffects[currentEffects[i]]->GetEffectSettings();
     }
 

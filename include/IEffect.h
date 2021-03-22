@@ -3,6 +3,7 @@
 
 #include "daisy_seed.h"
 #include "PedalConfig.h"
+#include "Storage.h"
 #include "../src/DaisyDisplay.h"
 
 class IEffect

@@ -5,6 +5,7 @@
 #include "DaisyDisplay.h"
 #include "../lib/Helpers/TempoArray.h"
 #include "../include/IEffect.h"
+#include "../include/Effects.h"
 #include "../lib/Inputs/Button.h"
 #include "../lib/Inputs/Knob.h"
 #include "../lib/Effects/CleanBoost.h"
@@ -30,7 +31,6 @@ using namespace daisy;
 DaisySeed *hw;
 
 // Available Effects
-#define AVAIL_EFFECTS 14
 IEffect *availableEffects[AVAIL_EFFECTS] = {
     new CleanBoost(),
     new DaisyChorus(),
@@ -51,6 +51,13 @@ IEffect *availableEffects[AVAIL_EFFECTS] = {
 uint32_t memBase = 0x90000000;
 static EffectStorage DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
 EffectStorage effectsStorageBuffer[MAX_EFFECTS];
+
+// State enum for the system
+enum PedalState
+{
+    PLAY_MODE = 0,
+    EDIT_MODE = 10
+};
 
 // Pedal state and effects objects
 volatile PedalState currentState = PedalState::PLAY_MODE;

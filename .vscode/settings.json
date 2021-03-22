@@ -9,6 +9,7 @@
         "atomic": "cpp",
         "*.tcc": "cpp",
         "ostream": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "new": "cpp"
     }
 }
