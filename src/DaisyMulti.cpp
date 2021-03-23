@@ -69,48 +69,48 @@ void InitializeControls()
  */
 void InitializeEffects()
 {
-    // // Configure QSPI mode
-    // hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
-    // dsy_qspi_init(&hw->qspi_handle);
+    // Configure QSPI mode
+    hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
+    dsy_qspi_init(&hw->qspi_handle);
 
-    // // Read the current effect objects and settings
-    // for (int i = 0; i < MAX_EFFECTS; i++)
-    // {
-    //     // Read and set the current effect
-    //     currentEffects[i] = effectsStorage[i].effectType;
-    //     newEffects[i] = effectsStorage[i].effectType;
-    //     currentEffectNames[i] = availableEffects[effectsStorage[i].effectType]->GetEffectName();
-    //     debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
-
-    //     // Read settings
-    //     for (int j = 0; j < MAX_KNOBS; j++)
-    //     {
-    //         debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
-    //     }
-    //     debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
-
-    //     // Initialize the effect
-    //     availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
-    //     availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
-    // }
-
-    // dsy_qspi_deinit();
-
-    /** DEBUG - Used when flashing to a new board **/
+    // Read the current effect objects and settings
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        IEffect *thisEffect = GetEffectObject(EffectType::CLEANBOOST);
-
         // Read and set the current effect
-        currentEffects[i] = thisEffect;
-        newEffects[i] = GetEffectType(thisEffect);
-        currentEffectNames[i] = thisEffect->GetEffectName();
-        debugPrintlnF(hw, "Effect %d: %s", i, thisEffect->GetEffectName());
+        currentEffects[i] = GetEffectObject((EffectType)effectsStorage[i].effectType);
+        newEffects[i] = (EffectType)effectsStorage[i].effectType;
+        currentEffectNames[i] = currentEffects[i]->GetEffectName();
+        debugPrintlnF(hw, "Effect %d: %s", i, currentEffects[i]->GetEffectName());
+
+        // Read settings
+        for (int j = 0; j < MAX_KNOBS; j++)
+        {
+            debugPrintlnF(hw, "Knob %d: %f", j, effectsStorage[i].effectSettings.knobSettings[j]);
+        }
+        debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
-        thisEffect->Setup(hw, &display);
+        currentEffects[i]->Setup(hw, &display, &tapTempoAvg);
+        currentEffects[i]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
-    /** DEBUG - Used when flashing to a new board **/
+
+    dsy_qspi_deinit();
+
+    // /** DEBUG - Used when flashing to a new board **/
+    // for (int i = 0; i < MAX_EFFECTS; i++)
+    // {
+    //     IEffect *thisEffect = GetEffectObject(EffectType::CLEANBOOST);
+
+    //     // Read and set the current effect
+    //     currentEffects[i] = thisEffect;
+    //     newEffects[i] = GetEffectType(thisEffect);
+    //     currentEffectNames[i] = thisEffect->GetEffectName();
+    //     debugPrintlnF(hw, "Effect %d: %s", i, thisEffect->GetEffectName());
+
+    //     // Initialize the effect
+    //     thisEffect->Setup(hw, &display);
+    // }
+    // /** DEBUG - Used when flashing to a new board **/
 }
 
 /**
@@ -339,28 +339,28 @@ void UpdateEffectLeds()
  */
 void SaveCurrentEffectSettings()
 {
-    // // Initialize flash for writing
-    // hw->qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
-    // dsy_qspi_init(&hw->qspi_handle);
+    // Initialize flash for writing
+    hw->qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
+    dsy_qspi_init(&hw->qspi_handle);
 
-    // // Fill in the effect storage buffer
-    // for (int i = 0; i < MAX_EFFECTS; i++)
-    // {
-    //     effectsStorageBuffer[i].effectType = currentEffects[i];
-    //     effectsStorageBuffer[i].effectSettings = availableEffects[currentEffects[i]]->GetEffectSettings();
-    // }
+    // Fill in the effect storage buffer
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        effectsStorageBuffer[i].effectType = GetEffectType(currentEffects[i]);
+        effectsStorageBuffer[i].effectSettings = currentEffects[i]->GetEffectSettings();
+    }
 
-    // // Write the current effects array to flash
-    // uint32_t writesize = MAX_EFFECTS * sizeof(effectsStorage[0]);
-    // dsy_qspi_erase(memBase, memBase + writesize);
-    // int success = dsy_qspi_write(memBase, writesize, (uint8_t *)effectsStorageBuffer);
+    // Write the current effects array to flash
+    uint32_t writesize = MAX_EFFECTS * sizeof(effectsStorage[0]);
+    dsy_qspi_erase(memBase, memBase + writesize);
+    int success = dsy_qspi_write(memBase, writesize, (uint8_t *)effectsStorageBuffer);
 
-    // if (success == DSY_MEMORY_ERROR)
-    // {
-    //     debugPrintln(hw, "Failed to write to memory!");
-    // }
+    if (success == DSY_MEMORY_ERROR)
+    {
+        debugPrintln(hw, "Failed to write to memory!");
+    }
 
-    // dsy_qspi_deinit();
+    dsy_qspi_deinit();
 }
 
 /**
