@@ -103,7 +103,7 @@ void InitializeEffects()
 
         // Read and set the current effect
         currentEffects[i] = thisEffect;
-        newEffects[i] = thisEffect;
+        newEffects[i] = GetEffectType(thisEffect);
         currentEffectNames[i] = thisEffect->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, thisEffect->GetEffectName());
 
@@ -211,24 +211,24 @@ void ControlEncoderInterrupt()
     // Check for encoder turns in edit mode
     if (currentState == PedalState::EDIT_MODE && selectedEditEffect > -1 && selectedEditEffect < MAX_EFFECTS)
     {
-        // // Check for a change in the selected effect
-        // int inc = controlEncoder.Increment();
-        // if (inc != 0)
-        // {
-        //     // Check if we have looped around
-        //     int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + inc;
-        //     if (newEffect < 0)
-        //     {
-        //         newEffect = AVAIL_EFFECTS - 1;
-        //     }
-        //     else if (newEffect >= AVAIL_EFFECTS)
-        //     {
-        //         newEffect = 0;
-        //     }
+        // Check for a change in the selected effect
+        int inc = controlEncoder.Increment();
+        if (inc != 0)
+        {
+            // Check if we have looped around
+            int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + inc;
+            if (newEffect < 0)
+            {
+                newEffect = AVAIL_EFFECTS - 1;
+            }
+            else if (newEffect >= AVAIL_EFFECTS)
+            {
+                newEffect = 0;
+            }
 
-        //     // Trigger a change of the effect
-        //     newEffects[selectedEditEffect] = newEffect;
-        // }
+            // Trigger a change of the effect
+            newEffects[selectedEditEffect] = (EffectType)newEffect;
+        }
     }
 
     // Handle output volume whe in play mode
@@ -421,25 +421,26 @@ int main(void)
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
             // Check for a changed effect
-            if (currentEffects[i] != newEffects[i])
+            if (GetEffectType(currentEffects[i]) != newEffects[i])
             {
-                // // Clean up the previous effect
-                // availableEffects[currentEffects[i]]->Cleanup();
+                // Clean up the previous effect
+                currentEffects[i]->Cleanup();
+                delete currentEffects[i];
 
-                // // Set the new effect
-                // currentEffects[i] = newEffects[i];
-                // currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
+                // Set the new effect
+                currentEffects[i] = GetEffectObject(newEffects[i]);
+                currentEffectNames[i] = currentEffects[i]->GetEffectName();
 
-                // // Setup the new effect
-                // availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
+                // Setup the new effect
+                currentEffects[i]->Setup(hw, &display, &tapTempoAvg);
 
-                // // Update display for changed effect
-                // showEditModeEffectScreen(display,
-                //                          availableEffects[currentEffects[i]]->GetEffectName(),
-                //                          availableEffects[currentEffects[i]]->GetKnobNames());
-                // availableEffects[currentEffects[i]]->UpdateToggleDisplay();
+                // Update display for changed effect
+                showEditModeEffectScreen(display,
+                                         currentEffects[i]->GetEffectName(),
+                                         currentEffects[i]->GetKnobNames());
+                currentEffects[i]->UpdateToggleDisplay();
 
-                // debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
             }
 
             // Call the effect's loop

@@ -9,6 +9,8 @@
 class IEffect
 {
 public:
+    IEffect() {}
+    virtual ~IEffect() {}
     virtual void Setup(daisy::DaisySeed *hardware, DaisyDisplay *daisyDisplay, unsigned long *avgTempo = nullptr) {}
     virtual void Cleanup() {}
     virtual float Process(float in) { return 0; }

@@ -80,55 +80,55 @@ extern IEffect *GetEffectObject(EffectType type)
  */
 extern EffectType GetEffectType(IEffect *effect)
 {
-    if (strncmp(effect->GetEffectName(), "AUTOWAH", 7))
+    if (strncmp(effect->GetEffectName(), "AUTOWAH", 7) == 0)
     {
         return EffectType::AUTOWAH;
     }
-    else if (strncmp(effect->GetEffectName(), "BITCRUSH", 8))
+    else if (strncmp(effect->GetEffectName(), "BITCRUSH", 8) == 0)
     {
         return EffectType::BITCRUSH;
     }
-    else if (strncmp(effect->GetEffectName(), "CHORUS", 6))
+    else if (strncmp(effect->GetEffectName(), "CHORUS", 6) == 0)
     {
         return EffectType::CHORUS;
     }
-    else if (strncmp(effect->GetEffectName(), "COMPRESSOR", 10))
+    else if (strncmp(effect->GetEffectName(), "COMPRESSOR", 10) == 0)
     {
         return EffectType::COMPRESSOR;
     }
-    else if (strncmp(effect->GetEffectName(), "FLANGER", 7))
+    else if (strncmp(effect->GetEffectName(), "FLANGER", 7) == 0)
     {
         return EffectType::FLANGER;
     }
-    else if (strncmp(effect->GetEffectName(), "FOLD", 4))
+    else if (strncmp(effect->GetEffectName(), "FOLD", 4) == 0)
     {
         return EffectType::FOLD;
     }
-    else if (strncmp(effect->GetEffectName(), "PHASER", 6))
+    else if (strncmp(effect->GetEffectName(), "PHASER", 6) == 0)
     {
         return EffectType::PHASER;
     }
-    else if (strncmp(effect->GetEffectName(), "TREMOLO", 7))
+    else if (strncmp(effect->GetEffectName(), "TREMOLO", 7) == 0)
     {
         return EffectType::TREMOLO;
     }
-    else if (strncmp(effect->GetEffectName(), "DISTORTION", 10))
+    else if (strncmp(effect->GetEffectName(), "DISTORTION", 10) == 0)
     {
         return EffectType::DISTORTION;
     }
-    else if (strncmp(effect->GetEffectName(), "OVERDRIVE", 9))
+    else if (strncmp(effect->GetEffectName(), "OVERDRIVE", 9) == 0)
     {
         return EffectType::OVERDRIVE;
     }
-    else if (strncmp(effect->GetEffectName(), "ECHO", 4))
+    else if (strncmp(effect->GetEffectName(), "ECHO", 4) == 0)
     {
         return EffectType::ECHO;
     }
-    else if (strncmp(effect->GetEffectName(), "REVERB", 6))
+    else if (strncmp(effect->GetEffectName(), "REVERB", 6) == 0)
     {
         return EffectType::REVERB;
     }
-    else if (strncmp(effect->GetEffectName(), "SHIFTER", 7))
+    else if (strncmp(effect->GetEffectName(), "SHIFTER", 7) == 0)
     {
         return EffectType::SHIFTER;
     }

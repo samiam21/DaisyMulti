@@ -48,7 +48,7 @@ volatile PedalState newState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
 char *currentEffectNames[MAX_EFFECTS];
 IEffect *currentEffects[MAX_EFFECTS];
-IEffect *newEffects[MAX_EFFECTS];
+EffectType newEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
 
 // Effect controls
