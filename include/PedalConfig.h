@@ -108,25 +108,6 @@
             display.WriteMessage(message, args);        \
     }
 
-// State enum for the system
-enum PedalState
-{
-    PLAY_MODE = 0,
-    EDIT_MODE = 10
-};
-
-struct EffectSettings
-{
-    float knobSettings[MAX_KNOBS];
-    u_int8_t togglePosition;
-};
-
-struct EffectStorage
-{
-    int availableEffectsPosition;
-    EffectSettings effectSettings;
-};
-
 // Pin Definitions - Selector
 const int effectSelectorPinA = 27;
 const int effectSelectorPinB = 26;

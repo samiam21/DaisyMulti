@@ -17,7 +17,7 @@ void AudioCallback(float **in, float **out, size_t size)
         {
             if (currentEffectsState[j])
             {
-                wet = availableEffects[currentEffects[j]]->Process(wet);
+                wet = currentEffects[j]->Process(wet);
             }
         }
 
@@ -77,10 +77,10 @@ void InitializeEffects()
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         // Read and set the current effect
-        currentEffects[i] = effectsStorage[i].availableEffectsPosition;
-        newEffects[i] = effectsStorage[i].availableEffectsPosition;
-        currentEffectNames[i] = availableEffects[effectsStorage[i].availableEffectsPosition]->GetEffectName();
-        debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
+        currentEffects[i] = GetEffectObject((EffectType)effectsStorage[i].effectType);
+        newEffects[i] = (EffectType)effectsStorage[i].effectType;
+        currentEffectNames[i] = currentEffects[i]->GetEffectName();
+        debugPrintlnF(hw, "Effect %d: %s", i, currentEffects[i]->GetEffectName());
 
         // Read settings
         for (int j = 0; j < MAX_KNOBS; j++)
@@ -90,27 +90,25 @@ void InitializeEffects()
         debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
-        availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
-        availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
+        currentEffects[i]->Setup(hw, &display, &tapTempoAvg);
+        currentEffects[i]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
 
     dsy_qspi_deinit();
 
-    // // Show the selected effects in play mode
-    // updatePlayModeEffects(display, currentEffectNames);
-
     // /** DEBUG - Used when flashing to a new board **/
     // for (int i = 0; i < MAX_EFFECTS; i++)
     // {
+    //     IEffect *thisEffect = GetEffectObject(EffectType::CLEANBOOST);
+
     //     // Read and set the current effect
-    //     currentEffects[i] = 0;
-    //     newEffects[i] = 0;
-    //     currentEffectNames[i] = availableEffects[0]->GetEffectName();
-    //     debugPrintlnF(hw, "Effect %d: %s", i, availableEffects[currentEffects[i]]->GetEffectName());
+    //     currentEffects[i] = thisEffect;
+    //     newEffects[i] = GetEffectType(thisEffect);
+    //     currentEffectNames[i] = thisEffect->GetEffectName();
+    //     debugPrintlnF(hw, "Effect %d: %s", i, thisEffect->GetEffectName());
 
     //     // Initialize the effect
-    //     availableEffects[currentEffects[i]]->Setup(hw, &display);
-    //     availableEffects[currentEffects[i]]->SetEffectSettings(effectsStorage[i].effectSettings);
+    //     thisEffect->Setup(hw, &display);
     // }
     // /** DEBUG - Used when flashing to a new board **/
 }
@@ -134,11 +132,11 @@ void HandleEffectButtons()
 
                 // Update the OLED to display the effect edit screen
                 showEditModeEffectScreen(display,
-                                         availableEffects[currentEffects[selectedEditEffect]]->GetEffectName(),
-                                         availableEffects[currentEffects[selectedEditEffect]]->GetKnobNames());
-                availableEffects[currentEffects[selectedEditEffect]]->UpdateToggleDisplay();
+                                         currentEffects[selectedEditEffect]->GetEffectName(),
+                                         currentEffects[selectedEditEffect]->GetKnobNames());
+                currentEffects[selectedEditEffect]->UpdateToggleDisplay();
 
-                debugPrintlnF(hw, "Editing %s", availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+                debugPrintlnF(hw, "Editing %s", currentEffects[selectedEditEffect]->GetEffectName());
             }
         }
     }
@@ -154,7 +152,7 @@ void HandleEffectButtons()
                 currentEffectsState[i] = !currentEffectsState[i];
                 UpdateEffectLeds();
 
-                debugPrintlnF(hw, "Turned %s %s", availableEffects[currentEffects[i]]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
+                debugPrintlnF(hw, "Turned %s %s", currentEffects[i]->GetEffectName(), currentEffectsState[i] ? "ON" : "OFF");
             }
         }
     }
@@ -218,7 +216,7 @@ void ControlEncoderInterrupt()
         if (inc != 0)
         {
             // Check if we have looped around
-            int newEffect = currentEffects[selectedEditEffect] + inc;
+            int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + inc;
             if (newEffect < 0)
             {
                 newEffect = AVAIL_EFFECTS - 1;
@@ -229,7 +227,7 @@ void ControlEncoderInterrupt()
             }
 
             // Trigger a change of the effect
-            newEffects[selectedEditEffect] = newEffect;
+            newEffects[selectedEditEffect] = (EffectType)newEffect;
         }
     }
 
@@ -348,8 +346,8 @@ void SaveCurrentEffectSettings()
     // Fill in the effect storage buffer
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        effectsStorageBuffer[i].availableEffectsPosition = currentEffects[i];
-        effectsStorageBuffer[i].effectSettings = availableEffects[currentEffects[i]]->GetEffectSettings();
+        effectsStorageBuffer[i].effectType = GetEffectType(currentEffects[i]);
+        effectsStorageBuffer[i].effectSettings = currentEffects[i]->GetEffectSettings();
     }
 
     // Write the current effects array to flash
@@ -423,29 +421,30 @@ int main(void)
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
             // Check for a changed effect
-            if (currentEffects[i] != newEffects[i])
+            if (GetEffectType(currentEffects[i]) != newEffects[i])
             {
                 // Clean up the previous effect
-                availableEffects[currentEffects[i]]->Cleanup();
+                currentEffects[i]->Cleanup();
+                delete currentEffects[i];
 
                 // Set the new effect
-                currentEffects[i] = newEffects[i];
-                currentEffectNames[i] = availableEffects[currentEffects[i]]->GetEffectName();
+                currentEffects[i] = GetEffectObject(newEffects[i]);
+                currentEffectNames[i] = currentEffects[i]->GetEffectName();
 
                 // Setup the new effect
-                availableEffects[currentEffects[i]]->Setup(hw, &display, &tapTempoAvg);
+                currentEffects[i]->Setup(hw, &display, &tapTempoAvg);
 
                 // Update display for changed effect
                 showEditModeEffectScreen(display,
-                                         availableEffects[currentEffects[i]]->GetEffectName(),
-                                         availableEffects[currentEffects[i]]->GetKnobNames());
-                availableEffects[currentEffects[i]]->UpdateToggleDisplay();
+                                         currentEffects[i]->GetEffectName(),
+                                         currentEffects[i]->GetKnobNames());
+                currentEffects[i]->UpdateToggleDisplay();
 
-                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, availableEffects[currentEffects[selectedEditEffect]]->GetEffectName());
+                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
             }
 
             // Call the effect's loop
-            availableEffects[currentEffects[i]]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
+            currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
         }
     }
 }
