@@ -30,23 +30,6 @@ using namespace daisy;
 // Declare a DaisySeed object called hw
 DaisySeed *hw;
 
-// Available Effects
-IEffect *availableEffects[AVAIL_EFFECTS] = {
-    new CleanBoost(),
-    new DaisyChorus(),
-    new DaisyFlanger(),
-    new DaisyTremolo(),
-    new DaisyPhaser(),
-    new Shifter(),
-    new AutoWah(),
-    new Crush(),
-    new DaisyFold(),
-    new Distortion(),
-    new Drive(),
-    new Echo(),
-    new DaisyCompressor(),
-    new Reverb()};
-
 // Flash storage parameters
 uint32_t memBase = 0x90000000;
 static EffectStorage DSY_QSPI_BSS effectsStorage[MAX_EFFECTS];
@@ -64,8 +47,8 @@ volatile PedalState currentState = PedalState::PLAY_MODE;
 volatile PedalState newState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
 char *currentEffectNames[MAX_EFFECTS];
-volatile int currentEffects[MAX_EFFECTS];
-volatile int newEffects[MAX_EFFECTS];
+IEffect *currentEffects[MAX_EFFECTS];
+IEffect *newEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
 
 // Effect controls
