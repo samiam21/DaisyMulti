@@ -8,16 +8,16 @@
 #define WAIT_FOR_SERIAL false
 #define ENABLE_DISPLAY true
 
-#define DAISY_BLOCKSIZE 48
-#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_48KHZ
+#define DAISY_BLOCKSIZE 1
+#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
 
 // Audio channels at 96KHz
-//#define AUDIO_IN_CH 1
-//#define AUDIO_OUT_CH 0
+#define AUDIO_IN_CH 1
+#define AUDIO_OUT_CH 0
 
 // Audio channels at 48KHz
-#define AUDIO_IN_CH 0
-#define AUDIO_OUT_CH 0
+//#define AUDIO_IN_CH 0
+//#define AUDIO_OUT_CH 0
 
 #define MAX_EFFECTS 6
 
