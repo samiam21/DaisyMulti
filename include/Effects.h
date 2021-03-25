@@ -1,21 +1,21 @@
 #ifndef EFFECTS_H
 #define EFFECTS_H
 
-#include "IEffect.h"
-#include "../lib/Effects/CleanBoost.h"
-#include "../lib/Effects/DaisyChorus.h"
-#include "../lib/Effects/DaisyFlanger.h"
-#include "../lib/Effects/DaisyTremolo.h"
-#include "../lib/Effects/Crush.h"
-#include "../lib/Effects/Distortion.h"
-#include "../lib/Effects/Drive.h"
-#include "../lib/Effects/AutoWah.h"
-#include "../lib/Effects/Echo.h"
-#include "../lib/Effects/DaisyCompressor.h"
-#include "../lib/Effects/Reverb.h"
-#include "../lib/Effects/DaisyPhaser.h"
-#include "../lib/Effects/DaisyFold.h"
-#include "../lib/Effects/Shifter.h"
+#include "../lib/DaisyEffects/IEffect.h"
+#include "../lib/DaisyEffects/CleanBoost.h"
+#include "../lib/DaisyEffects/DaisyChorus.h"
+#include "../lib/DaisyEffects/DaisyFlanger.h"
+#include "../lib/DaisyEffects/DaisyTremolo.h"
+#include "../lib/DaisyEffects/Crush.h"
+#include "../lib/DaisyEffects/Distortion.h"
+#include "../lib/DaisyEffects/Drive.h"
+#include "../lib/DaisyEffects/AutoWah.h"
+#include "../lib/DaisyEffects/Echo.h"
+#include "../lib/DaisyEffects/DaisyCompressor.h"
+#include "../lib/DaisyEffects/Reverb.h"
+#include "../lib/DaisyEffects/DaisyPhaser.h"
+#include "../lib/DaisyEffects/DaisyFold.h"
+#include "../lib/DaisyEffects/Shifter.h"
 
 #define AVAIL_EFFECTS 14
 enum EffectType
