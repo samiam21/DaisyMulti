@@ -1,6 +1,6 @@
 #include "Button.h"
 
-void Button::Init(DaisySeed *hardware, dsy_gpio_pin pin, u_int16_t holdTime)
+void Button::Init(DaisySeed *hardware, dsy_gpio_pin pin, u_int16_t holdTime, unsigned long debounceTime)
 {
     // Set the hardware pointer
     hw = hardware;
@@ -8,8 +8,9 @@ void Button::Init(DaisySeed *hardware, dsy_gpio_pin pin, u_int16_t holdTime)
     // Set the button pin for the class
     buttonPin = pin;
 
-    // Set the hold time
+    // Set the hold time and debounce time
     buttonHoldTime = holdTime;
+    buttonDebounce = debounceTime;
 
     // Configure the button pin with the specific mode
     button.Init(pin, hw->AudioCallbackRate(), Switch::Type::TYPE_MOMENTARY, Switch::Polarity::POLARITY_NORMAL, Switch::Pull::PULL_UP);

@@ -1,5 +1,15 @@
 {
     "files.associations": {
-        "random": "cpp"
+        "random": "cpp",
+        "functional": "cpp",
+        "type_traits": "cpp",
+        "ranges": "cpp",
+        "cstdint": "cpp",
+        "utility": "cpp",
+        "atomic": "cpp",
+        "*.tcc": "cpp",
+        "ostream": "cpp",
+        "memory": "cpp",
+        "new": "cpp"
     }
 }

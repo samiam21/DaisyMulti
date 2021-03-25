@@ -16,7 +16,7 @@ public:
     /**
      * Initialize the button with print capabilities
      */
-    void Init(DaisySeed *hardware, dsy_gpio_pin pin, u_int16_t holdTime = 2000);
+    void Init(DaisySeed *hardware, dsy_gpio_pin pin, u_int16_t holdTime = 2000, unsigned long debounceTime = 200);
 
     /**
      * Checks if the button is pressed, accounting for debounce
@@ -34,9 +34,9 @@ private:
     dsy_gpio_pin buttonPin;
     DaisySeed *hw;
 
-    const unsigned long buttonDebounce = 200;
+    unsigned long buttonDebounce = 200;
     unsigned long lastButtonPress = 0;
-    u_int16_t buttonHoldTime = 20000;
+    u_int16_t buttonHoldTime = 2000;
 
     Switch button;
 };

@@ -5,22 +5,31 @@
 
 #define DEBUG 1
 
-#define WAIT_FOR_SERIAL true
+#define WAIT_FOR_SERIAL false
+#define ENABLE_DISPLAY true
 
-#define BLOCKSIZE 1
-#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
+#define DAISY_BLOCKSIZE 48
+#define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_48KHZ
 
-#define AUDIO_IN_CH 1
+// Audio channels at 96KHz
+//#define AUDIO_IN_CH 1
+//#define AUDIO_OUT_CH 0
+
+// Audio channels at 48KHz
+#define AUDIO_IN_CH 0
 #define AUDIO_OUT_CH 0
 
+#define MAX_EFFECTS 6
+
+#define MAX_KNOBS 4
 #define KNOB_1_CHN 0
 #define KNOB_2_CHN 1
 #define KNOB_3_CHN 2
 #define KNOB_4_CHN 3
 
-// NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
-// #define BYPASS_SELECTOR // Bypasses the effect selector
+#define PI_VAL 3.14159265
 
+/** Serial debug print macros **/
 #define initDebugPrint(hw, pcBlock)                                                                    \
     {                                                                                                  \
         if (DEBUG)                                                                                     \
@@ -47,36 +56,82 @@
             hw->Print(msg, args);     \
     }
 
-#define PI_VAL 3.14159265
+/** OLED display macros **/
+#define initDisplay(hw, display) \
+    {                            \
+        if (ENABLE_DISPLAY)      \
+            display.Init(hw);    \
+    }
+#define updateOutputLevel(display, outputLevel)     \
+    {                                               \
+        if (ENABLE_DISPLAY)                         \
+            display.UpdateOutputLevel(outputLevel); \
+    }
+#define updatePlayModeEffects(display, currentEffectNames)     \
+    {                                                          \
+        if (ENABLE_DISPLAY)                                    \
+            display.UpdatePlayModeEffects(currentEffectNames); \
+    }
+#define showEditModeStartupScreen(display)       \
+    {                                            \
+        if (ENABLE_DISPLAY)                      \
+            display.ShowEditModeStartupScreen(); \
+    }
+#define showEditModeEffectScreen(display, effectName, knobNames)     \
+    {                                                                \
+        if (ENABLE_DISPLAY)                                          \
+            display.ShowEditModeEffectScreen(effectName, knobNames); \
+    }
+#define updateEditModeToggleValue(display, value)      \
+    {                                                  \
+        if (ENABLE_DISPLAY)                            \
+            display->UpdateEditModeToggleValue(value); \
+    }
+#define updateEditModeKnobValue(display, knobPosition, value)      \
+    {                                                              \
+        if (ENABLE_DISPLAY)                                        \
+            display->UpdateEditModeKnobValue(knobPosition, value); \
+    }
+#define updateEditModeKnobValueI(display, knobPosition, value)      \
+    {                                                               \
+        if (ENABLE_DISPLAY)                                         \
+            display->UpdateEditModeKnobValueI(knobPosition, value); \
+    }
+#define writeDisplayMessage(display, message) \
+    {                                         \
+        if (ENABLE_DISPLAY)                   \
+            display.WriteMessage(message);    \
+    }
+#define writeDisplayMessageF(display, message, args...) \
+    {                                                   \
+        if (ENABLE_DISPLAY)                             \
+            display.WriteMessage(message, args);        \
+    }
 
 // Pin Definitions - Selector
-const int effectSelectorPin1 = 29;
-const int effectSelectorPin2 = 28;
-const int effectSelectorPin3 = 27;
-const int effectSelectorPin4 = 26;
+const int effectSelectorPinA = 27;
+const int effectSelectorPinB = 26;
+const int effectSelectorPinSw = 28;
 
 // Pin Definitions - SPST
-const int effectSPSTPin1 = 5;
-const int effectSPSTPin2 = 6;
-const int effectSPSTPin3 = 7;
-const int effectSPSTPin4 = 8;
+const int effectSPSTPins[MAX_EFFECTS] = {1, 3, 5, 0, 2, 4};
+const int tapButtonPin = 30;
 
 // Pin Definitions - SPDT
 const int effectSPDT1Pin1 = 12;
 const int effectSPDT1Pin2 = 13;
-const int effectSPDT2Pin1 = 10;
-const int effectSPDT2Pin2 = 11;
 
 // Pin Definitions - POT
-const int effectPotPin1 = 20;
-const int effectPotPin2 = 23;
-const int effectPotPin3 = 22;
-const int effectPotPin4 = 21;
+const int effectPotPin1 = 21;
+const int effectPotPin2 = 22;
+const int effectPotPin3 = 23;
+const int effectPotPin4 = 24;
 
 // Pin Definitions - LED
-const int effectLedPin1 = 18;
-const int effectLedPin2 = 17;
-const int effectLedPin3 = 15;
-const int effectLedPin4 = 16;
+const int effectLedPins[MAX_EFFECTS] = {19, 17, 15, 20, 18, 16};
+
+// Pin Definitions - OLED
+const int oledResetPin = 11;
+const int oledDCPin = 9;
 
 #endif
