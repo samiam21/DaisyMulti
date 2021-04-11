@@ -16,8 +16,9 @@
 #include "../lib/DaisyEffects/DaisyPhaser.h"
 #include "../lib/DaisyEffects/DaisyFold.h"
 #include "../lib/DaisyEffects/Shifter.h"
+#include "../lib/DaisyEffects/Metronome.h"
 
-#define AVAIL_EFFECTS 14
+#define AVAIL_EFFECTS 15
 enum EffectType
 {
     CLEANBOOST,
@@ -33,6 +34,7 @@ enum EffectType
     DISTORTION,
     ECHO,
     REVERB,
+    METRONOME,
     COMPRESSOR
 };
 
@@ -69,6 +71,8 @@ extern IEffect *GetEffectObject(EffectType type)
         return new Reverb();
     case COMPRESSOR:
         return new DaisyCompressor();
+    case METRONOME:
+        return new Metronome();
     case CLEANBOOST:
     default:
         return new CleanBoost();
@@ -131,6 +135,10 @@ extern EffectType GetEffectType(IEffect *effect)
     else if (strncmp(effect->GetEffectName(), "SHIFTER", 7) == 0)
     {
         return EffectType::SHIFTER;
+    }
+    else if (strncmp(effect->GetEffectName(), "METRONOME", 9) == 0)
+    {
+        return EffectType::METRONOME;
     }
     else
     {

@@ -90,7 +90,7 @@ void InitializeEffects()
         debugPrintlnF(hw, "Toggle: %d", effectsStorage[i].effectSettings.togglePosition);
 
         // Initialize the effect
-        currentEffects[i]->Setup(hw, &display, &tapTempoAvg);
+        currentEffects[i]->Setup(hw, &display, &tapTempoBpm);
         currentEffects[i]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
 
@@ -171,7 +171,9 @@ void HandleEffectButtons()
 
             // Calculate the average duration of the items in the array
             tapTempoAvg = tempoArray.average();
+            tapTempoBpm = 60000 / tapTempoAvg;
             //writeDisplayMessageF(display, (char *)"tap avg: %d", tapTempoAvg);
+            //debugPrintlnF(hw, "tap bpm: %d", tapTempoBpm);
         }
         else
         {
@@ -432,7 +434,7 @@ int main(void)
                 currentEffectNames[i] = currentEffects[i]->GetEffectName();
 
                 // Setup the new effect
-                currentEffects[i]->Setup(hw, &display, &tapTempoAvg);
+                currentEffects[i]->Setup(hw, &display, &tapTempoBpm);
 
                 // Update display for changed effect
                 showEditModeEffectScreen(display,
