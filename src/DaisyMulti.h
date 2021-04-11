@@ -44,9 +44,9 @@ Led effectLeds[MAX_EFFECTS];
 // Tap tempo
 Button tapTempoButton;
 TempoArray tempoArray;
-size_t currentTempoSamples;
 unsigned long tapTempoTime = 0;
 unsigned long tapTempoAvg = 0;
+int tapTempoBpm = 0;
 
 // Control Encoder
 Encoder controlEncoder;
