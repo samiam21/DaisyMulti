@@ -50,7 +50,7 @@ void DaisyDisplay::UpdateOutputLevel(float outputLevel)
     display.DrawRect(1, 56, SSD1309_WIDTH - 1, SSD1309_HEIGHT - 1, true, false);
 
     // Draw the output level
-    int levelWidth = (int)(12.2f * outputLevel);
+    int levelWidth = (int)(24.4f * outputLevel);
     display.DrawRect(3, 58, levelWidth + 3, SSD1309_HEIGHT - 3, true, true);
 
     // Update the view
