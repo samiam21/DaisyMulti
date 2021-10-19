@@ -64,7 +64,7 @@ float newOutputLevel = 5.0f;
 /**
  * Audio callback to process each enabled effect
  */
-void AudioCallback(float **in, float **out, size_t size);
+void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size);
 
 /**
  * Initializes the input controls

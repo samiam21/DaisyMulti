@@ -3,14 +3,14 @@
 /**
  * Audio callback to process each enabled effect
  */
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
 {
     // Interrupt handler for the control encoder
     ControlEncoderInterrupt();
 
     for (size_t i = 0; i < size; i++)
     {
-        float wet = in[AUDIO_IN_CH][i];
+        float wet = in[i];
 
         // Apply each effect that is turned on
         for (int j = 0; j < MAX_EFFECTS; j++)
@@ -22,7 +22,7 @@ void AudioCallback(float **in, float **out, size_t size)
         }
 
         // Output the processed signal with the volume level control
-        out[AUDIO_OUT_CH][i] = wet * outputLevel;
+        out[i] = wet * outputLevel;
     }
 }
 
@@ -160,7 +160,7 @@ void HandleEffectButtons()
     // Handle tap tempo button
     if (tapTempoButton.IsPressed())
     {
-        //writeDisplayMessage(display, (char *)"tap pressed");
+        // writeDisplayMessage(display, (char *)"tap pressed");
 
         // Calculate the duration (ignore a duration longer than 2 seconds)
         unsigned long duration = System::GetNow() - tapTempoTime;
@@ -172,14 +172,14 @@ void HandleEffectButtons()
             // Calculate the average duration of the items in the array
             tapTempoAvg = tempoArray.average();
             tapTempoBpm = 60000 / tapTempoAvg;
-            //writeDisplayMessageF(display, (char *)"tap avg: %d", tapTempoAvg);
-            //debugPrintlnF(hw, "tap bpm: %d", tapTempoBpm);
+            // writeDisplayMessageF(display, (char *)"tap avg: %d", tapTempoAvg);
+            // debugPrintlnF(hw, "tap bpm: %d", tapTempoBpm);
         }
         else
         {
             // Duration was too long, reset the array for new tempo calculations
             tempoArray.clear();
-            //writeDisplayMessage(display, (char *)"array cleared");
+            // writeDisplayMessage(display, (char *)"array cleared");
         }
 
         // Update the time
