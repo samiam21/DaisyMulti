@@ -3,14 +3,14 @@
 /**
  * Audio callback to process each enabled effect
  */
-void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::InterleavingOutputBuffer out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     // Interrupt handler for the control encoder
     ControlEncoderInterrupt();
 
     for (size_t i = 0; i < size; i++)
     {
-        float wet = in[i];
+        float wet = in[AUDIO_IN_CH][i];
 
         // Apply each effect that is turned on
         for (int j = 0; j < MAX_EFFECTS; j++)
@@ -22,7 +22,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer in, AudioHandle::Interle
         }
 
         // Output the processed signal with the volume level control
-        out[i] = wet * outputLevel;
+        out[AUDIO_OUT_CH][i] = wet * outputLevel;
     }
 }
 
