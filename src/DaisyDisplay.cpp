@@ -7,9 +7,12 @@ void DaisyDisplay::Init(DaisySeed *hardware)
 {
     hw = hardware;
 
-    oled_pins[OledDisplay::DATA_COMMAND] = hw->GetPin(oledDCPin);
-    oled_pins[OledDisplay::RESET] = hw->GetPin(oledResetPin);
-    display.Init(oled_pins);
+    /** Configure the Display */
+    MyOledDisplay::Config disp_cfg;
+    disp_cfg.driver_config.transport_config.pin_config.dc = hw->GetPin(oledDCPin);
+    disp_cfg.driver_config.transport_config.pin_config.reset = hw->GetPin(oledResetPin);
+    /** And Initialize */
+    display.Init(disp_cfg);
 }
 
 /**

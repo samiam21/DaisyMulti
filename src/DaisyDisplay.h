@@ -3,15 +3,19 @@
 
 #include <cstdarg>
 #include "daisy_seed.h"
+#include "dev/oled_ssd130x.h"
 #include "../include/PedalConfig.h"
 
 using namespace daisy;
+using MyOledDisplay = OledDisplay<SSD130x4WireSpi128x64Driver>;
 
 #define MAX_MESSAGE_LEN 255
 #define FONT_SIZE Font_6x8
 #define FONT_SIZE_LARGE Font_11x18
 #define LINE_HEIGHT 9
 #define CHAR_WIDTH 7
+#define SSD1309_WIDTH 128
+#define SSD1309_HEIGHT 64
 
 /**
  * Class for handling writing data out to the OLED display
@@ -71,8 +75,7 @@ public:
 
 private:
     DaisySeed *hw;
-    OledDisplay display;
-    dsy_gpio_pin oled_pins[OledDisplay::NUM_PINS];
+    MyOledDisplay display;
 };
 
 #endif
