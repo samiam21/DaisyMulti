@@ -26,8 +26,8 @@ enum PedalState
 {
     PLAY_MODE = 0,
     PLAY_CHANGE_VOLUME = 1,
-    EDIT_MODE = 10
-
+    EDIT_MODE = 10,
+    EDIT_CHANGE_EFFECT = 11
 };
 
 // Pedal state and effects objects
@@ -38,6 +38,7 @@ char *currentEffectNames[MAX_EFFECTS];
 IEffect *currentEffects[MAX_EFFECTS];
 EffectType newEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
+volatile float effectChangeInc = 0.0f;
 
 // Effect controls
 Button effectButtons[MAX_EFFECTS];

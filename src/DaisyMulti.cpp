@@ -211,25 +211,9 @@ void ControlEncoderInterrupt()
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
-            debugPrintln(hw, "here 1");
-
-            // Check if we have looped around
-            int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + inc;
-            if (newEffect < 0)
-            {
-                newEffect = AVAIL_EFFECTS - 1;
-            }
-            else if (newEffect >= AVAIL_EFFECTS)
-            {
-                newEffect = 0;
-            }
-
-            debugPrintln(hw, "starting change effect");
-
-            // Trigger a change of the effect
-            newEffects[selectedEditEffect] = (EffectType)newEffect;
-
-            debugPrintln(hw, "ending change effect");
+            // Trigger a switch to EDIT_CHANGE_EFFECT mode
+            newState = PedalState::EDIT_CHANGE_EFFECT;
+            effectChangeInc = (float)inc;
         }
     }
 
@@ -315,6 +299,28 @@ void HandlePedalState()
             outputChangeInc = 0.0f;
             currentState = PedalState::PLAY_MODE;
             newState = PedalState::PLAY_MODE;
+        }
+
+        // Updating current effect in EDIT mode
+        else if (newState == PedalState::EDIT_CHANGE_EFFECT)
+        {
+            // Check if we have looped around
+            int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + effectChangeInc;
+            if (newEffect < 0)
+            {
+                newEffect = AVAIL_EFFECTS - 1;
+            }
+            else if (newEffect >= AVAIL_EFFECTS)
+            {
+                newEffect = 0;
+            }
+
+            // Trigger a change of the effect
+            newEffects[selectedEditEffect] = (EffectType)newEffect;
+
+            // Effect changed, return to EDIT mode
+            currentState = PedalState::EDIT_MODE;
+            newState = PedalState::EDIT_MODE;
         }
     }
 }
