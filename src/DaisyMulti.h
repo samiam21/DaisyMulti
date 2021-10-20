@@ -25,7 +25,9 @@ EffectStorage effectsStorageBuffer[MAX_EFFECTS];
 enum PedalState
 {
     PLAY_MODE = 0,
+    PLAY_CHANGE_VOLUME = 1,
     EDIT_MODE = 10
+
 };
 
 // Pedal state and effects objects
@@ -59,7 +61,7 @@ const float outputLevelIncrement = 0.2f;
 const float outputLevelMin = 0.0f;
 const float outputLevelMax = 5.0f;
 float outputLevel = 1.0f;
-float newOutputLevel = 1.0f;
+volatile float outputChangeInc = 0.0f;
 
 /**
  * Audio callback to process each enabled effect

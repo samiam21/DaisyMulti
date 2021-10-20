@@ -211,6 +211,8 @@ void ControlEncoderInterrupt()
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
+            debugPrintln(hw, "here 1");
+
             // Check if we have looped around
             int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + inc;
             if (newEffect < 0)
@@ -222,30 +224,25 @@ void ControlEncoderInterrupt()
                 newEffect = 0;
             }
 
+            debugPrintln(hw, "starting change effect");
+
             // Trigger a change of the effect
             newEffects[selectedEditEffect] = (EffectType)newEffect;
+
+            debugPrintln(hw, "ending change effect");
         }
     }
 
-    // Handle output volume whe in play mode
+    // Handle output volume when in play mode
     else if (currentState == PedalState::PLAY_MODE)
     {
         // Check for a change in the selected effect
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
-            // Increment the output volume
-            newOutputLevel = outputLevel + ((float)inc * outputLevelIncrement);
-
-            // Check if we have hit an edge
-            if (newOutputLevel < outputLevelMin)
-            {
-                newOutputLevel = outputLevelMin;
-            }
-            else if (newOutputLevel > outputLevelMax)
-            {
-                newOutputLevel = outputLevelMax;
-            }
+            // Trigger a switch to PLAY_CHANGE_VOLUME mode
+            newState = PedalState::PLAY_CHANGE_VOLUME;
+            outputChangeInc = (float)inc;
         }
     }
 }
@@ -258,8 +255,8 @@ void HandlePedalState()
     // Has a new state been triggered?
     if (currentState != newState)
     {
-        // Switching to edit mode
-        if (newState == PedalState::EDIT_MODE)
+        // Switching to EDIT mode from PLAY mode
+        if (newState == PedalState::EDIT_MODE && currentState == PedalState::PLAY_MODE)
         {
             // Switch to edit mode
             debugPrintln(hw, "Switching to edit mode!");
@@ -272,8 +269,8 @@ void HandlePedalState()
             showEditModeStartupScreen(display);
         }
 
-        // Switching to play mode
-        else if (newState == PedalState::PLAY_MODE)
+        // Switching to PLAY mode from EDIT mode
+        else if (newState == PedalState::PLAY_MODE && currentState == PedalState::EDIT_MODE)
         {
             // Switch back to play mode
             debugPrintln(hw, "Switching to play mode!");
@@ -291,6 +288,33 @@ void HandlePedalState()
 
             // Persist current effect settings in flash
             SaveCurrentEffectSettings();
+        }
+
+        // Updating output volume in PLAY mode
+        else if (newState == PedalState::PLAY_CHANGE_VOLUME)
+        {
+            // Increment the output level
+            float newOutputLevel = outputLevel + ((float)outputChangeInc * outputLevelIncrement);
+
+            // Check if we have hit an edge
+            if (newOutputLevel < outputLevelMin)
+            {
+                newOutputLevel = outputLevelMin;
+            }
+            else if (newOutputLevel > outputLevelMax)
+            {
+                newOutputLevel = outputLevelMax;
+            }
+
+            // Update the output level
+            outputLevel = newOutputLevel;
+            debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
+            updateOutputLevel(display, outputLevel);
+
+            // Volume updated, return to PLAY mode
+            outputChangeInc = 0.0f;
+            currentState = PedalState::PLAY_MODE;
+            newState = PedalState::PLAY_MODE;
         }
     }
 }
@@ -407,14 +431,6 @@ int main(void)
 
         // Handle the effect buttons
         HandleEffectButtons();
-
-        // Check for a change in output level
-        if (outputLevel != newOutputLevel)
-        {
-            outputLevel = newOutputLevel;
-            debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
-            updateOutputLevel(display, outputLevel);
-        }
 
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
