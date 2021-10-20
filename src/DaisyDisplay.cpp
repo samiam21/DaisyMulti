@@ -7,9 +7,12 @@ void DaisyDisplay::Init(DaisySeed *hardware)
 {
     hw = hardware;
 
-    oled_pins[OledDisplay::DATA_COMMAND] = hw->GetPin(oledDCPin);
-    oled_pins[OledDisplay::RESET] = hw->GetPin(oledResetPin);
-    display.Init(oled_pins);
+    /** Configure the Display */
+    MyOledDisplay::Config disp_cfg;
+    disp_cfg.driver_config.transport_config.pin_config.dc = hw->GetPin(oledDCPin);
+    disp_cfg.driver_config.transport_config.pin_config.reset = hw->GetPin(oledResetPin);
+    /** And Initialize */
+    display.Init(disp_cfg);
 }
 
 /**
@@ -47,7 +50,7 @@ void DaisyDisplay::UpdateOutputLevel(float outputLevel)
     display.DrawRect(1, 56, SSD1309_WIDTH - 1, SSD1309_HEIGHT - 1, true, false);
 
     // Draw the output level
-    int levelWidth = (int)(12.2f * outputLevel);
+    int levelWidth = (int)(24.4f * outputLevel);
     display.DrawRect(3, 58, levelWidth + 3, SSD1309_HEIGHT - 3, true, true);
 
     // Update the view

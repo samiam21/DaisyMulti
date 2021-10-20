@@ -3,7 +3,7 @@
 /**
  * Audio callback to process each enabled effect
  */
-void AudioCallback(float **in, float **out, size_t size)
+void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
 {
     // Interrupt handler for the control encoder
     ControlEncoderInterrupt();
@@ -69,10 +69,6 @@ void InitializeControls()
  */
 void InitializeEffects()
 {
-    // Configure QSPI mode
-    hw->qspi_handle.mode = DSY_QSPI_MODE_DSY_MEMORY_MAPPED;
-    dsy_qspi_init(&hw->qspi_handle);
-
     // Read the current effect objects and settings
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
@@ -93,8 +89,6 @@ void InitializeEffects()
         currentEffects[i]->Setup(hw, &display, &tapTempoBpm);
         currentEffects[i]->SetEffectSettings(effectsStorage[i].effectSettings);
     }
-
-    dsy_qspi_deinit();
 
     // /** DEBUG - Used when flashing to a new board **/
     // for (int i = 0; i < MAX_EFFECTS; i++)
@@ -160,7 +154,7 @@ void HandleEffectButtons()
     // Handle tap tempo button
     if (tapTempoButton.IsPressed())
     {
-        //writeDisplayMessage(display, (char *)"tap pressed");
+        // writeDisplayMessage(display, (char *)"tap pressed");
 
         // Calculate the duration (ignore a duration longer than 2 seconds)
         unsigned long duration = System::GetNow() - tapTempoTime;
@@ -172,14 +166,14 @@ void HandleEffectButtons()
             // Calculate the average duration of the items in the array
             tapTempoAvg = tempoArray.average();
             tapTempoBpm = 60000 / tapTempoAvg;
-            //writeDisplayMessageF(display, (char *)"tap avg: %d", tapTempoAvg);
-            //debugPrintlnF(hw, "tap bpm: %d", tapTempoBpm);
+            // writeDisplayMessageF(display, (char *)"tap avg: %d", tapTempoAvg);
+            // debugPrintlnF(hw, "tap bpm: %d", tapTempoBpm);
         }
         else
         {
             // Duration was too long, reset the array for new tempo calculations
             tempoArray.clear();
-            //writeDisplayMessage(display, (char *)"array cleared");
+            // writeDisplayMessage(display, (char *)"array cleared");
         }
 
         // Update the time
@@ -341,10 +335,6 @@ void UpdateEffectLeds()
  */
 void SaveCurrentEffectSettings()
 {
-    // Initialize flash for writing
-    hw->qspi_handle.mode = DSY_QSPI_MODE_INDIRECT_POLLING;
-    dsy_qspi_init(&hw->qspi_handle);
-
     // Fill in the effect storage buffer
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
@@ -354,15 +344,22 @@ void SaveCurrentEffectSettings()
 
     // Write the current effects array to flash
     uint32_t writesize = MAX_EFFECTS * sizeof(effectsStorage[0]);
-    dsy_qspi_erase(memBase, memBase + writesize);
-    int success = dsy_qspi_write(memBase, writesize, (uint8_t *)effectsStorageBuffer);
+    size_t address = (size_t)effectsStorage;
+    hw->qspi.Erase(address, address + writesize);
+    hw->qspi.Write(address, writesize, (uint8_t *)effectsStorageBuffer);
 
-    if (success == DSY_MEMORY_ERROR)
+    // Compare to RAM to check for failure
+    uint32_t failcnt = 0;
+    for (uint32_t i = 0; i < MAX_EFFECTS; i++)
+    {
+        if (effectsStorageBuffer[i].effectType != effectsStorage[i].effectType)
+            failcnt++;
+    }
+
+    if (failcnt > 0)
     {
         debugPrintln(hw, "Failed to write to memory!");
     }
-
-    dsy_qspi_deinit();
 }
 
 /**
