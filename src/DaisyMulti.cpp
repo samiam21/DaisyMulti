@@ -314,6 +314,14 @@ void HandlePedalState()
                 newEffect = 0;
             }
 
+            // If the effect audio is enabled, disable it while switching
+            bool switchedAudioOff = false;
+            if (currentEffectsState[selectedEditEffect])
+            {
+                currentEffectsState[selectedEditEffect] = false;
+                switchedAudioOff = true;
+            }
+
             // Clean up the previous effect
             currentEffects[selectedEditEffect]->Cleanup();
             delete currentEffects[selectedEditEffect];
@@ -330,6 +338,13 @@ void HandlePedalState()
                                      currentEffects[selectedEditEffect]->GetEffectName(),
                                      currentEffects[selectedEditEffect]->GetKnobNames());
             currentEffects[selectedEditEffect]->UpdateToggleDisplay();
+
+            // If we previously disabled audio for the effect, re-enable it
+            if (switchedAudioOff)
+            {
+                currentEffectsState[selectedEditEffect] = true;
+                switchedAudioOff = false;
+            }
 
             debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
 
