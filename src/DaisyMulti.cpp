@@ -74,7 +74,6 @@ void InitializeEffects()
     {
         // Read and set the current effect
         currentEffects[i] = GetEffectObject((EffectType)effectsStorage[i].effectType);
-        newEffects[i] = (EffectType)effectsStorage[i].effectType;
         currentEffectNames[i] = currentEffects[i]->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, currentEffects[i]->GetEffectName());
 
@@ -315,8 +314,24 @@ void HandlePedalState()
                 newEffect = 0;
             }
 
-            // Trigger a change of the effect
-            newEffects[selectedEditEffect] = (EffectType)newEffect;
+            // Clean up the previous effect
+            currentEffects[selectedEditEffect]->Cleanup();
+            delete currentEffects[selectedEditEffect];
+
+            // Set the new effect
+            currentEffects[selectedEditEffect] = GetEffectObject((EffectType)newEffect);
+            currentEffectNames[selectedEditEffect] = currentEffects[selectedEditEffect]->GetEffectName();
+
+            // Setup the new effect
+            currentEffects[selectedEditEffect]->Setup(hw, &display, &tapTempoBpm);
+
+            // Update display for changed effect
+            showEditModeEffectScreen(display,
+                                     currentEffects[selectedEditEffect]->GetEffectName(),
+                                     currentEffects[selectedEditEffect]->GetKnobNames());
+            currentEffects[selectedEditEffect]->UpdateToggleDisplay();
+
+            debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
 
             // Effect changed, return to EDIT mode
             currentState = PedalState::EDIT_MODE;
@@ -441,29 +456,6 @@ int main(void)
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
-            // Check for a changed effect
-            if (GetEffectType(currentEffects[i]) != newEffects[i])
-            {
-                // Clean up the previous effect
-                currentEffects[i]->Cleanup();
-                delete currentEffects[i];
-
-                // Set the new effect
-                currentEffects[i] = GetEffectObject(newEffects[i]);
-                currentEffectNames[i] = currentEffects[i]->GetEffectName();
-
-                // Setup the new effect
-                currentEffects[i]->Setup(hw, &display, &tapTempoBpm);
-
-                // Update display for changed effect
-                showEditModeEffectScreen(display,
-                                         currentEffects[i]->GetEffectName(),
-                                         currentEffects[i]->GetKnobNames());
-                currentEffects[i]->UpdateToggleDisplay();
-
-                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
-            }
-
             // Call the effect's loop
             currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
         }
