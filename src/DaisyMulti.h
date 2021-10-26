@@ -25,7 +25,9 @@ EffectStorage effectsStorageBuffer[MAX_EFFECTS];
 enum PedalState
 {
     PLAY_MODE = 0,
-    EDIT_MODE = 10
+    PLAY_CHANGE_VOLUME = 1,
+    EDIT_MODE = 10,
+    EDIT_CHANGE_EFFECT = 11
 };
 
 // Pedal state and effects objects
@@ -34,8 +36,8 @@ volatile PedalState newState = PedalState::PLAY_MODE;
 volatile u_int8_t selectedEditEffect = -1;
 char *currentEffectNames[MAX_EFFECTS];
 IEffect *currentEffects[MAX_EFFECTS];
-EffectType newEffects[MAX_EFFECTS];
 bool currentEffectsState[MAX_EFFECTS] = {false};
+volatile float effectChangeInc = 0.0f;
 
 // Effect controls
 Button effectButtons[MAX_EFFECTS];
@@ -59,7 +61,7 @@ const float outputLevelIncrement = 0.2f;
 const float outputLevelMin = 0.0f;
 const float outputLevelMax = 5.0f;
 float outputLevel = 1.0f;
-float newOutputLevel = 1.0f;
+volatile float outputChangeInc = 0.0f;
 
 /**
  * Audio callback to process each enabled effect

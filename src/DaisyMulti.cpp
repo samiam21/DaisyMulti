@@ -74,7 +74,6 @@ void InitializeEffects()
     {
         // Read and set the current effect
         currentEffects[i] = GetEffectObject((EffectType)effectsStorage[i].effectType);
-        newEffects[i] = (EffectType)effectsStorage[i].effectType;
         currentEffectNames[i] = currentEffects[i]->GetEffectName();
         debugPrintlnF(hw, "Effect %d: %s", i, currentEffects[i]->GetEffectName());
 
@@ -211,41 +210,22 @@ void ControlEncoderInterrupt()
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
-            // Check if we have looped around
-            int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + inc;
-            if (newEffect < 0)
-            {
-                newEffect = AVAIL_EFFECTS - 1;
-            }
-            else if (newEffect >= AVAIL_EFFECTS)
-            {
-                newEffect = 0;
-            }
-
-            // Trigger a change of the effect
-            newEffects[selectedEditEffect] = (EffectType)newEffect;
+            // Trigger a switch to EDIT_CHANGE_EFFECT mode
+            newState = PedalState::EDIT_CHANGE_EFFECT;
+            effectChangeInc = (float)inc;
         }
     }
 
-    // Handle output volume whe in play mode
+    // Handle output volume when in play mode
     else if (currentState == PedalState::PLAY_MODE)
     {
         // Check for a change in the selected effect
         int inc = controlEncoder.Increment();
         if (inc != 0)
         {
-            // Increment the output volume
-            newOutputLevel = outputLevel + ((float)inc * outputLevelIncrement);
-
-            // Check if we have hit an edge
-            if (newOutputLevel < outputLevelMin)
-            {
-                newOutputLevel = outputLevelMin;
-            }
-            else if (newOutputLevel > outputLevelMax)
-            {
-                newOutputLevel = outputLevelMax;
-            }
+            // Trigger a switch to PLAY_CHANGE_VOLUME mode
+            newState = PedalState::PLAY_CHANGE_VOLUME;
+            outputChangeInc = (float)inc;
         }
     }
 }
@@ -258,8 +238,8 @@ void HandlePedalState()
     // Has a new state been triggered?
     if (currentState != newState)
     {
-        // Switching to edit mode
-        if (newState == PedalState::EDIT_MODE)
+        // Switching to EDIT mode from PLAY mode
+        if (newState == PedalState::EDIT_MODE && currentState == PedalState::PLAY_MODE)
         {
             // Switch to edit mode
             debugPrintln(hw, "Switching to edit mode!");
@@ -272,8 +252,8 @@ void HandlePedalState()
             showEditModeStartupScreen(display);
         }
 
-        // Switching to play mode
-        else if (newState == PedalState::PLAY_MODE)
+        // Switching to PLAY mode from EDIT mode
+        else if (newState == PedalState::PLAY_MODE && currentState == PedalState::EDIT_MODE)
         {
             // Switch back to play mode
             debugPrintln(hw, "Switching to play mode!");
@@ -291,6 +271,86 @@ void HandlePedalState()
 
             // Persist current effect settings in flash
             SaveCurrentEffectSettings();
+        }
+
+        // Updating output volume in PLAY mode
+        else if (newState == PedalState::PLAY_CHANGE_VOLUME)
+        {
+            // Increment the output level
+            float newOutputLevel = outputLevel + ((float)outputChangeInc * outputLevelIncrement);
+
+            // Check if we have hit an edge
+            if (newOutputLevel < outputLevelMin)
+            {
+                newOutputLevel = outputLevelMin;
+            }
+            else if (newOutputLevel > outputLevelMax)
+            {
+                newOutputLevel = outputLevelMax;
+            }
+
+            // Update the output level
+            outputLevel = newOutputLevel;
+            debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
+            updateOutputLevel(display, outputLevel);
+
+            // Volume updated, return to PLAY mode
+            outputChangeInc = 0.0f;
+            currentState = PedalState::PLAY_MODE;
+            newState = PedalState::PLAY_MODE;
+        }
+
+        // Updating current effect in EDIT mode
+        else if (newState == PedalState::EDIT_CHANGE_EFFECT)
+        {
+            // Check if we have looped around
+            int newEffect = GetEffectType(currentEffects[selectedEditEffect]) + effectChangeInc;
+            if (newEffect < 0)
+            {
+                newEffect = AVAIL_EFFECTS - 1;
+            }
+            else if (newEffect >= AVAIL_EFFECTS)
+            {
+                newEffect = 0;
+            }
+
+            // If the effect audio is enabled, disable it while switching
+            bool switchedAudioOff = false;
+            if (currentEffectsState[selectedEditEffect])
+            {
+                currentEffectsState[selectedEditEffect] = false;
+                switchedAudioOff = true;
+            }
+
+            // Clean up the previous effect
+            currentEffects[selectedEditEffect]->Cleanup();
+            delete currentEffects[selectedEditEffect];
+
+            // Set the new effect
+            currentEffects[selectedEditEffect] = GetEffectObject((EffectType)newEffect);
+            currentEffectNames[selectedEditEffect] = currentEffects[selectedEditEffect]->GetEffectName();
+
+            // Setup the new effect
+            currentEffects[selectedEditEffect]->Setup(hw, &display, &tapTempoBpm);
+
+            // Update display for changed effect
+            showEditModeEffectScreen(display,
+                                     currentEffects[selectedEditEffect]->GetEffectName(),
+                                     currentEffects[selectedEditEffect]->GetKnobNames());
+            currentEffects[selectedEditEffect]->UpdateToggleDisplay();
+
+            // If we previously disabled audio for the effect, re-enable it
+            if (switchedAudioOff)
+            {
+                currentEffectsState[selectedEditEffect] = true;
+                switchedAudioOff = false;
+            }
+
+            debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
+
+            // Effect changed, return to EDIT mode
+            currentState = PedalState::EDIT_MODE;
+            newState = PedalState::EDIT_MODE;
         }
     }
 }
@@ -408,40 +468,9 @@ int main(void)
         // Handle the effect buttons
         HandleEffectButtons();
 
-        // Check for a change in output level
-        if (outputLevel != newOutputLevel)
-        {
-            outputLevel = newOutputLevel;
-            debugPrintlnF(hw, "Changed output level to: %.2f", outputLevel);
-            updateOutputLevel(display, outputLevel);
-        }
-
         // Execute the effect loop commands
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
-            // Check for a changed effect
-            if (GetEffectType(currentEffects[i]) != newEffects[i])
-            {
-                // Clean up the previous effect
-                currentEffects[i]->Cleanup();
-                delete currentEffects[i];
-
-                // Set the new effect
-                currentEffects[i] = GetEffectObject(newEffects[i]);
-                currentEffectNames[i] = currentEffects[i]->GetEffectName();
-
-                // Setup the new effect
-                currentEffects[i]->Setup(hw, &display, &tapTempoBpm);
-
-                // Update display for changed effect
-                showEditModeEffectScreen(display,
-                                         currentEffects[i]->GetEffectName(),
-                                         currentEffects[i]->GetKnobNames());
-                currentEffects[i]->UpdateToggleDisplay();
-
-                debugPrintlnF(hw, "Set effect %d to %s", selectedEditEffect, currentEffects[selectedEditEffect]->GetEffectName());
-            }
-
             // Call the effect's loop
             currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
         }
