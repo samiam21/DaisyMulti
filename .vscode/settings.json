@@ -11,5 +11,6 @@
         "ostream": "cpp",
         "memory": "cpp",
         "new": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

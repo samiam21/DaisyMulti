@@ -3,6 +3,7 @@ TARGET = DaisyMulti
 
 # Enable debugging for J-Link
 DEBUG = 1
+#OPT = -Os
 
 CPPFLAGS += -DUSBCON
 CPPFLAGS += -DUSBD_VID=0x0483
