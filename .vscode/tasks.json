@@ -41,7 +41,7 @@
     {
       "label": "build_libdaisy",
       "type": "shell",
-      "command": "make",
+      "command": "make clean; make OPT=-Os",
       "options": {
         "cwd": "${workspaceFolder}/lib/libdaisy/"
       },
@@ -50,7 +50,7 @@
     {
       "label": "build_daisysp",
       "type": "shell",
-      "command": "make",
+      "command": "make clean; make OPT=-Os",
       "options": {
         "cwd": "${workspaceFolder}/lib/daisysp/"
       },
