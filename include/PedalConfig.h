@@ -4,16 +4,13 @@
 #include "daisy_seed.h"
 
 #define DEBUG 1
+#define DEV_BOARD
 
 #define WAIT_FOR_SERIAL false
 #define ENABLE_DISPLAY true
 
 #define DAISY_BLOCKSIZE 1
 #define DAISY_SAMPLE_RATE daisy::SaiHandle::Config::SampleRate::SAI_96KHZ
-
-// OLD - Audio channels at 96KHz
-//#define AUDIO_IN_CH 1
-//#define AUDIO_OUT_CH 0
 
 // Audio channels
 #define AUDIO_IN_CH 0
@@ -108,6 +105,34 @@
             display.WriteMessage(message, args);        \
     }
 
+#ifdef DEV_BOARD
+// Pin Definitions - Selector
+const int effectSelectorPinA = 28;
+const int effectSelectorPinB = 26;
+const int effectSelectorPinSw = 27;
+
+// Pin Definitions - SPST
+const int effectSPSTPins[MAX_EFFECTS] = {5, 4, 3, 2, 1, 0};
+const int tapButtonPin = 30;
+
+// Pin Definitions - SPDT
+const int effectSPDT1Pin1 = 12;
+const int effectSPDT1Pin2 = 13;
+
+// Pin Definitions - POT
+const int effectPotPin1 = 22;
+const int effectPotPin2 = 21;
+const int effectPotPin3 = 24;
+const int effectPotPin4 = 23;
+
+// Pin Definitions - LED
+const int effectLedPins[MAX_EFFECTS] = {15, 17, 18, 20, 16, 19};
+
+// Pin Definitions - OLED
+const int oledResetPin = 11;
+const int oledDCPin = 9;
+
+#else // Production Board
 // Pin Definitions - Selector
 const int effectSelectorPinA = 27;
 const int effectSelectorPinB = 26;
@@ -133,5 +158,7 @@ const int effectLedPins[MAX_EFFECTS] = {19, 17, 15, 20, 18, 16};
 // Pin Definitions - OLED
 const int oledResetPin = 11;
 const int oledDCPin = 9;
+
+#endif
 
 #endif
