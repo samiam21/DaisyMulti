@@ -3,7 +3,9 @@ TARGET = DaisyMulti
 
 # Enable debugging for J-Link
 DEBUG = 1
-#OPT = -Os
+
+# Set optimization level so code will fit (this should also be set in libdaisy and DaisySP)
+OPT = -Os
 
 CPPFLAGS += -DUSBCON
 CPPFLAGS += -DUSBD_VID=0x0483
