@@ -120,10 +120,10 @@ const int effectSPDT1Pin1 = 12;
 const int effectSPDT1Pin2 = 13;
 
 // Pin Definitions - POT
-const int effectPotPin1 = 21;
-const int effectPotPin2 = 22;
-const int effectPotPin3 = 23;
-const int effectPotPin4 = 24;
+const int effectPotPin1 = 24;
+const int effectPotPin2 = 23;
+const int effectPotPin3 = 22;
+const int effectPotPin4 = 21;
 
 // Pin Definitions - LED
 const int effectLedPins[MAX_EFFECTS] = {17, 20, 16, 19, 18, 15};
