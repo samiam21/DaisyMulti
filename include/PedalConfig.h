@@ -112,8 +112,8 @@ const int effectSelectorPinB = 26;
 const int effectSelectorPinSw = 27;
 
 // Pin Definitions - SPST
-const int effectSPSTPins[MAX_EFFECTS] = {5, 4, 3, 2, 1, 0};
-const int tapButtonPin = 30;
+const int effectSPSTPins[MAX_EFFECTS] = {0, 1, 4, 30, 2, 3};
+const int tapButtonPin = 5;
 
 // Pin Definitions - SPDT
 const int effectSPDT1Pin1 = 12;
@@ -126,7 +126,7 @@ const int effectPotPin3 = 23;
 const int effectPotPin4 = 24;
 
 // Pin Definitions - LED
-const int effectLedPins[MAX_EFFECTS] = {15, 17, 18, 20, 16, 19};
+const int effectLedPins[MAX_EFFECTS] = {17, 20, 16, 19, 18, 15};
 
 // Pin Definitions - OLED
 const int oledResetPin = 11;

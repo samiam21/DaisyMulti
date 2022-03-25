@@ -154,6 +154,7 @@ void HandleEffectButtons()
     if (tapTempoButton.IsPressed())
     {
         // writeDisplayMessage(display, (char *)"tap pressed");
+        // debugPrintln(hw, "tap pressed");
 
         // Calculate the duration (ignore a duration longer than 2 seconds)
         unsigned long duration = System::GetNow() - tapTempoTime;
