@@ -190,18 +190,31 @@ void ControlEncoderInterrupt()
     controlEncoder.Debounce();
     bool buttonPressed = controlEncoder.RisingEdge();
 
-    // Check if we are currently in play mode and the control button is pressed
-    if (currentState == PedalState::PLAY_MODE && buttonPressed)
+    // Make sure we don't switch between edit/play too quickly
+    if (buttonPressed)
     {
-        // Trigger a switch to edit mode
-        newState = PedalState::EDIT_MODE;
-    }
+        uint32_t now = System::GetNow();
+        // debugPrintlnF(hw, "%d %d", now, lastChangeOfState);
 
-    // Check if we are currently in edit mode and the control button is pressed
-    else if (currentState == PedalState::EDIT_MODE && buttonPressed)
-    {
-        // Trigger a switch to play mode
-        newState = PedalState::PLAY_MODE;
+        if (now - lastChangeOfState > 1000)
+        {
+            // Set last change time and allow changing the state
+            lastChangeOfState = now;
+
+            // Check if we are currently in play mode and the control button is pressed
+            if (currentState == PedalState::PLAY_MODE && buttonPressed)
+            {
+                // Trigger a switch to edit mode
+                newState = PedalState::EDIT_MODE;
+            }
+
+            // Check if we are currently in edit mode and the control button is pressed
+            else if (currentState == PedalState::EDIT_MODE && buttonPressed)
+            {
+                // Trigger a switch to play mode
+                newState = PedalState::PLAY_MODE;
+            }
+        }
     }
 
     // Check for encoder turns in edit mode

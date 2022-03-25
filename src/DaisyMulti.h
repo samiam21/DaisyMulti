@@ -52,6 +52,8 @@ int tapTempoBpm = 0;
 
 // Control Encoder
 Encoder controlEncoder;
+u_int32_t lastChangeOfState = 0;
+u_int32_t stateChangeMinTime = 1000;
 
 // OLED display
 DaisyDisplay display;
