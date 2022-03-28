@@ -46,6 +46,7 @@ Led effectLeds[MAX_EFFECTS];
 // Tap tempo
 Button tapTempoButton;
 TempoArray tempoArray;
+const unsigned long tapTempoDebounce = 175UL;
 unsigned long tapTempoTime = 0;
 unsigned long tapTempoAvg = 0;
 int tapTempoBpm = 0;

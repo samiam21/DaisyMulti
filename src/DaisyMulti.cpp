@@ -52,7 +52,7 @@ void InitializeControls()
     {
         effectButtons[i].Init(hw, hw->GetPin(effectSPSTPins[i]));
     }
-    tapTempoButton.Init(hw, hw->GetPin((tapButtonPin)), 2000U, 300UL);
+    tapTempoButton.Init(hw, hw->GetPin((tapButtonPin)), 2000U, tapTempoDebounce);
 
     // Initialize the LEDs
     for (int i = 0; i < MAX_EFFECTS; i++)
