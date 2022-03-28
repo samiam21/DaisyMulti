@@ -152,7 +152,7 @@ extern EffectType GetEffectType(IEffect *effect)
     {
         return EffectType::RESONATOR;
     }
-    else if (strncmp(effect->GetEffectName(), "STOMPBOX", 8) == 0)
+    else if (strncmp(effect->GetEffectName(), "STOMP BOX", 9) == 0)
     {
         return EffectType::STOMPBOX;
     }
