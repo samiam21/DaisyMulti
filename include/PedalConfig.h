@@ -122,7 +122,7 @@ const int effectSPDT1Pin2 = 13;
 // Pin Definitions - POT
 const int effectPotPin1 = 24;
 const int effectPotPin2 = 23;
-const int effectPotPin3 = 22;
+const int effectPotPin3 = 25;
 const int effectPotPin4 = 21;
 
 // Pin Definitions - LED
