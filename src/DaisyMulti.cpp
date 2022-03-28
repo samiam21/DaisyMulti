@@ -156,6 +156,9 @@ void HandleEffectButtons()
         // writeDisplayMessage(display, (char *)"tap pressed");
         // debugPrintln(hw, "tap pressed");
 
+        // Trigger that the tap button was pressed
+        isTapPressed = true;
+
         // Calculate the duration (ignore a duration longer than 2 seconds)
         unsigned long duration = System::GetNow() - tapTempoTime;
         if (duration < 2000)
@@ -486,7 +489,10 @@ int main(void)
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
             // Call the effect's loop
-            currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i);
+            currentEffects[i]->Loop(currentState == PedalState::EDIT_MODE && selectedEditEffect == i, isTapPressed);
         }
+
+        // Reset tap pressed
+        isTapPressed = false;
     }
 }
