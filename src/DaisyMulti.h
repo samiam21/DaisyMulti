@@ -50,6 +50,7 @@ const unsigned long tapTempoDebounce = 175UL;
 unsigned long tapTempoTime = 0;
 unsigned long tapTempoAvg = 0;
 int tapTempoBpm = 0;
+bool isTapPressed = false;
 
 // Control Encoder
 Encoder controlEncoder;

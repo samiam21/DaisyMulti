@@ -18,8 +18,9 @@
 #include "../lib/DaisyEffects/Shifter.h"
 #include "../lib/DaisyEffects/Metronome.h"
 #include "../lib/DaisyEffects/DaisyResonator.h"
+#include "../lib/DaisyEffects/StompBox.h"
 
-#define AVAIL_EFFECTS 16
+#define AVAIL_EFFECTS 17
 enum EffectType
 {
     CLEANBOOST,
@@ -37,7 +38,8 @@ enum EffectType
     REVERB,
     RESONATOR,
     METRONOME,
-    COMPRESSOR
+    COMPRESSOR,
+    STOMPBOX
 };
 
 /**
@@ -77,6 +79,8 @@ extern IEffect *GetEffectObject(EffectType type)
         return new DaisyCompressor();
     case METRONOME:
         return new Metronome();
+    case STOMPBOX:
+        return new StompBox();
     case CLEANBOOST:
     default:
         return new CleanBoost();
@@ -147,6 +151,10 @@ extern EffectType GetEffectType(IEffect *effect)
     else if (strncmp(effect->GetEffectName(), "RESONATOR", 9) == 0)
     {
         return EffectType::RESONATOR;
+    }
+    else if (strncmp(effect->GetEffectName(), "STOMPBOX", 8) == 0)
+    {
+        return EffectType::STOMPBOX;
     }
     else
     {
