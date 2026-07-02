@@ -12,5 +12,6 @@
         "memory": "cpp",
         "new": "cpp"
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cortex-debug.armToolchainPath": "C:/Program Files/DaisyToolchain/bin"
 }

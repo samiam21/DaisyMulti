@@ -3,7 +3,7 @@
 
 #include "daisy_seed.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define DEV_BOARD
 
 #define WAIT_FOR_SERIAL false

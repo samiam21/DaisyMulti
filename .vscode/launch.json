@@ -7,13 +7,14 @@
       "name": "Debug J-Link",
       "cwd": "${workspaceRoot}",
       "executable": "./build/DaisyMulti.elf",
-      "serverpath": "C:/Program Files (x86)/SEGGER/JLink/JLinkGDBServerCL.exe",
+      "serverpath": "C:/Program Files/SEGGER/JLink_V956/JLinkGDBServerCL.exe",
       "servertype": "jlink",
       "device": "STM32H750XB",
-      "interface": "jtag",
+      "interface": "swd",
+      "serverArgs": ["-JLinkScriptFile", "D:/Workspace/Daisy/DaisyMulti/.vscode/Daisy.JLinkScript", "-speed", "1000"],
       "preLaunchTask": "build",
-      "runToMain": true,
-      "svdFile": "./.vscode/STM32H750x.svd"
+      "svdFile": "./.vscode/STM32H750x.svd",
+      "showDevDebugOutput": "raw"
     }
   ]
 }

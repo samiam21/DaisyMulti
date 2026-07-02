@@ -1,0 +1,29 @@
+/*
+ * J-Link initialization script for Daisy Seed (STM32H750XB)
+ *
+ * The Daisy dev board does not wire the NRST line (J-Link 20-pin connector
+ * pin 15) to the J-Link header, so any J-Link operation that tries to use
+ * hardware reset fails with error code -1.
+ *
+ * InitTarget() - overrides the default STM32H750XB script that requires NRST.
+ *   Left intentionally empty so J-Link connects via SWD only.
+ *
+ * ResetTarget() - overrides the default hardware-reset sequence.
+ *   Issues a software reset via the ARM AIRCR register (SYSRESETREQ) instead
+ *   of pulsing NRST. This ensures the target is cleanly reset between debug
+ *   sessions without needing the reset line to be wired.
+ */
+
+void InitTarget(void) {
+    // Intentionally empty — bypasses the default STM32H750XB InitTarget
+    // which requires NRST (pin 15) to be connected.
+}
+
+void ResetTarget(void) {
+    // Software reset via ARM Application Interrupt and Reset Control Register.
+    // AIRCR address: 0xE000ED0C
+    // Value 0x05FA0004: VECTKEY=0x05FA (required), SYSRESETREQ=1
+    // This resets the MCU without needing the NRST line.
+    JLINK_MEM_WriteU32(0xE000ED0C, 0x05FA0004);
+    JLINK_SYS_Sleep(50);
+}
