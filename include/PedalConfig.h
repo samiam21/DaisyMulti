@@ -4,6 +4,7 @@
 #include "daisy_seed.h"
 
 #define DEBUG 0
+/* #define DEV_BOARD */
 
 #define WAIT_FOR_SERIAL false
 #define ENABLE_DISPLAY true
