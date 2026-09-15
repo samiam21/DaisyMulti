@@ -11,3 +11,7 @@
 	path = lib/DaisyEffects
 	url = https://github.com/samiam21/DaisyEffects
 	branch = master
+[submodule "DaisyInputs"]
+	path = lib/DaisyInputs
+	url = https://github.com/samiam21/DaisyInputs
+	branch = main

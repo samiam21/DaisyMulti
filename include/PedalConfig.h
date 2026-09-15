@@ -4,7 +4,6 @@
 #include "daisy_seed.h"
 
 #define DEBUG 0
-#define DEV_BOARD
 
 #define WAIT_FOR_SERIAL false
 #define ENABLE_DISPLAY true
@@ -19,6 +18,7 @@
 #define MAX_EFFECTS 6
 
 #define MAX_KNOBS 4
+#define KNOB_NO_CHN 99
 #define KNOB_1_CHN 0
 #define KNOB_2_CHN 1
 #define KNOB_3_CHN 2
@@ -128,6 +128,10 @@ const int effectPotPin4 = 21;
 // Pin Definitions - LED
 const int effectLedPins[MAX_EFFECTS] = {17, 20, 16, 19, 18, 15};
 
+// Legacy toggle pin aliases (used by DaisyEffects)
+const int effectTogglePin1 = effectSPSTPins[0];
+const int effectTogglePin2 = effectSPSTPins[1];
+
 // Pin Definitions - OLED
 const int oledResetPin = 11;
 const int oledDCPin = 9;
@@ -154,6 +158,10 @@ const int effectPotPin4 = 24;
 
 // Pin Definitions - LED
 const int effectLedPins[MAX_EFFECTS] = {19, 17, 15, 20, 18, 16};
+
+// Legacy toggle pin aliases (used by DaisyEffects)
+const int effectTogglePin1 = effectSPSTPins[0];
+const int effectTogglePin2 = effectSPSTPins[1];
 
 // Pin Definitions - OLED
 const int oledResetPin = 11;

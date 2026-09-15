@@ -2,12 +2,12 @@
 #define DAISY_MULTI_H
 
 #include "../include/PedalConfig.h"
-#include "DaisyDisplay.h"
+#include "../lib/DaisyEffects/Hardware/DaisyDisplay.h"
 #include "../lib/Helpers/TempoArray.h"
 #include "../lib/DaisyEffects/IEffect.h"
 #include "../include/Effects.h"
-#include "../lib/Inputs/Button.h"
-#include "../lib/Inputs/Knob.h"
+#include "../lib/DaisyInputs/Button.h"
+#include "../lib/DaisyInputs/Knob.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
