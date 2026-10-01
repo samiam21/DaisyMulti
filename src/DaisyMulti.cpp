@@ -21,8 +21,13 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, s
             }
         }
 
-        // Output the processed signal with the volume level control
-        out[AUDIO_OUT_CH][i] = wet * outputLevel;
+        // Output the processed signal with the volume level control. Both
+        // channels are written: libdaisy hands the callback an uninitialised
+        // stack buffer, so a channel left unwritten emits whatever the main
+        // loop last left on the stack.
+        float outSample = wet * outputLevel;
+        out[0][i] = outSample;
+        out[1][i] = outSample;
     }
 }
 
