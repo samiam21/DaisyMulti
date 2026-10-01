@@ -13,8 +13,9 @@
 // daisy:: before all libdaisy functions
 using namespace daisy;
 
-// Declare a DaisySeed object called hw
-DaisySeed *hw;
+// Declare the DaisySeed object, and the hw pointer the rest of the code uses
+DaisySeed hwObject;
+DaisySeed *hw = &hwObject;
 
 // Flash storage parameters
 uint32_t memBase = 0x90000000;
